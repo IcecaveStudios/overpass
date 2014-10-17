@@ -1,0 +1,39 @@
+{
+    "name": "icecave/overpass",
+    "description": "A basic pub/sub and RPC system.",
+    "keywords": [],
+    "homepage": "https://github.com/IcecaveStudios/overpass",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "James Harris",
+            "email": "james.harris@icecave.com.au",
+            "homepage": "https://github.com/jmalloc"
+        }
+    ],
+    "require": {
+        "php": ">=5.5",
+        "ext-amqp": "*",
+        "icecave/isolator": "~2|~3"
+    },
+    "require-dev": {
+        "eloquent/phony": "dev-develop",
+        "icecave/archer": "~1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Icecave\\Overpass\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "0.1.x-dev"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ezzatron/phony"
+        }
+    ]
+}
