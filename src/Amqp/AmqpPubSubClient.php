@@ -51,7 +51,7 @@ class AmqpPubSubClient implements PubSubClientInterface
         $this
             ->queue()
             ->bind(
-                self::EXCHANGE_NAME,
+                $this->exchange()->getName(),
                 $topic
             );
 
@@ -74,7 +74,7 @@ class AmqpPubSubClient implements PubSubClientInterface
         $this
             ->queue()
             ->unbind(
-                self::EXCHANGE_NAME,
+                $this->exchange()->getName(),
                 $topic
             );
 
@@ -154,7 +154,7 @@ class AmqpPubSubClient implements PubSubClientInterface
                 $this->channel()
             );
 
-            $this->exchange->setName(self::EXCHANGE_NAME);
+            $this->exchange->setName('overpass.pubsub');
             $this->exchange->setType(AMQP_EX_TYPE_TOPIC);
             $this->exchange->declareExchange();
         }
@@ -229,8 +229,6 @@ class AmqpPubSubClient implements PubSubClientInterface
 
         throw new InvalidArgumentException('Could not unserialize payload.');
     }
-
-    const EXCHANGE_NAME = 'overpass.pubsub';
 
     private $subscriptions;
     private $connection;

@@ -41,6 +41,10 @@ class AmqpPubSubClientTest extends PHPUnit_Framework_TestCase
             ->thenReturn($this->queue)
             ->thenThrow(new LogicException('Multiple AMQP queues created!'));
 
+        Phake::when($this->exchange)
+            ->getName()
+            ->thenReturn('<exchange>');
+
         Phake::when($this->envelope)
             ->getRoutingKey()
             ->thenReturn('foo');
@@ -79,7 +83,7 @@ class AmqpPubSubClientTest extends PHPUnit_Framework_TestCase
         $this->client->subscribe('foo.bar');
 
         Phake::verify($this->queue, Phake::times(1))->bind(
-            'overpass.pubsub',
+            '<exchange>',
             'foo.bar'
         );
     }
@@ -89,7 +93,7 @@ class AmqpPubSubClientTest extends PHPUnit_Framework_TestCase
         $this->client->subscribe('foo.?');
 
         Phake::verify($this->queue)->bind(
-            'overpass.pubsub',
+            '<exchange>',
             'foo.*'
         );
     }
@@ -99,7 +103,7 @@ class AmqpPubSubClientTest extends PHPUnit_Framework_TestCase
         $this->client->subscribe('foo.*');
 
         Phake::verify($this->queue)->bind(
-            'overpass.pubsub',
+            '<exchange>',
             'foo.#'
         );
     }
@@ -111,7 +115,7 @@ class AmqpPubSubClientTest extends PHPUnit_Framework_TestCase
         $this->client->unsubscribe('foo.bar');
 
         Phake::verify($this->queue, Phake::times(1))->unbind(
-            'overpass.pubsub',
+            '<exchange>',
             'foo.bar'
         );
     }
@@ -123,7 +127,7 @@ class AmqpPubSubClientTest extends PHPUnit_Framework_TestCase
         $this->client->unsubscribe('foo.?');
 
         Phake::verify($this->queue, Phake::times(1))->unbind(
-            'overpass.pubsub',
+            '<exchange>',
             'foo.*'
         );
     }
@@ -135,7 +139,7 @@ class AmqpPubSubClientTest extends PHPUnit_Framework_TestCase
         $this->client->unsubscribe('foo.*');
 
         Phake::verify($this->queue, Phake::times(1))->unbind(
-            'overpass.pubsub',
+            '<exchange>',
             'foo.#'
         );
     }

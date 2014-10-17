@@ -6,7 +6,7 @@ use Icecave\Overpass\Amqp\AmqpPubSubClient;
 
 $connection = new AMQPConnection(
     [
-        'host' => 'localhost',
+        'host' => '192.168.54.31',
         'port' => 5672,
     ]
 );
