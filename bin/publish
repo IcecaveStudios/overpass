@@ -6,17 +6,23 @@ use Icecave\Overpass\Amqp\AmqpPubSubClient;
 
 $connection = new AMQPConnection(
     [
-        'host' => '192.168.54.31',
+        'host' => 'localhost',
         'port' => 5672,
+        'read_timeout' => 3,
+        'write_timeout' => 3,
     ]
 );
 
 $connection->connect();
 
+$topic = isset($_SERVER['argv'][1])
+        ? $_SERVER['argv'][1]
+        : '';
+
 $pubSub = new AmqpPubSubClient($connection);
 
 $counter = 0;
 while (true) {
-    $pubSub->publish($counter % 2 ? 'foo' : 'bar', $counter);
+    $pubSub->publish($topic, $counter);
     echo 'P' . $counter++ . PHP_EOL;
 }

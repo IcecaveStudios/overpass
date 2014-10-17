@@ -4,21 +4,42 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Icecave\Overpass\Amqp\AmqpPubSubClient;
 
-$connection = new AMQPConnection(
-    [
-        'host' => '192.168.54.31',
-        'port' => 5672,
-    ]
-);
+while (true) {
+    try {
+        $connection = new AMQPConnection(
+            [
+                'host' => 'localhost',
+                'port' => 5672,
+                'read_timeout' => 5,
+                'write_timeout' => 5,
+                'connect_timeout' => 3,
+            ]
+        );
 
-$connection->connect();
+        echo 'Connecting...';
+        $connection->connect();
+        echo 'Done.' . PHP_EOL;
 
-$pubSub = new AmqpPubSubClient($connection);
-$pubSub->subscribe('*');
-$pubSub->consume(
-    function ($topic, $payload) {
-        printf('%-10s %s' . PHP_EOL, $topic, $payload);
+        $pubSub = new AmqpPubSubClient($connection);
+        $pubSub->subscribe(
+            isset($_SERVER['argv'][1])
+                ? $_SERVER['argv'][1]
+                : '*'
+        );
 
-        return true;
+        $pubSub->consume(
+            function ($topic, $payload) {
+                printf('%-10s %s' . PHP_EOL, $topic, $payload);
+
+                return true;
+            }
+        );
+
+        break;
+    } catch (AMQPConnectionException $e) {
+        echo $e->getMessage() . PHP_EOL;
+        sleep(1);
+
+        continue;
     }
-);
+}
