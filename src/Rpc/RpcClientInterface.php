@@ -1,5 +1,5 @@
 <?php
-namespace Icecave\Overpass;
+namespace Icecave\Overpass\Rpc;
 
 interface RpcClientInterface
 {

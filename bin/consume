@@ -2,7 +2,9 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
-use Icecave\Overpass\Amqp\AmqpPubSubClient;
+use Icecave\Overpass\Amqp\AmqpDeclarationManager;
+use Icecave\Overpass\Amqp\PubSub\AmqpSubscriber;
+use Icecave\Overpass\Serialization\JsonSerialization;
 
 while (true) {
     try {
@@ -10,8 +12,8 @@ while (true) {
             [
                 'host' => 'localhost',
                 'port' => 5672,
-                'read_timeout' => 5,
-                'write_timeout' => 5,
+                'read_timeout' => 300,
+                'write_timeout' => 300,
                 'connect_timeout' => 3,
             ]
         );
@@ -20,16 +22,21 @@ while (true) {
         $connection->connect();
         echo 'Done.' . PHP_EOL;
 
-        $pubSub = new AmqpPubSubClient($connection);
-        $pubSub->subscribe(
+        $subscriber = new AmqpSubscriber(
+            $connection,
+            new AmqpDeclarationManager,
+            new JsonSerialization
+        );
+
+        $subscriber->subscribe(
             isset($_SERVER['argv'][1])
                 ? $_SERVER['argv'][1]
                 : '*'
         );
 
-        $pubSub->consume(
+        $subscriber->consume(
             function ($topic, $payload) {
-                printf('%-10s %s' . PHP_EOL, $topic, $payload);
+                printf('<== %s %s' . PHP_EOL, $topic, $payload);
 
                 return true;
             }

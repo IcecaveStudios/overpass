@@ -17,7 +17,6 @@
         "icecave/isolator": "~2|~3"
     },
     "require-dev": {
-        "eloquent/phony": "dev-develop",
         "icecave/archer": "~1"
     },
     "autoload": {
@@ -29,11 +28,5 @@
         "branch-alias": {
             "dev-develop": "0.1.x-dev"
         }
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/ezzatron/phony"
-        }
-    ]
+    }
 }

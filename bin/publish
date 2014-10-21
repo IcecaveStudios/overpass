@@ -2,7 +2,9 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
-use Icecave\Overpass\Amqp\AmqpPubSubClient;
+use Icecave\Overpass\Amqp\AmqpDeclarationManager;
+use Icecave\Overpass\Amqp\PubSub\AmqpPublisher;
+use Icecave\Overpass\Serialization\JsonSerialization;
 
 $connection = new AMQPConnection(
     [
@@ -19,10 +21,33 @@ $topic = isset($_SERVER['argv'][1])
         ? $_SERVER['argv'][1]
         : '';
 
-$pubSub = new AmqpPubSubClient($connection);
+$publisher = new AmqpPublisher(
+    $connection,
+    new AmqpDeclarationManager,
+    new JsonSerialization
+);
 
-$counter = 0;
+$payloadCounter = 0;
+$delta = 1;
+$perSecond = 1;
+$maxPerSecond = 100;
+
 while (true) {
-    $pubSub->publish($topic, $counter);
-    echo 'P' . $counter++ . PHP_EOL;
+
+    $start = microtime(true);
+    for ($i = 0; $i < $perSecond; ++$i) {
+        $publisher->publish($topic, $payloadCounter++);
+    }
+    $elapsed = microtime(true) - $start;
+
+    $percentage = ($perSecond / $maxPerSecond) * 100;
+    echo str_repeat('*', $percentage) . PHP_EOL;
+
+    usleep(1000000 - $elapsed);
+
+    $perSecond += $delta;
+
+    if ($perSecond === $maxPerSecond || $perSecond === 1) {
+        $delta *= -1;
+    }
 }
