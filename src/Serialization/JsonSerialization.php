@@ -33,7 +33,7 @@ class JsonSerialization implements SerializationInterface
         if ($payload !== null) {
             return $payload;
         } elseif (strcasecmp(trim($buffer), 'null') === 0) {
-            return false;
+            return null;
         }
 
         throw new InvalidArgumentException('Could not unserialize payload.');
