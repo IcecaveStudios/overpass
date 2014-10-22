@@ -1,62 +1,60 @@
 <?php
 namespace Icecave\Overpass\Amqp\PubSub;
 
-use AMQPChannel;
-use AMQPConnection;
-use AMQPEnvelope;
-use AMQPExchange;
-use AMQPQueue;
 use Icecave\Overpass\Amqp\AmqpDeclarationManager;
 use Icecave\Overpass\Serialization\SerializationInterface;
 use LogicException;
 use Phake;
+use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit_Framework_TestCase;
 
 class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->connection = Phake::mock(AMQPConnection::class);
+        $this->channel = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(AmqpDeclarationManager::class);
         $this->serialization = Phake::mock(SerializationInterface::class);
-        $this->channel = Phake::mock(AMQPChannel::class);
-        $this->exchange = Phake::mock(AMQPExchange::class);
-        $this->queue = Phake::mock(AMQPQueue::class);
-        $this->envelope = Phake::mock(AMQPEnvelope::class);
+        $this->message = new AMQPMessage('<payload>');
+        $this->message->delivery_info['routing_key'] = 'subscription-topic';
+        $this->payload = (object) ['payload' => true];
 
-        Phake::when($this->declarationManager)
-            ->channel(Phake::anyParameters())
-            ->thenReturn($this->channel)
-            ->thenThrow(new LogicException('Multiple AMQP channels created!'));
+        Phake::when($this->channel)
+            ->basic_consume(Phake::anyParameters())
+            ->thenGetReturnByLambda(
+                function ($_, $tag, $_, $_, $_, $_, $callback) {
+                    // store the callback as this is used to determine whether to continue waiting
+                    $this->channel->callbacks[$tag] = $callback;
+                }
+            );
+
+        Phake::when($this->channel)
+            ->wait()
+            ->thenReturn(null)
+            ->thenGetReturnByLambda(
+                function () {
+                    // unset the callback so the consumer stops waiting
+                    $this->channel->callbacks = [];
+                }
+            );
 
         Phake::when($this->declarationManager)
             ->pubSubExchange(Phake::anyParameters())
-            ->thenReturn($this->exchange)
+            ->thenReturn('<exchange>')
             ->thenThrow(new LogicException('Multiple AMQP exchanges created!'));
 
         Phake::when($this->declarationManager)
             ->exclusiveQueue(Phake::anyParameters())
-            ->thenReturn($this->queue)
+            ->thenReturn('<queue>')
             ->thenThrow(new LogicException('Multiple AMQP queues created!'));
 
         Phake::when($this->serialization)
-            ->unserialize('<bar>')
-            ->thenReturn('bar');
-
-        Phake::when($this->exchange)
-            ->getName()
-            ->thenReturn('<exchange>');
-
-        Phake::when($this->envelope)
-            ->getRoutingKey()
-            ->thenReturn('foo');
-
-        Phake::when($this->envelope)
-            ->getBody()
-            ->thenReturn('<bar>');
+            ->unserialize('<payload>')
+            ->thenReturn($this->payload);
 
         $this->subscriber = new AmqpSubscriber(
-            $this->connection,
+            $this->channel,
             $this->declarationManager,
             $this->serialization
         );
@@ -64,68 +62,116 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
 
     public function testSubscribe()
     {
-        $this->subscriber->subscribe('foo.bar');
-        $this->subscriber->subscribe('foo.bar');
+        $this->subscriber->subscribe('subscription-topic');
 
-        Phake::verify($this->queue, Phake::times(1))->bind(
+        Phake::inOrder(
+            Phake::verify($this->declarationManager)->pubSubExchange($this->channel),
+            Phake::verify($this->declarationManager)->exclusiveQueue($this->channel),
+            Phake::verify($this->channel)->queue_bind(
+                '<queue>',
+                '<exchange>',
+                'subscription-topic'
+            )
+        );
+    }
+
+    public function testSubscribeToMultipleTopics()
+    {
+        $this->subscriber->subscribe('subscription-topic-1');
+        $this->subscriber->subscribe('subscription-topic-2');
+
+        Phake::inOrder(
+            Phake::verify($this->declarationManager)->pubSubExchange($this->channel),
+            Phake::verify($this->declarationManager)->exclusiveQueue($this->channel),
+            Phake::verify($this->channel)->queue_bind(
+                '<queue>',
+                '<exchange>',
+                'subscription-topic-1'
+            ),
+            Phake::verify($this->channel)->queue_bind(
+                '<queue>',
+                '<exchange>',
+                'subscription-topic-2'
+            )
+        );
+    }
+
+    public function testSubscribeWithDuplicateSubscription()
+    {
+        $this->subscriber->subscribe('subscription-topic');
+        $this->subscriber->subscribe('subscription-topic');
+
+        Phake::verify($this->channel, Phake::times(1))->queue_bind(
+            '<queue>',
             '<exchange>',
-            'foo.bar'
+            'subscription-topic'
         );
     }
 
     public function testSubscribeWithAtomWildcard()
     {
-        $this->subscriber->subscribe('foo.?');
+        $this->subscriber->subscribe('subscription.?.topic');
 
-        Phake::verify($this->queue)->bind(
+        Phake::verify($this->channel, Phake::times(1))->queue_bind(
+            '<queue>',
             '<exchange>',
-            'foo.*'
+            'subscription.*.topic'
         );
     }
 
     public function testSubscribeWithFullWildcard()
     {
-        $this->subscriber->subscribe('foo.*');
+        $this->subscriber->subscribe('subscription.*.topic');
 
-        Phake::verify($this->queue)->bind(
+        Phake::verify($this->channel, Phake::times(1))->queue_bind(
+            '<queue>',
             '<exchange>',
-            'foo.#'
+            'subscription.#.topic'
         );
     }
 
     public function testUnsubscribe()
     {
-        $this->subscriber->unsubscribe('foo.bar');
-        $this->subscriber->subscribe('foo.bar');
-        $this->subscriber->unsubscribe('foo.bar');
+        $this->subscriber->subscribe('subscription-topic');
+        $this->subscriber->unsubscribe('subscription-topic');
 
-        Phake::verify($this->queue, Phake::times(1))->unbind(
+        Phake::verify($this->channel)->queue_unbind(
+            '<queue>',
             '<exchange>',
-            'foo.bar'
+            'subscription-topic'
         );
+    }
+
+    public function testUnsubscribeWithUnknownSubscription()
+    {
+        $this->subscriber->unsubscribe('subscription-topic');
+
+        Phake::verifyNoInteraction($this->channel);
+        Phake::verifyNoInteraction($this->declarationManager);
     }
 
     public function testUnsubscribeWithAtomWildcard()
     {
-        $this->subscriber->unsubscribe('foo.?');
-        $this->subscriber->subscribe('foo.?');
-        $this->subscriber->unsubscribe('foo.?');
+        $this->subscriber->subscribe('subscription.?.topic');
+        $this->subscriber->unsubscribe('subscription.?.topic');
 
-        Phake::verify($this->queue, Phake::times(1))->unbind(
+        Phake::verify($this->channel)->queue_unbind(
+            '<queue>',
             '<exchange>',
-            'foo.*'
+            'subscription.*.topic'
         );
     }
 
     public function testUnsubscribeWithFullWildcard()
     {
-        $this->subscriber->unsubscribe('foo.*');
-        $this->subscriber->subscribe('foo.*');
-        $this->subscriber->unsubscribe('foo.*');
+        $this->subscriber->unsubscribe('subscription.*.topic');
+        $this->subscriber->subscribe('subscription.*.topic');
+        $this->subscriber->unsubscribe('subscription.*.topic');
 
-        Phake::verify($this->queue, Phake::times(1))->unbind(
+        Phake::verify($this->channel)->queue_unbind(
+            '<queue>',
             '<exchange>',
-            'foo.#'
+            'subscription.#.topic'
         );
     }
 
@@ -138,85 +184,76 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
             return true;
         };
 
-        $this->subscriber->subscribe('foo');
+        $this->subscriber->subscribe('subscription-topic');
         $this->subscriber->consume($consumer);
 
         $handler = null;
 
-        Phake::verify($this->queue)->consume(
-            Phake::capture($handler),
-            AMQP_AUTOACK,
-            'consumer'
+        Phake::verify($this->channel)->basic_consume(
+            '<queue>',
+            'consumer-tag',
+            false, // no local
+            true,  // no ack
+            false, // exclusive
+            false, // no wait
+            Phake::capture($handler)
         );
 
         $this->assertTrue(
             is_callable($handler)
         );
 
-        $this->assertTrue(
-            $handler($this->envelope)
-        );
+        $handler($this->message);
 
         $this->assertSame(
-            [['foo', 'bar']],
+            [['subscription-topic', $this->payload]],
             $calls
         );
 
-        Phake::verify($this->queue, Phake::never())->cancel(Phake::anyParameters());
+        Phake::verify($this->channel, Phake::times(2))->wait();
+        Phake::verify($this->channel, Phake::never())->basic_cancel(Phake::anyParameters());
     }
 
-    public function testConsumeEnd()
+    public function testConsumeCancel()
     {
-        $calls = [];
-        $consumer = function () use (&$calls) {
-            $calls[] = func_get_args();
-
+        $consumer = function () {
             return false;
         };
 
-        $this->subscriber->subscribe('foo');
+        $this->subscriber->subscribe('subscription-topic');
         $this->subscriber->consume($consumer);
 
         $handler = null;
 
-        Phake::verify($this->queue)->consume(
-            Phake::capture($handler),
-            AMQP_AUTOACK,
-            'consumer'
+        Phake::verify($this->channel)->basic_consume(
+            '<queue>',
+            'consumer-tag',
+            false, // no local
+            true,  // no ack
+            false, // exclusive
+            false, // no wait
+            Phake::capture($handler)
         );
+
+        Phake::verify($this->channel, Phake::times(2))->wait();
 
         $this->assertTrue(
             is_callable($handler)
         );
 
-        $this->assertFalse(
-            $handler($this->envelope)
-        );
+        $handler($this->message);
 
-        $this->assertSame(
-            [['foo', 'bar']],
-            $calls
-        );
-
-        Phake::verify($this->queue)->cancel('consumer');
+        Phake::verify($this->channel)->basic_cancel('consumer-tag');
     }
 
     public function testConsumeWithNoSubscriptions()
     {
-        $calls = [];
-        $consumer = function () use (&$calls) {
-            $calls[] = func_get_args();
-
-            return false;
+        $consumer = function () {
+            throw new LogicException('Consumer should not be invoked.');
         };
 
         $this->subscriber->consume($consumer);
 
-        Phake::verifyNoInteraction($this->queue);
-
-        $this->assertSame(
-            [],
-            $calls
-        );
+        Phake::verifyNoInteraction($this->channel);
     }
 }

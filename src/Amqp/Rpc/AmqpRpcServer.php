@@ -1,98 +1,78 @@
 <?php
 namespace Icecave\Overpass\Amqp;
 
-use AMQPChannel;
+use Icecave\Overpass\Serialization\SerializationInterface;
+use Icecave\Overpass\Rpc\RpcServerInterface;
 use AMQPConnection;
-use AMQPExchange;
-use AMQPQueue;
-use Icecave\Isolator\IsolatorTrait;
 
 class AmqpRpcServer implements RpcServerInterface
 {
-    use IsolatorTrait;
-
-    public function __construct(AMQPConnection $connection)
-    {
+    /**
+     * @param AMQPConnection         $connection
+     * @param AmqpDeclarationManager $declarationManager
+     * @param SerializationInterface $serialization
+     */
+    public function __construct(
+        AMQPConnection $connection,
+        AmqpDeclarationManager $declarationManager,
+        SerializationInterface $serialization
+    ) {
         $this->connection = $connection;
-        $this->procedures = [];
+        $this->declarationManager = $declarationManager;
+        $this->serialization = $serialization;
+        $this->functions = [];
     }
 
+    /**
+     * Register a function with the RPC server.
+     *
+     * @param string   $name     The name the under which the function is exposed.
+     * @param callable $function The function to expose.
+     */
     public function register($name, callable $function)
     {
-        $this->procedures[$name] = $function;
+
     }
 
+    /**
+     * Unregister a function with the RPC server.
+     *
+     * @param string $name The name the under which the function is exposed.
+     */
     public function unregister($name)
     {
-        unset($this->procedures[$name]);
+
     }
 
+    /**
+     * Check if the RPC server has a function registered under the given name.
+     *
+     * @param string $name The name the under which the function is exposed.
+     *
+     * @param boolean True if there is a function with the given name.
+     */
     public function has($name)
     {
-        return isset($this->procedures[$name]);
+
     }
 
+    /**
+     * Run the RPC server.
+     */
     public function run()
     {
 
     }
 
     /**
-     * @return AMQPChannel
+     * Stop the RPC server.
      */
-    private function channel()
+    public function stop()
     {
-        if (!$this->channel) {
-            $this->channel = $this->isolator()->new(
-                AMQPChannel::class,
-                $this->connection
-            );
 
-            $this->channel->setPrefetchCount(1);
-        }
-
-        return $this->channel;
-    }
-
-    /**
-     * @return AMQPExchange
-     */
-    private function exchange()
-    {
-        if (!$this->exchange) {
-            $this->exchange = $this->isolator()->new(
-                AMQPExchange::class,
-                $this->channel()
-            );
-
-            $this->exchange->setName('overpass.pubsub');
-            $this->exchange->setType(AMQP_EX_TYPE_TOPIC);
-            $this->exchange->declareExchange();
-        }
-
-        return $this->exchange;
-    }
-
-    /**
-     * @return AMQPQueue
-     */
-    private function queue()
-    {
-        if (!$this->queue) {
-            $this->queue = $this->isolator()->new(
-                AMQPQueue::class,
-                $this->channel()
-            );
-
-            $this->queue->setFlags(AMQP_EXCLUSIVE);
-            $this->queue->declareQueue();
-        }
-
-        return $this->queue;
     }
 
     private $connection;
-    private $exchange;
-    private $queue;
-    private $procedures;
+    private $declarationManager;
+    private $serialization;
 }

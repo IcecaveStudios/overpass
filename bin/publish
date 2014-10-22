@@ -5,49 +5,33 @@ require __DIR__ . '/../vendor/autoload.php';
 use Icecave\Overpass\Amqp\AmqpDeclarationManager;
 use Icecave\Overpass\Amqp\PubSub\AmqpPublisher;
 use Icecave\Overpass\Serialization\JsonSerialization;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 
-$connection = new AMQPConnection(
-    [
-        'host' => 'localhost',
-        'port' => 5672,
-        'read_timeout' => 3,
-        'write_timeout' => 3,
-    ]
+$connection = new AMQPStreamConnection(
+    'localhost',
+    5672,
+    'guest',
+    'guest',
+    '/'
 );
-
-$connection->connect();
 
 $topic = isset($_SERVER['argv'][1])
         ? $_SERVER['argv'][1]
         : '';
 
 $publisher = new AmqpPublisher(
-    $connection,
+    $connection->channel(),
     new AmqpDeclarationManager,
     new JsonSerialization
 );
 
-$payloadCounter = 0;
-$delta = 1;
-$perSecond = 1;
-$maxPerSecond = 100;
+$payloadCounter = 1;
+$sleep = 1000000;
 
 while (true) {
+    $publisher->publish($topic, $payloadCounter++);
 
-    $start = microtime(true);
-    for ($i = 0; $i < $perSecond; ++$i) {
-        $publisher->publish($topic, $payloadCounter++);
-    }
-    $elapsed = microtime(true) - $start;
+    echo '.';
 
-    $percentage = ($perSecond / $maxPerSecond) * 100;
-    echo str_repeat('*', $percentage) . PHP_EOL;
-
-    usleep(1000000 - $elapsed);
-
-    $perSecond += $delta;
-
-    if ($perSecond === $maxPerSecond || $perSecond === 1) {
-        $delta *= -1;
-    }
+    usleep($sleep);
 }

@@ -1,24 +1,25 @@
 <?php
 namespace Icecave\Overpass\Amqp\PubSub;
 
-use AMQPConnection;
 use Icecave\Overpass\Amqp\AmqpDeclarationManager;
 use Icecave\Overpass\PubSub\PublisherInterface;
 use Icecave\Overpass\Serialization\SerializationInterface;
+use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Message\AMQPMessage;
 
 class AmqpPublisher implements PublisherInterface
 {
     /**
-     * @param AMQPConnection         $connection
+     * @param AMQPChannel            $channel
      * @param AmqpDeclarationManager $declarationManager
      * @param SerializationInterface $serialization
      */
     public function __construct(
-        AMQPConnection $connection,
+        AMQPChannel $channel,
         AmqpDeclarationManager $declarationManager,
         SerializationInterface $serialization
     ) {
-        $this->connection = $connection;
+        $this->channel = $channel;
         $this->declarationManager = $declarationManager;
         $this->serialization = $serialization;
     }
@@ -33,8 +34,13 @@ class AmqpPublisher implements PublisherInterface
     {
         $this->initialize();
 
-        $this->exchange->publish(
-            $this->serialization->serialize($payload),
+        $message = new AMQPMessage(
+            $this->serialization->serialize($payload)
+        );
+
+        $this->channel->basic_publish(
+            $message,
+            $this->exchange,
             $topic
         );
     }
@@ -45,12 +51,11 @@ class AmqpPublisher implements PublisherInterface
             return;
         }
 
-        $channel = $this->declarationManager->channel($this->connection);
-        $this->exchange = $this->declarationManager->pubSubExchange($channel);
+        $this->exchange = $this->declarationManager->pubSubExchange($this->channel);
     }
 
-    private $connection;
+    private $channel;
+    private $exchange;
     private $declarationManager;
     private $serialization;
-    private $exchange;
 }

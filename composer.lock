@@ -4,65 +4,60 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bab3b40fa399070b4bfb9cdcaad5bae7",
+    "hash": "5d21b0415e12c3d4062338536dd31800",
     "packages": [
         {
-            "name": "icecave/isolator",
-            "version": "3.0.1",
+            "name": "videlalvaro/php-amqplib",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/IcecaveStudios/isolator.git",
-                "reference": "e137a63f5f5ce480d65faa73babbdf58f2d74e0b"
+                "url": "https://github.com/videlalvaro/php-amqplib.git",
+                "reference": "58044157b30853a1a425e26e9ff9895247668ac3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IcecaveStudios/isolator/zipball/e137a63f5f5ce480d65faa73babbdf58f2d74e0b",
-                "reference": "e137a63f5f5ce480d65faa73babbdf58f2d74e0b",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/58044157b30853a1a425e26e9ff9895247668ac3",
+                "reference": "58044157b30853a1a425e26e9ff9895247668ac3",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3"
+                "ext-bcmath": "*",
+                "php": ">=5.3.0"
             },
             "require-dev": {
-                "icecave/archer": "~1"
+                "phpunit/phpunit": "3.7.*"
+            },
+            "suggest": {
+                "ext-sockets": "Use AMQPSocketConnection"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-develop": "3.0.x-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Icecave\\Isolator\\": "src"
-                },
-                "files": [
-                    "src/register-autoloader.php"
-                ]
+                "psr-0": {
+                    "PhpAmqpLib": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "LGPL-2.1"
             ],
             "authors": [
                 {
-                    "name": "James Harris",
-                    "email": "james.harris@icecave.com.au",
-                    "homepage": "https://github.com/jmalloc"
+                    "name": "Alvaro Videla"
                 }
             ],
-            "description": "Dependency injection for global functions.",
-            "homepage": "https://github.com/IcecaveStudios/isolator",
+            "description": "This library is a pure PHP implementation of the AMQP protocol. It's been tested against RabbitMQ.",
+            "homepage": "https://github.com/videlalvaro/php-amqplib/",
             "keywords": [
-                "Double",
-                "fake",
-                "mock",
-                "phpunit",
-                "stub",
-                "test",
-                "unit"
+                "message",
+                "queue",
+                "rabbitmq"
             ],
-            "time": "2014-10-20 23:50:20"
+            "time": "2014-10-06 11:00:55"
         }
     ],
     "packages-dev": [
@@ -1061,8 +1056,7 @@
     "stability-flags": [],
     "prefer-stable": false,
     "platform": {
-        "php": ">=5.5",
-        "ext-amqp": "*"
+        "php": ">=5.5"
     },
     "platform-dev": []
 }

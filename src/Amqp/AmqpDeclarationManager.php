@@ -1,58 +1,61 @@
 <?php
 namespace Icecave\Overpass\Amqp;
 
-use AMQPChannel;
-use AMQPConnection;
-use AMQPExchange;
-use AMQPQueue;
-use Icecave\Isolator\IsolatorTrait;
+use PhpAmqpLib\Channel\AMQPChannel;
 
 /**
  * @internal
  */
 class AmqpDeclarationManager
 {
-    use IsolatorTrait;
-
-    /**
-     * @param AMQPConnection $connection
-     *
-     * @return AMQPChannel
-     */
-    public function channel(AMQPConnection $connection)
-    {
-        $channel = $this->isolator()->new(AMQPChannel::class, $connection);
-        $channel->setPrefetchCount(1);
-
-        return $channel;
-    }
-
     /**
      * @param AMQPChannel $channel
      *
-     * @return AMQPExchange
+     * @return string
      */
     public function pubSubExchange(AMQPChannel $channel)
     {
-        $exchange = $this->isolator()->new(AMQPExchange::class, $channel);
-        $exchange->setName('overpass.pubsub');
-        $exchange->setType(AMQP_EX_TYPE_TOPIC);
-        $exchange->declareExchange();
+        $name = 'overpass.pubsub';
 
-        return $exchange;
+        $channel->exchange_declare(
+            $name,
+            'topic',
+            false, // passive,
+            false, // durable,
+            false  // auto delete
+        );
+
+        return $name;
     }
 
     /**
      * @param AMQPChannel $channel
      *
-     * @return AMQPQueue
+     * @return string
      */
     public function exclusiveQueue(AMQPChannel $channel)
     {
-        $queue = $this->isolator()->new(AMQPQueue::class, $channel);
-        $queue->setFlags(AMQP_EXCLUSIVE);
-        $queue->declareQueue();
+        list($queueName) = $channel->queue_declare(
+            '',    // name
+            false, // passive
+            false, // durable,
+            true   // exclusive
+        );
 
-        return $queue;
+        return $queueName;
+    }
+
+    /**
+     * @param AMQPChannel $channel
+     *
+     * @return string
+     */
+    public function rpcQueue(AMQPChannel $channel, $name)
+    {
+        list($queueName) = $channel->queue_declare(
+            'overpass.rpc.' . $name
+        );
+
+        return $queueName;
     }
 }

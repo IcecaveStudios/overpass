@@ -1,27 +1,26 @@
 <?php
 namespace Icecave\Overpass\Amqp\PubSub;
 
-use AMQPConnection;
 use Icecave\Overpass\Amqp\AmqpDeclarationManager;
 use Icecave\Overpass\PubSub\SubscriberInterface;
 use Icecave\Overpass\Serialization\SerializationInterface;
+use PhpAmqpLib\Channel\AMQPChannel;
 
 class AmqpSubscriber implements SubscriberInterface
 {
     /**
-     * @param AMQPConnection         $connection
+     * @param AMQPChannel            $channel
      * @param AmqpDeclarationManager $declarationManager
      * @param SerializationInterface $serialization
      */
     public function __construct(
-        AMQPConnection $connection,
+        AMQPChannel $channel,
         AmqpDeclarationManager $declarationManager,
         SerializationInterface $serialization
     ) {
-        $this->connection = $connection;
+        $this->channel = $channel;
         $this->declarationManager = $declarationManager;
         $this->serialization = $serialization;
-        $this->subscriptions = [];
     }
 
     /**
@@ -39,8 +38,9 @@ class AmqpSubscriber implements SubscriberInterface
 
         $this->initialize();
 
-        $this->queue->bind(
-            $this->exchange->getName(),
+        $this->channel->queue_bind(
+            $this->queue,
+            $this->exchange,
             $topic
         );
 
@@ -62,8 +62,9 @@ class AmqpSubscriber implements SubscriberInterface
 
         $this->initialize();
 
-        $this->queue->unbind(
-            $this->exchange->getName(),
+        $this->channel->queue_unbind(
+            $this->queue,
+            $this->exchange,
             $topic
         );
 
@@ -88,29 +89,37 @@ class AmqpSubscriber implements SubscriberInterface
             return;
         }
 
-        $consumerTag = 'consumer';
+        $tag = 'consumer-tag';
 
-        $handler = function ($envelope) use ($callback, $consumerTag) {
+        $handler = function ($message) use ($callback, $tag) {
 
             $keepConsuming = $callback(
-                $envelope->getRoutingKey(),
-                $this->serialization->unserialize($envelope->getBody())
+                $message->get('routing_key'),
+                $this->serialization->unserialize($message->body)
             );
 
             if ($keepConsuming) {
-                return true;
+                return;
             }
 
-            $this->queue->cancel($consumerTag);
-
-            return false;
+            $this->channel->basic_cancel($tag);
         };
 
-        $this->queue->consume(
-            $handler,
-            AMQP_AUTOACK,
-            $consumerTag
+        $this->channel->basic_consume(
+            $this->queue,
+            $tag,
+            false, // no local
+            true,  // no ack
+            false, // exclusive
+            false, // no wait
+            $handler
         );
+
+        while (
+            isset($this->channel->callbacks[$tag])
+        ) {
+            $this->channel->wait();
+        }
     }
 
     /**
@@ -135,15 +144,14 @@ class AmqpSubscriber implements SubscriberInterface
             return;
         }
 
-        $channel = $this->declarationManager->channel($this->connection);
-        $this->exchange = $this->declarationManager->pubSubExchange($channel);
-        $this->queue = $this->declarationManager->exclusiveQueue($channel);
+        $this->exchange = $this->declarationManager->pubSubExchange($this->channel);
+        $this->queue = $this->declarationManager->exclusiveQueue($this->channel);
     }
 
-    private $connection;
+    private $channel;
+    private $exchange;
+    private $queue;
     private $declarationManager;
     private $serialization;
     private $subscriptions;
-    private $exchange;
-    private $queue;
 }
