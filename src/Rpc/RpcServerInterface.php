@@ -4,28 +4,11 @@ namespace Icecave\Overpass\Rpc;
 interface RpcServerInterface
 {
     /**
-     * Register a procedure with the RPC server.
+     * Get the registry used by this server to resolve procedure names.
      *
-     * @param string   $name      The name the under which the procedure is exposed.
-     * @param callable $procedure The procedure to expose.
+     * @return RegistryInterface The procedure registry.
      */
-    public function register($name, callable $procedure);
-
-    /**
-     * Unregister a procedure with the RPC server.
-     *
-     * @param string $name The name the under which the procedure is exposed.
-     */
-    public function unregister($name);
-
-    /**
-     * Check if the RPC server has a procedure registered under the given name.
-     *
-     * @param string $name The name the under which the procedure is exposed.
-     *
-     * @param boolean True if there is a procedure with the given name.
-     */
-    public function has($name);
+    public function registry();
 
     /**
      * Run the RPC server.

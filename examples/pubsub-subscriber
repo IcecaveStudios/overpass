@@ -2,8 +2,11 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
+use Eloquent\Asplode\Asplode;
 use Icecave\Overpass\Amqp\PubSub\AmqpSubscriber;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+
+Asplode::install();
 
 $connection = new AMQPStreamConnection(
     'localhost',
@@ -25,7 +28,7 @@ $subscriber->subscribe(
 
 $subscriber->consume(
     function ($topic, $payload) {
-        printf('<== %s %s' . PHP_EOL, $topic, $payload->counter);
+        printf('[subscriber] <== %s %s' . PHP_EOL, $topic, $payload->counter);
 
         return true;
     }

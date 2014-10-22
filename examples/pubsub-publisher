@@ -2,8 +2,11 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
+use Eloquent\Asplode\Asplode;
 use Icecave\Overpass\Amqp\PubSub\AmqpPublisher;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+
+Asplode::install();
 
 $connection = new AMQPStreamConnection(
     'localhost',
@@ -29,7 +32,7 @@ while (true) {
         (object) [ 'counter' => $payloadCounter++ ]
     );
 
-    printf('==> %s %s' . PHP_EOL, $topic, $payloadCounter);
+    printf('[publisher] ==> %s %s' . PHP_EOL, $topic, $payloadCounter);
 
     usleep(10000);
 }

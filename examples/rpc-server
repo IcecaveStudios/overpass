@@ -2,8 +2,12 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
+use Eloquent\Asplode\Asplode;
 use Icecave\Overpass\Amqp\Rpc\AmqpRpcServer;
+use Icecave\Overpass\Rpc\Registry;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+
+Asplode::install();
 
 $connection = new AMQPStreamConnection(
     'localhost',
@@ -13,18 +17,22 @@ $connection = new AMQPStreamConnection(
     '/'
 );
 
-$server = new AmqpRpcServer(
-    $connection->channel()
-);
+$registry = new Registry;
 
-$server->register(
+$registry->register(
     'double',
     function ($value) {
+        printf('[server] <== double(%d)' . PHP_EOL, $value);
         $result = $value * 2;
-        printf('<== %s * 2 = %s' . PHP_EOL, $value, $result);
+        printf('[server] ==> %d' . PHP_EOL, $result);
 
-        return $value;
+        return $result;
     }
+);
+
+$server = new AmqpRpcServer(
+    $registry,
+    $connection->channel()
 );
 
 $server->run();

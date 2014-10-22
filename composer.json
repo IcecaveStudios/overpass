@@ -13,10 +13,12 @@
     ],
     "require": {
         "php": ">=5.5",
+        "eloquent/enumeration": "~5",
         "videlalvaro/php-amqplib": "~2.4"
     },
     "require-dev": {
-        "icecave/archer": "~1"
+        "icecave/archer": "~1",
+        "eloquent/asplode": "~2.0"
     },
     "autoload": {
         "psr-4": {
