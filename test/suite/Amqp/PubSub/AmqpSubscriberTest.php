@@ -1,7 +1,6 @@
 <?php
 namespace Icecave\Overpass\Amqp\PubSub;
 
-use Icecave\Overpass\Amqp\AmqpDeclarationManager;
 use Icecave\Overpass\Serialization\SerializationInterface;
 use LogicException;
 use Phake;
@@ -14,7 +13,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->channel = Phake::mock(AMQPChannel::class);
-        $this->declarationManager = Phake::mock(AmqpDeclarationManager::class);
+        $this->declarationManager = Phake::mock(DeclarationManager::class);
         $this->serialization = Phake::mock(SerializationInterface::class);
         $this->message = new AMQPMessage('<payload>');
         $this->message->delivery_info['routing_key'] = 'subscription-topic';
@@ -24,8 +23,15 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
             ->basic_consume(Phake::anyParameters())
             ->thenGetReturnByLambda(
                 function ($_, $tag, $_, $_, $_, $_, $callback) {
+
+                    if ($tag === '') {
+                        $tag = '<consumer-tag>';
+                    }
+
                     // store the callback as this is used to determine whether to continue waiting
                     $this->channel->callbacks[$tag] = $callback;
+
+                    return $tag;
                 }
             );
 
@@ -40,14 +46,12 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
             );
 
         Phake::when($this->declarationManager)
-            ->pubSubExchange(Phake::anyParameters())
-            ->thenReturn('<exchange>')
-            ->thenThrow(new LogicException('Multiple AMQP exchanges created!'));
+            ->exchange()
+            ->thenReturn('<exchange>');
 
         Phake::when($this->declarationManager)
-            ->exclusiveQueue(Phake::anyParameters())
-            ->thenReturn('<queue>')
-            ->thenThrow(new LogicException('Multiple AMQP queues created!'));
+            ->queue()
+            ->thenReturn('<queue>');
 
         Phake::when($this->serialization)
             ->unserialize('<payload>')
@@ -65,33 +69,12 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         $this->subscriber->subscribe('subscription-topic');
 
         Phake::inOrder(
-            Phake::verify($this->declarationManager)->pubSubExchange($this->channel),
-            Phake::verify($this->declarationManager)->exclusiveQueue($this->channel),
+            Phake::verify($this->declarationManager)->queue(),
+            Phake::verify($this->declarationManager)->exchange(),
             Phake::verify($this->channel)->queue_bind(
                 '<queue>',
                 '<exchange>',
                 'subscription-topic'
-            )
-        );
-    }
-
-    public function testSubscribeToMultipleTopics()
-    {
-        $this->subscriber->subscribe('subscription-topic-1');
-        $this->subscriber->subscribe('subscription-topic-2');
-
-        Phake::inOrder(
-            Phake::verify($this->declarationManager)->pubSubExchange($this->channel),
-            Phake::verify($this->declarationManager)->exclusiveQueue($this->channel),
-            Phake::verify($this->channel)->queue_bind(
-                '<queue>',
-                '<exchange>',
-                'subscription-topic-1'
-            ),
-            Phake::verify($this->channel)->queue_bind(
-                '<queue>',
-                '<exchange>',
-                'subscription-topic-2'
             )
         );
     }
@@ -191,10 +174,10 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->channel)->basic_consume(
             '<queue>',
-            'consumer-tag',
+            '',
             false, // no local
             true,  // no ack
-            false, // exclusive
+            true,  // exclusive
             false, // no wait
             Phake::capture($handler)
         );
@@ -227,10 +210,10 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->channel)->basic_consume(
             '<queue>',
-            'consumer-tag',
+            '',
             false, // no local
             true,  // no ack
-            false, // exclusive
+            true,  // exclusive
             false, // no wait
             Phake::capture($handler)
         );
@@ -243,7 +226,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
 
         $handler($this->message);
 
-        Phake::verify($this->channel)->basic_cancel('consumer-tag');
+        Phake::verify($this->channel)->basic_cancel('<consumer-tag>');
     }
 
     public function testConsumeWithNoSubscriptions()

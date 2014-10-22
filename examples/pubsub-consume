@@ -2,10 +2,8 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-use Icecave\Overpass\Amqp\AmqpDeclarationManager;
 use Icecave\Overpass\Amqp\PubSub\AmqpSubscriber;
-use Icecave\Overpass\Serialization\JsonSerialization;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 $connection = new AMQPStreamConnection(
     'localhost',
@@ -16,9 +14,7 @@ $connection = new AMQPStreamConnection(
 );
 
 $subscriber = new AmqpSubscriber(
-    $connection->channel(),
-    new AmqpDeclarationManager,
-    new JsonSerialization
+    $connection->channel()
 );
 
 $subscriber->subscribe(
@@ -29,7 +25,7 @@ $subscriber->subscribe(
 
 $subscriber->consume(
     function ($topic, $payload) {
-        printf('<== %s %s' . PHP_EOL, $topic, $payload);
+        printf('<== %s %s' . PHP_EOL, $topic, $payload->counter);
 
         return true;
     }

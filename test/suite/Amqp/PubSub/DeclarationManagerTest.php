@@ -1,12 +1,11 @@
 <?php
 namespace Icecave\Overpass\Amqp\PubSub;
 
-use Icecave\Overpass\Amqp\AmqpDeclarationManager;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PHPUnit_Framework_TestCase;
 
-class AmqpDeclarationManagerTest extends PHPUnit_Framework_TestCase
+class DeclarationManagerTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -16,12 +15,12 @@ class AmqpDeclarationManagerTest extends PHPUnit_Framework_TestCase
             ->queue_declare(Phake::anyParameters())
             ->thenReturn(['<queue>', 0, 0]);
 
-        $this->declarationManager = new AmqpDeclarationManager();
+        $this->declarationManager = new DeclarationManager($this->channel);
     }
 
-    public function testPubSubExchange()
+    public function testExchange()
     {
-        $name = $this->declarationManager->pubSubExchange($this->channel);
+        $name = $this->declarationManager->exchange();
 
         Phake::verify($this->channel)->exchange_declare(
             'overpass.pubsub',
@@ -37,9 +36,23 @@ class AmqpDeclarationManagerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testExclusiveQueue()
+    public function testExchangeDeclaresOnce()
     {
-        $name = $this->declarationManager->exclusiveQueue($this->channel);
+        $this->declarationManager->exchange();
+
+        $this->assertSame(
+            'overpass.pubsub',
+            $this->declarationManager->exchange()
+        );
+
+        Phake::verify($this->channel, Phake::times(1))->exchange_declare(
+            Phake::anyParameters()
+        );
+    }
+
+    public function testQueue()
+    {
+        $name = $this->declarationManager->queue();
 
         Phake::verify($this->channel)->queue_declare(
             '',    // name
@@ -54,17 +67,20 @@ class AmqpDeclarationManagerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testRpcQueue()
+    public function testQueueDeclaresOnce()
     {
-        $name = $this->declarationManager->rpcQueue($this->channel, 'foo.bar');
-
-        Phake::verify($this->channel)->queue_declare(
-            'overpass.rpc.foo.bar'
-        );
+        $this->declarationManager->queue();
 
         $this->assertSame(
             '<queue>',
-            $name
+            $this->declarationManager->queue()
+        );
+
+        Phake::verify($this->channel)->queue_declare(
+            '',    // name
+            false, // passive
+            false, // durable,
+            true   // exclusive
         );
     }
 }

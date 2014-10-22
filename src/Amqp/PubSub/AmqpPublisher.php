@@ -1,8 +1,8 @@
 <?php
 namespace Icecave\Overpass\Amqp\PubSub;
 
-use Icecave\Overpass\Amqp\AmqpDeclarationManager;
 use Icecave\Overpass\PubSub\PublisherInterface;
+use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -10,18 +10,18 @@ use PhpAmqpLib\Message\AMQPMessage;
 class AmqpPublisher implements PublisherInterface
 {
     /**
-     * @param AMQPChannel            $channel
-     * @param AmqpDeclarationManager $declarationManager
-     * @param SerializationInterface $serialization
+     * @param AMQPChannel                 $channel
+     * @param DeclarationManager|null     $declarationManager
+     * @param SerializationInterface|null $serialization
      */
     public function __construct(
         AMQPChannel $channel,
-        AmqpDeclarationManager $declarationManager,
-        SerializationInterface $serialization
+        DeclarationManager $declarationManager = null,
+        SerializationInterface $serialization = null
     ) {
         $this->channel = $channel;
-        $this->declarationManager = $declarationManager;
-        $this->serialization = $serialization;
+        $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
+        $this->serialization = $serialization ?: new JsonSerialization();
     }
 
     /**
@@ -32,30 +32,18 @@ class AmqpPublisher implements PublisherInterface
      */
     public function publish($topic, $payload)
     {
-        $this->initialize();
-
-        $message = new AMQPMessage(
-            $this->serialization->serialize($payload)
-        );
+        $payload = $this
+            ->serialization
+            ->serialize($payload);
 
         $this->channel->basic_publish(
-            $message,
-            $this->exchange,
+            new AMQPMessage($payload),
+            $this->declarationManager->exchange(),
             $topic
         );
     }
 
-    private function initialize()
-    {
-        if ($this->exchange) {
-            return;
-        }
-
-        $this->exchange = $this->declarationManager->pubSubExchange($this->channel);
-    }
-
     private $channel;
-    private $exchange;
     private $declarationManager;
     private $serialization;
 }

@@ -2,9 +2,7 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
-use Icecave\Overpass\Amqp\AmqpDeclarationManager;
 use Icecave\Overpass\Amqp\PubSub\AmqpPublisher;
-use Icecave\Overpass\Serialization\JsonSerialization;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 $connection = new AMQPStreamConnection(
@@ -17,21 +15,21 @@ $connection = new AMQPStreamConnection(
 
 $topic = isset($_SERVER['argv'][1])
         ? $_SERVER['argv'][1]
-        : '';
+        : 'default-topic';
 
 $publisher = new AmqpPublisher(
-    $connection->channel(),
-    new AmqpDeclarationManager,
-    new JsonSerialization
+    $connection->channel()
 );
 
 $payloadCounter = 1;
-$sleep = 1000000;
 
 while (true) {
-    $publisher->publish($topic, $payloadCounter++);
+    $publisher->publish(
+        $topic,
+        (object) [ 'counter' => $payloadCounter++ ]
+    );
 
-    echo '.';
+    printf('==> %s %s' . PHP_EOL, $topic, $payloadCounter);
 
-    usleep($sleep);
+    usleep(10000);
 }
