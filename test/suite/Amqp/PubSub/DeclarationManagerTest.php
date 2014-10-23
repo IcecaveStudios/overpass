@@ -23,7 +23,7 @@ class DeclarationManagerTest extends PHPUnit_Framework_TestCase
         $name = $this->declarationManager->exchange();
 
         Phake::verify($this->channel)->exchange_declare(
-            'overpass.pubsub',
+            'overpass/pubsub',
             'topic',
             false, // passive,
             false, // durable,
@@ -31,7 +31,7 @@ class DeclarationManagerTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertSame(
-            'overpass.pubsub',
+            'overpass/pubsub',
             $name
         );
     }
@@ -41,7 +41,7 @@ class DeclarationManagerTest extends PHPUnit_Framework_TestCase
         $this->declarationManager->exchange();
 
         $this->assertSame(
-            'overpass.pubsub',
+            'overpass/pubsub',
             $this->declarationManager->exchange()
         );
 

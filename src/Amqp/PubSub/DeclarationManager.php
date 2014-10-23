@@ -22,7 +22,7 @@ class DeclarationManager
             return $this->exchange;
         }
 
-        $name = 'overpass.pubsub';
+        $name = 'overpass/pubsub';
 
         $this->channel->exchange_declare(
             $name,

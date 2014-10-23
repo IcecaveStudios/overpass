@@ -26,7 +26,7 @@ class DeclarationManager
         }
 
         list($queueName) = $this->channel->queue_declare(
-            'overpass.rpc.' . $procedureName,
+            'overpass/rpc/' . $procedureName,
             false, // passive
             false, // durable
             false, // exclusive

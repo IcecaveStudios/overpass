@@ -31,7 +31,7 @@ class DeclarationManagerTest extends PHPUnit_Framework_TestCase
         $name = $this->declarationManager->requestQueue('procedure-1');
 
         Phake::verify($this->channel)->queue_declare(
-            'overpass.rpc.procedure-1',
+            'overpass/rpc/procedure-1',
             false, // passive
             false, // durable
             false, // exclusive
@@ -39,14 +39,14 @@ class DeclarationManagerTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertSame(
-            'overpass.rpc.procedure-1',
+            'overpass/rpc/procedure-1',
             $name
         );
 
         $name = $this->declarationManager->requestQueue('procedure-2');
 
         Phake::verify($this->channel)->queue_declare(
-            'overpass.rpc.procedure-2',
+            'overpass/rpc/procedure-2',
             false, // passive
             false, // durable
             false, // exclusive
@@ -54,7 +54,7 @@ class DeclarationManagerTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertSame(
-            'overpass.rpc.procedure-2',
+            'overpass/rpc/procedure-2',
             $name
         );
     }
@@ -64,7 +64,7 @@ class DeclarationManagerTest extends PHPUnit_Framework_TestCase
         $this->declarationManager->requestQueue('procedure-name');
 
         $this->assertSame(
-            'overpass.rpc.procedure-name',
+            'overpass/rpc/procedure-name',
             $this->declarationManager->requestQueue('procedure-name')
         );
 
