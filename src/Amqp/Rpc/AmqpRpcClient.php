@@ -2,11 +2,15 @@
 namespace Icecave\Overpass\Amqp\Rpc;
 
 use Exception;
+use Icecave\Overpass\Rpc\Message\Request;
+use Icecave\Overpass\Rpc\Message\Response;
+use Icecave\Overpass\Rpc\Message\ResponseCode;
 use Icecave\Overpass\Rpc\RpcClientInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use RuntimeException;
 
 class AmqpRpcClient implements RpcClientInterface
 {
@@ -38,32 +42,13 @@ class AmqpRpcClient implements RpcClientInterface
     {
         $this->initialize();
 
-        $this->channel->basic_publish(
-            $this->createMessage($name, $arguments),
-            '', // default direct exchange
-            $this->declarationManager->requestQueue($name)
+        $this->send(
+            Request::create($name, $arguments)
         );
 
-        $this->response = null;
-
-        while (
-            null === $this->response
-            && $this->channel->callbacks
-        ) {
-            $this->channel->wait();
-        }
-
-        $response = $this->response;
-        $this->response = null;
-
-        if (count($response) === 1) {
-            return $response[0];
-        }
-
-        list($code, $reason) = $response;
-
-        // TODO throw proper exception type ...
-        throw new Exception($reason, $code);
+        return $this
+            ->wait()
+            ->extract();
     }
 
     /**
@@ -79,6 +64,9 @@ class AmqpRpcClient implements RpcClientInterface
         return $this->call($name, $arguments);
     }
 
+    /**
+     * Initialize AMQP resources.
+     */
     private function initialize()
     {
         if ($this->consumerTag) {
@@ -93,47 +81,79 @@ class AmqpRpcClient implements RpcClientInterface
             true,  // exclusive
             false, // no wait
             function ($message) {
-                $this->dispatch($message);
+                $this->recv($message);
             }
         );
     }
 
-    private function dispatch(AMQPMessage $message)
+    /**
+     * Send an RPC request.
+     *
+     * @param Request $request
+     */
+    private function send(Request $request)
+    {
+        $payload = $this
+            ->serialization
+            ->serialize($request);
+
+        $message = new AMQPMessage(
+            $payload,
+            [
+                'reply_to'       => $this->declarationManager->responseQueue(),
+                'correlation_id' => ++$this->correlationId,
+            ]
+        );
+
+        $this->channel->basic_publish(
+            $message,
+            '', // default direct exchange
+            $this->declarationManager->requestQueue($request->name())
+        );
+    }
+
+    /**
+     * Receive an RPC response.
+     *
+     * @param AMQPMessage $message
+     */
+    private function recv(AMQPMessage $message)
     {
         $correlationId = $message->get('correlation_id');
 
         if ($correlationId < $this->correlationId) {
             return;
         } elseif ($correlationId > $this->correlationId) {
-            throw new RuntimeException('Response skipped.'); // TODO improve
+            throw new RuntimeException(
+                'Out-of-order RPC response returned by server.'
+            );
         }
 
-        $this->response = $this
+        $payload = $this
             ->serialization
             ->unserialize($message->body);
+
+        $this->response = Response::createFromPayload($payload);
     }
 
     /**
-     * Create the RPC request message.
+     * Wait for an RPC response.
      *
-     * @param string $procedureName
-     * @param array  $arguments
-     *
-     * @return AMQPMessage
+     * @return Response
      */
-    private function createMessage($procedureName, array $arguments)
+    private function wait()
     {
-        $payload = $this
-            ->serialization
-            ->serialize($arguments);
+        while (
+            !$this->response
+            && $this->channel->callbacks
+        ) {
+            $this->channel->wait();
+        }
 
-        return new AMQPMessage(
-            $payload,
-            [
-                'reply_to' => $this->declarationManager->responseQueue(),
-                'correlation_id' => ++$this->correlationId,
-            ]
-        );
+        $response = $this->response;
+        $this->response = null;
+
+        return $response;
     }
 
     private $channel;
