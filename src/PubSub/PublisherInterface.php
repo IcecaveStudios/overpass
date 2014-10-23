@@ -1,7 +1,9 @@
 <?php
 namespace Icecave\Overpass\PubSub;
 
-interface PublisherInterface
+use Psr\Log\LoggerAwareInterface;
+
+interface PublisherInterface extends LoggerAwareInterface
 {
     /**
      * Publish a message.

@@ -2,13 +2,17 @@
 namespace Icecave\Overpass\Amqp\PubSub;
 
 use Icecave\Overpass\PubSub\SubscriberInterface;
-use Icecave\Overpass\Serialization\SerializationInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
+use Icecave\Overpass\Serialization\SerializationInterface;
+use Icecave\Repr\Repr;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\Log\LoggerAwareTrait;
 
 class AmqpSubscriber implements SubscriberInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @param AMQPChannel                 $channel
      * @param DeclarationManager|null     $declarationManager
@@ -31,19 +35,28 @@ class AmqpSubscriber implements SubscriberInterface
      */
     public function subscribe($topic)
     {
-        $topic = $this->normalizeTopic($topic);
+        $normalizedTopic = $this->normalizeTopic($topic);
 
-        if (isset($this->subscriptions[$topic])) {
+        if (isset($this->subscriptions[$normalizedTopic])) {
             return;
         }
 
         $this->channel->queue_bind(
             $this->declarationManager->queue(),
             $this->declarationManager->exchange(),
-            $topic
+            $normalizedTopic
         );
 
-        $this->subscriptions[$topic] = true;
+        $this->subscriptions[$normalizedTopic] = true;
+
+        if ($this->logger) {
+            $this->logger->debug(
+                'Subscribed to topic "{topic}"',
+                [
+                    'topic' => $topic,
+                ]
+            );
+        }
     }
 
     /**
@@ -53,19 +66,28 @@ class AmqpSubscriber implements SubscriberInterface
      */
     public function unsubscribe($topic)
     {
-        $topic = $this->normalizeTopic($topic);
+        $normalizedTopic = $this->normalizeTopic($topic);
 
-        if (!isset($this->subscriptions[$topic])) {
+        if (!isset($this->subscriptions[$normalizedTopic])) {
             return;
         }
 
         $this->channel->queue_unbind(
             $this->declarationManager->queue(),
             $this->declarationManager->exchange(),
-            $topic
+            $normalizedTopic
         );
 
-        unset($this->subscriptions[$topic]);
+        unset($this->subscriptions[$normalizedTopic]);
+
+        if ($this->logger) {
+            $this->logger->debug(
+                'Unsubscribed from topic "{topic}"',
+                [
+                    'topic' => $topic,
+                ]
+            );
+        }
     }
 
     /**
@@ -134,10 +156,22 @@ class AmqpSubscriber implements SubscriberInterface
             ->serialization
             ->unserialize($message->body);
 
+        $topic = $message->get('routing_key');
+
+        if ($this->logger) {
+            $this->logger->debug(
+                'Received {payload} from topic "{topic}"',
+                [
+                    'topic' => $topic,
+                    'payload' => Repr::repr($payload),
+                ]
+            );
+        }
+
         $callback = $this->consumerCallback;
 
         $keepConsuming = $callback(
-            $message->get('routing_key'),
+            $topic,
             $payload
         );
 

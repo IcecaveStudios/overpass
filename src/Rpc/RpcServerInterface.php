@@ -1,7 +1,9 @@
 <?php
 namespace Icecave\Overpass\Rpc;
 
-interface RpcServerInterface
+use Psr\Log\LoggerAwareInterface;
+
+interface RpcServerInterface extends LoggerAwareInterface
 {
     /**
      * Get the registry used by this server to resolve procedure names.

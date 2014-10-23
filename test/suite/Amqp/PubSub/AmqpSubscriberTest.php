@@ -2,11 +2,13 @@
 namespace Icecave\Overpass\Amqp\PubSub;
 
 use Icecave\Overpass\Serialization\SerializationInterface;
+use Icecave\Repr\Repr;
 use LogicException;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit_Framework_TestCase;
+use Psr\Log\LoggerInterface;
 
 class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
 {
@@ -15,6 +17,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         $this->channel = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
         $this->serialization = Phake::mock(SerializationInterface::class);
+        $this->logger = Phake::mock(LoggerInterface::class);
         $this->message = new AMQPMessage('<payload>');
         $this->message->delivery_info['routing_key'] = 'subscription-topic';
         $this->payload = (object) ['payload' => true];
@@ -113,6 +116,20 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSubscribeLogging()
+    {
+        $this->subscriber->setLogger($this->logger);
+
+        $this->subscriber->subscribe('subscription.?.topic');
+
+        Phake::verify($this->logger)->debug(
+            'Subscribed to topic "{topic}"',
+            [
+                'topic' => 'subscription.?.topic',
+            ]
+        );
+    }
+
     public function testUnsubscribe()
     {
         $this->subscriber->subscribe('subscription-topic');
@@ -155,6 +172,21 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
             '<queue>',
             '<exchange>',
             'subscription.#.topic'
+        );
+    }
+
+    public function testUnsubscribeLogging()
+    {
+        $this->subscriber->setLogger($this->logger);
+
+        $this->subscriber->subscribe('subscription.?.topic');
+        $this->subscriber->unsubscribe('subscription.?.topic');
+
+        Phake::verify($this->logger)->debug(
+            'Unsubscribed from topic "{topic}"',
+            [
+                'topic' => 'subscription.?.topic',
+            ]
         );
     }
 
@@ -238,5 +270,39 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         $this->subscriber->consume($consumer);
 
         Phake::verifyNoInteraction($this->channel);
+    }
+
+    public function testConsumeLogging()
+    {
+        $this->subscriber->setLogger($this->logger);
+
+        $consumer = function () {
+            return false;
+        };
+
+        $this->subscriber->subscribe('subscription-topic');
+        $this->subscriber->consume($consumer);
+
+        $handler = null;
+
+        Phake::verify($this->channel)->basic_consume(
+            '<queue>',
+            '',
+            false, // no local
+            true,  // no ack
+            true,  // exclusive
+            false, // no wait
+            Phake::capture($handler)
+        );
+
+        $handler($this->message);
+
+        Phake::verify($this->logger)->debug(
+            'Received {payload} from topic "{topic}"',
+            [
+                'topic' => 'subscription-topic',
+                'payload' => Repr::repr($this->payload),
+            ]
+        );
     }
 }

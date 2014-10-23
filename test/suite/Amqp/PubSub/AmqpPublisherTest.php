@@ -2,10 +2,12 @@
 namespace Icecave\Overpass\Amqp\PubSub;
 
 use Icecave\Overpass\Serialization\SerializationInterface;
+use Icecave\Repr\Repr;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit_Framework_TestCase;
+use Psr\Log\LoggerInterface;
 
 class AmqpPublisherTest extends PHPUnit_Framework_TestCase
 {
@@ -14,6 +16,7 @@ class AmqpPublisherTest extends PHPUnit_Framework_TestCase
         $this->channel = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
         $this->serialization = Phake::mock(SerializationInterface::class);
+        $this->logger = Phake::mock(LoggerInterface::class);
 
         Phake::when($this->declarationManager)
             ->exchange()
@@ -41,6 +44,21 @@ class AmqpPublisherTest extends PHPUnit_Framework_TestCase
                 '<exchange>',
                 'subscription-topic'
             )
+        );
+    }
+
+    public function testPublishLogging()
+    {
+        $this->publisher->setLogger($this->logger);
+
+        $this->publisher->publish('subscription-topic', 'bar');
+
+        Phake::verify($this->logger)->debug(
+            'Published {payload} to topic "{topic}"',
+            [
+                'topic' => 'subscription-topic',
+                'payload' => Repr::repr('bar'),
+            ]
         );
     }
 }

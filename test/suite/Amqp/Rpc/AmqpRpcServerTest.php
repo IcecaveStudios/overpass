@@ -9,6 +9,7 @@ use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit_Framework_TestCase;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
@@ -19,6 +20,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $this->channel = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
         $this->serialization = new JsonSerialization();
+        $this->logger = Phake::mock(LoggerInterface::class);
         $this->procedure1 = Phake::mock(ProcedureInterface::class);
         $this->procedure2 = Phake::mock(ProcedureInterface::class);
         $this->consumerTagCounter = 0;

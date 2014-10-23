@@ -1,7 +1,9 @@
 <?php
 namespace Icecave\Overpass\Rpc;
 
-interface RpcClientInterface
+use Psr\Log\LoggerAwareInterface;
+
+interface RpcClientInterface extends LoggerAwareInterface
 {
     /**
      * Invoke a remote procedure.

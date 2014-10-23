@@ -11,9 +11,12 @@ use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\Log\LoggerAwareTrait;
 
 class AmqpRpcServer implements RpcServerInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @param RegistryInterface           $registry
      * @param AMQPChannel                 $channel
@@ -110,7 +113,10 @@ class AmqpRpcServer implements RpcServerInterface
         // Include the correlation ID in the response if one was provided ...
         $properties = [];
         if ($message->has('correlation_id')) {
-            $properties['correlation_id'] = $message->get('correlation_id');
+            $correlationId = $message->get('correlation_id');
+            $properties['correlation_id'] = $correlationId;
+        } else {
+            $correlationId = null;
         }
 
         // Send the response ...
@@ -119,6 +125,12 @@ class AmqpRpcServer implements RpcServerInterface
             '', // default direct exchange
             $message->get('reply_to')
         );
+
+        if ($this->logger) {
+            $this->logger->debug(
+                // log response
+            );
+        }
     }
 
     /**
@@ -145,6 +157,12 @@ class AmqpRpcServer implements RpcServerInterface
                 $message->get('delivery_tag')
             );
 
+            if ($this->logger) {
+                $this->logger->debug(
+                    // log ackknowledgement
+                );
+            }
+
             $response = Response::create(
                 $procedure->invoke($request->arguments())
             );
@@ -157,6 +175,12 @@ class AmqpRpcServer implements RpcServerInterface
                 $message->get('delivery_tag'),
                 true
             );
+
+            if ($this->logger) {
+                $this->logger->debug(
+                    // log rejection
+                );
+            }
 
             return;
         } catch (Exception $e) {

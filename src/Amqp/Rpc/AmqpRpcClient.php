@@ -6,12 +6,16 @@ use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\RpcClientInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
+use Icecave\Repr\Repr;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\Log\LoggerAwareTrait;
 use RuntimeException;
 
 class AmqpRpcClient implements RpcClientInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @param AMQPChannel                 $channel
      * @param DeclarationManager|null     $declarationManager
@@ -40,13 +44,37 @@ class AmqpRpcClient implements RpcClientInterface
     {
         $this->initialize();
 
+        $correlationId = ++$this->correlationId;
+
+        if ($this->logger) {
+            $this->logger->debug(
+                'Call #{id} invoke "{procedure}" with {arguments}',
+                [
+                    'procedure' => $name,
+                    'arguments' => Repr::repr($arguments),
+                    'id' => $correlationId
+                ]
+            );
+        }
+
         $this->send(
             Request::create($name, $arguments)
         );
 
-        return $this
-            ->wait()
-            ->extract();
+        $response = $this->wait();
+
+        if ($this->logger) {
+            $this->logger->debug(
+                'Call #{id} invoke "{procedure}" with {arguments}: {code} {value}',
+                [
+                    'code' => $response->code()->key(),
+                    'value' => Repr::repr($response->value()),
+                    'id' => $correlationId
+                ]
+            );
+        }
+
+        return $response->extract();
     }
 
     /**
@@ -99,7 +127,7 @@ class AmqpRpcClient implements RpcClientInterface
             $payload,
             [
                 'reply_to'       => $this->declarationManager->responseQueue(),
-                'correlation_id' => ++$this->correlationId,
+                'correlation_id' => $this->correlationId,
             ]
         );
 
