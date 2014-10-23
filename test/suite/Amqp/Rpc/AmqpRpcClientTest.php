@@ -4,7 +4,7 @@ namespace Icecave\Overpass\Amqp\Rpc;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
-use Icecave\Overpass\Serialization\SerializationInterface;
+use Icecave\Overpass\Serialization\JsonSerialization;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -17,7 +17,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
     {
         $this->channel = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
-        $this->serialization = Phake::mock(SerializationInterface::class);
+        $this->serialization = new JsonSerialization;
         $this->callback = null;
 
         // Store the handler as soon as basic_consume is called ...
@@ -44,7 +44,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
             ->thenGetReturnByLambda(
                 function () {
                     $message = new AMQPMessage(
-                        '<response-payload>',
+                        '[0,123]',
                         [
                             'correlation_id' => 1,
                         ]
@@ -55,7 +55,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
             )->thenGetReturnByLambda(
                 function () {
                     $message = new AMQPMessage(
-                        '<response-payload>',
+                        '[0,456]',
                         [
                             'correlation_id' => 2,
                         ]
@@ -75,16 +75,6 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
                 function ($name) {
                     return sprintf('<request-queue-%s>', $name);
                 }
-            );
-
-        Phake::when($this->serialization)
-            ->serialize(Phake::anyParameters())
-            ->thenReturn('<request-payload>');
-
-        Phake::when($this->serialization)
-            ->unserialize('<response-payload>')
-            ->thenReturn(
-                [ResponseCode::SUCCESS, 123]
             );
 
         $this->client = new AmqpRpcClient(
@@ -123,13 +113,9 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
             '<request-queue-procedure-name>'
         );
 
-        Phake::verify($this->serialization)->serialize(
-            Request::create('procedure-name', [1, 2, 3])
-        );
-
         $this->assertEquals(
             new AMQPMessage(
-                '<request-payload>',
+                '["procedure-name",[1,2,3]]',
                 [
                     'reply_to' => '<response-queue>',
                     'correlation_id' => 1,
@@ -162,7 +148,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
             )->thenGetReturnByLambda(
                 function () {
                     $message = new AMQPMessage(
-                        '<response-payload>',
+                        '[0,123]',
                         [
                             'correlation_id' => 1,
                         ]
@@ -172,7 +158,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
                 }
             );
 
-        $this->client->call('procedure-name', [1, 2, 3]);
+        $result = $this->client->call('procedure-name', [1, 2, 3]);
 
         $message = null;
 
@@ -185,6 +171,11 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             1,
             $message->get('correlation_id')
+        );
+
+        $this->assertSame(
+            123,
+            $result
         );
     }
 
@@ -226,10 +217,6 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
     public function testCallMagicMethod()
     {
         $result = $this->client->procedure(1, 2, 3);
-
-        Phake::verify($this->serialization)->serialize(
-            Request::create('procedure', [1, 2, 3])
-        );
 
         $this->assertSame(
             123,

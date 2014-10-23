@@ -2,6 +2,11 @@
 namespace Icecave\Overpass\Amqp\Rpc;
 
 use Exception;
+use Icecave\Overpass\Rpc\Exception\UnknownProcedureException;
+use Icecave\Overpass\Rpc\Message\Request;
+use Icecave\Overpass\Rpc\Message\Response;
+use Icecave\Overpass\Rpc\Message\ResponseCode;
+use Icecave\Overpass\Rpc\RegistryInterface;
 use Icecave\Overpass\Rpc\RpcServerInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
@@ -11,55 +16,32 @@ use PhpAmqpLib\Message\AMQPMessage;
 class AmqpRpcServer implements RpcServerInterface
 {
     /**
+     * @param RegistryInterface           $registry
      * @param AMQPChannel                 $channel
      * @param DeclarationManager|null     $declarationManager
      * @param SerializationInterface|null $serialization
      */
     public function __construct(
+        RegistryInterface $registry,
         AMQPChannel $channel,
         DeclarationManager $declarationManager = null,
         SerializationInterface $serialization = null
     ) {
+        $this->registry = $registry;
         $this->channel = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
         $this->serialization = $serialization ?: new JsonSerialization();
-        $this->procedures = [];
+        $this->consumerTags = [];
     }
 
     /**
-     * Register a procedure with the RPC server.
+     * Get the registry used by this server to resolve procedure names.
      *
-     * @param string   $name      The name the under which the procedure is exposed.
-     * @param callable $procedure The procedure to expose.
+     * @return RegistryInterface The procedure registry.
      */
-    public function register($name, callable $procedure)
+    public function registry()
     {
-        $this->procedures[$name] = (object) [
-            'invoker' => new Procedure($procedure),
-            'consumerTag' => null,
-        ];
-    }
-
-    /**
-     * Unregister a procedure with the RPC server.
-     *
-     * @param string $name The name the under which the procedure is exposed.
-     */
-    public function unregister($name)
-    {
-        unset($this->procedures[$name]);
-    }
-
-    /**
-     * Check if the RPC server has a procedure registered under the given name.
-     *
-     * @param string $name The name the under which the procedure is exposed.
-     *
-     * @param boolean True if there is a procedure with the given name.
-     */
-    public function has($name)
-    {
-        return isset($this->procedures[$name]);
+        return $this->registry;
     }
 
     /**
@@ -67,27 +49,31 @@ class AmqpRpcServer implements RpcServerInterface
      */
     public function run()
     {
-        if (!$this->procedures) {
+        if ($this->registry->isEmpty()) {
             return;
         }
 
-        foreach ($this->procedures as $procedureName => $procedure) {
-            $procedure->consumerTag = $this->channel->basic_consume(
+        $handler = function ($message) {
+            $this->recv($message);
+        };
+
+        foreach ($this->registry->procedures() as $procedureName) {
+            $this->consumerTags[$procedureName] = $this->channel->basic_consume(
                 $this->declarationManager->requestQueue($procedureName),
-                '',
+                '',    // consumer tag
                 false, // no local
                 false, // no ack
                 false, // exclusive
                 false, // no wait
-                function ($message) use ($procedureName) {
-                    $this->dispatch($procedureName, $message);
-                }
+                $handler
             );
         }
 
         while ($this->channel->callbacks) {
             $this->channel->wait();
         }
+
+        $this->stop();
     }
 
     /**
@@ -95,71 +81,23 @@ class AmqpRpcServer implements RpcServerInterface
      */
     public function stop()
     {
-        foreach ($this->procesures as $procedure) {
-            if ($procedure->consumerTag) {
-                $this->channel->basic_cancel($procedure->consumerTag);
-                $procedure->consumerTag = null;
-            }
+        $consumerTags = $this->consumerTags;
+
+        foreach ($consumerTags as $procedureName => $consumerTag) {
+            $this->channel->basic_cancel($consumerTag);
+            unset($this->consumerTags[$procedureName]);
         }
-    }
-
-    private function dispatch($procedureName, AMQPMessage $message)
-    {
-        // The procedure is no longer exposed, but may still be handled by
-        // another RPC server, so reject the message and instruct the server to
-        // re-queue the message ...
-        if (!$this->has($procedureName)) {
-            $this->channel->basic_reject(
-                $message->get('delivery_tag'),
-                true
-            );
-
-            return;
-        }
-
-        // Commit to handle this request. The acknowledgement must be sent
-        // *before* the procedure is called, otherwise a procedure call that
-        // fails midway through may be retried and we cannot guarantee that such
-        // behaviour is safe for all exposed procedures ...
-        $this->channel->basic_ack(
-            $message->get('delivery_tag')
-        );
-
-        try {
-            // Unserialize the arguments ...
-            $arguments = $this
-                ->serialization
-                ->unserialize($message->body);
-
-            // Attempt to invoke the procedure. Successful responses are encoded
-            // as 1-tuple containing the result ...
-            $response = [
-                $this
-                    ->procedures[$procedureName]
-                    ->invoker
-                    ->invoke($arguments)
-            ];
-        } catch (Exception $e) {
-            // Failure responses are encoded as a 2-tuple containing the error
-            // code and exception message ...
-            $response = [
-                $e->getCode(),
-                $e->getMessage(),
-            ];
-        }
-
-        $this->respond($message, $response);
     }
 
     /**
-     * Send a payload in response to a previously received message.
+     * Send an RPC response as a reply to a previously received request.
      *
      * @param AMQPMessage $message
      * @param mixed       $payload
      */
-    private function respond(AMQPMessage $message, $payload)
+    private function send(AMQPMessage $message, Response $response)
     {
-        // The message did not supply a reply queue, and is therefore
+        // The client did not supply a reply queue, and is therefore
         // uninterested in the result ...
         if (!$message->has('reply_to')) {
             return;
@@ -168,7 +106,7 @@ class AmqpRpcServer implements RpcServerInterface
         // Serialize the response payload ...
         $payload = $this
             ->serialization
-            ->serialize($payload);
+            ->serialize($response);
 
         // Include the correlation ID in the response if one was provided ...
         $properties = [];
@@ -184,8 +122,54 @@ class AmqpRpcServer implements RpcServerInterface
         );
     }
 
+    /**
+     * Receive an RPC request.
+     *
+     * @param AMQPMessage $message
+     */
+    private function recv(AMQPMessage $message)
+    {
+        try {
+            $payload = $this
+                ->serialization
+                ->unserialize($message->body);
+
+            $request = Request::createFromPayload($payload);
+
+            $procedure = $this->registry->get($request->name());
+
+            // Commit to handle this request. The acknowledgement must be sent
+            // *before* the procedure is called, otherwise a procedure that
+            // fails midway through may be retried and we cannot guarantee that
+            // such behaviour is safe for all exposed procedures ...
+            $this->channel->basic_ack(
+                $message->get('delivery_tag')
+            );
+
+            $response = Response::create(
+                $procedure->invoke($request->arguments())
+            );
+
+        // This could occur if the procedure is unregistered after a client has
+        // already enqueued a request. The request is requeued as it may be
+        // served by a different RPC server ...
+        } catch (UnknownProcedureException $e) {
+            $this->channel->basic_reject(
+                $message->get('delivery_tag'),
+                true
+            );
+
+            return;
+        } catch (Exception $e) {
+            $response = Response::createFromException($e);
+        }
+
+        $this->send($message, $response);
+    }
+
+    private $registry;
     private $channel;
     private $declarationManager;
     private $serialization;
-    private $procedures;
+    private $consumerTags;
 }
