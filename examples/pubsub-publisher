@@ -20,6 +20,10 @@ $topic = isset($_SERVER['argv'][1])
         ? $_SERVER['argv'][1]
         : 'default-topic';
 
+$sleep = isset($_SERVER['argv'][2])
+        ? $_SERVER['argv'][2]
+        : 10000;
+
 $publisher = new AmqpPublisher(
     $connection->channel()
 );
@@ -34,5 +38,5 @@ while (true) {
 
     printf('[publisher] ==> %s %s' . PHP_EOL, $topic, $payloadCounter);
 
-    usleep(10000);
+    usleep($sleep);
 }

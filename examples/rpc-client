@@ -16,6 +16,10 @@ $connection = new AMQPStreamConnection(
     '/'
 );
 
+$sleep = isset($_SERVER['argv'][1])
+        ? $_SERVER['argv'][1]
+        : 1000000;
+
 $client = new AmqpRpcClient(
     $connection->channel()
 );
@@ -23,9 +27,11 @@ $client = new AmqpRpcClient(
 $value = 0;
 
 while (true) {
-    $value++;
-    printf('[client] ==> double(%d)' . PHP_EOL, $value);
+    printf('[client] ==> double(%d)' . PHP_EOL, $value++);
+
     $result = $client->double($value);
+
     printf('[client] <== %s' . PHP_EOL, $result);
-    sleep(1);
+
+    usleep($sleep);
 }
