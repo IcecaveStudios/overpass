@@ -1,10 +1,8 @@
 <?php
 namespace Icecave\Overpass\Amqp\Rpc;
 
-use Exception;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
-use Icecave\Overpass\Rpc\Message\ResponseCode;
 use Icecave\Overpass\Rpc\RpcClientInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;

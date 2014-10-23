@@ -6,7 +6,6 @@ use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
 use Icecave\Overpass\Rpc\Exception\RpcException;
 use Icecave\Overpass\Rpc\Exception\UnknownProcedureException;
 use LogicException;
-use Phake;
 use PHPUnit_Framework_TestCase;
 
 class ResponseTest extends PHPUnit_Framework_TestCase

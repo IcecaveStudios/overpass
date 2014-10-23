@@ -10,8 +10,8 @@ use Icecave\Overpass\Serialization\SerializableInterface;
 class Request implements SerializableInterface
 {
     /**
-     * @param string $name The name of the procedure to call.
-     * @param array $arguments The arguments to pass.
+     * @param string $name      The name of the procedure to call.
+     * @param array  $arguments The arguments to pass.
      */
     private function __construct($name, array $arguments)
     {
@@ -22,8 +22,8 @@ class Request implements SerializableInterface
     /**
      * Create a request.
      *
-     * @param string $name The name of the procedure to call.
-     * @param array $arguments The arguments to pass.
+     * @param string $name      The name of the procedure to call.
+     * @param array  $arguments The arguments to pass.
      *
      * @return Request
      */

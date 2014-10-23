@@ -18,7 +18,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $this->registry = Phake::partialMock(Registry::class);
         $this->channel = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
-        $this->serialization = new JsonSerialization;
+        $this->serialization = new JsonSerialization();
         $this->procedure1 = Phake::mock(ProcedureInterface::class);
         $this->procedure2 = Phake::mock(ProcedureInterface::class);
         $this->consumerTagCounter = 0;

@@ -22,7 +22,7 @@ class Registry implements RegistryInterface
      *
      * @param string $name The public name of the procedure.
      *
-     * @return ProcedureInterface The procedure with the given name.
+     * @return ProcedureInterface        The procedure with the given name.
      * @throws UnknownProcedureException if the given procedure is not registered.
      */
     public function get($name)

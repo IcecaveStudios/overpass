@@ -11,7 +11,7 @@ class RegistryTest extends PHPUnit_Framework_TestCase
     {
         $this->procedure = Phake::mock(ProcedureInterface::class);
 
-        $this->registry = new Registry;
+        $this->registry = new Registry();
     }
 
     public function testRegister()

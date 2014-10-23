@@ -3,7 +3,6 @@ namespace Icecave\Overpass\Amqp\Rpc;
 
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
-use Icecave\Overpass\Rpc\Message\ResponseCode;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -17,7 +16,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
     {
         $this->channel = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
-        $this->serialization = new JsonSerialization;
+        $this->serialization = new JsonSerialization();
         $this->callback = null;
 
         // Store the handler as soon as basic_consume is called ...

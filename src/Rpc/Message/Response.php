@@ -7,7 +7,6 @@ use Icecave\Overpass\Rpc\Exception\RpcException;
 use Icecave\Overpass\Rpc\Exception\RpcExceptionInterface;
 use Icecave\Overpass\Rpc\Exception\UnknownProcedureException;
 use Icecave\Overpass\Serialization\SerializableInterface;
-use LogicException;
 
 /**
  * Represents an RPC response.
@@ -109,7 +108,7 @@ class Response implements SerializableInterface
     /**
      * Extract the return value or exception.
      *
-     * @return mixed The return value (if the response was successful).
+     * @return mixed                 The return value (if the response was successful).
      * @throws RpcExceptionInterface if the response was not successful.
      */
     public function extract()

@@ -2,7 +2,6 @@
 namespace Icecave\Overpass\Rpc\Message;
 
 use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
-use Phake;
 use PHPUnit_Framework_TestCase;
 
 class RequestTest extends PHPUnit_Framework_TestCase

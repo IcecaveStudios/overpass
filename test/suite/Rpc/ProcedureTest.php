@@ -1,8 +1,6 @@
 <?php
 namespace Icecave\Overpass\Rpc;
 
-use Icecave\Overpass\Rpc\Exception\UnknownProcedureException;
-use Phake;
 use PHPUnit_Framework_TestCase;
 
 class ProcedureTest extends PHPUnit_Framework_TestCase

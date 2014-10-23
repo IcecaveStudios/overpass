@@ -2,7 +2,6 @@
 namespace Icecave\Overpass\Rpc\Exception;
 
 use Icecave\Overpass\Rpc\Message\ResponseCode;
-use Phake;
 use PHPUnit_Framework_TestCase;
 
 class RpcExceptionTest extends PHPUnit_Framework_TestCase
