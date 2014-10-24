@@ -4,39 +4,39 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Eloquent\Asplode\Asplode;
 use Icecave\Overpass\Amqp\PubSub\AmqpPublisher;
+use Icecave\Stump\Logger;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 Asplode::install();
 
-$connection = new AMQPStreamConnection(
+// Parse the command line parameters ...
+list(, $sleep, $topic, $server, $port, $username, $password, $vhost) = $_SERVER['argv'] + [
+    null,
+    1,
+    'default-topic',
     'localhost',
     5672,
     'guest',
     'guest',
     '/'
-);
+];
 
-$topic = isset($_SERVER['argv'][1])
-        ? $_SERVER['argv'][1]
-        : 'default-topic';
+// Connect to the AMQP server ...
+$connection = new AMQPStreamConnection($server, $port, $username, $password, $vhost);
 
-$sleep = isset($_SERVER['argv'][2])
-        ? $_SERVER['argv'][2]
-        : 10000;
+// Create an Overpass publisher ...
+$publisher = new AmqpPublisher($connection->channel());
+$publisher->setLogger(new Logger());
 
-$publisher = new AmqpPublisher(
-    $connection->channel()
-);
-
+// Publish messages forever...
 $payloadCounter = 1;
 
 while (true) {
-    $publisher->publish(
-        $topic,
-        (object) [ 'counter' => $payloadCounter++ ]
-    );
+    $payload = (object) [
+        'counter' => $payloadCounter++
+    ];
 
-    printf('[publisher] ==> %s %s' . PHP_EOL, $topic, $payloadCounter);
+    $publisher->publish($topic, $payload);
 
-    usleep($sleep);
+    usleep($sleep * 1000000);
 }

@@ -6,9 +6,12 @@ use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\Log\LoggerAwareTrait;
 
 class AmqpPublisher implements PublisherInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @param AMQPChannel                 $channel
      * @param DeclarationManager|null     $declarationManager
@@ -32,15 +35,27 @@ class AmqpPublisher implements PublisherInterface
      */
     public function publish($topic, $payload)
     {
-        $payload = $this
-            ->serialization
-            ->serialize($payload);
+        $message = new AMQPMessage(
+            $this
+                ->serialization
+                ->serialize($payload)
+        );
 
         $this->channel->basic_publish(
-            new AMQPMessage($payload),
+            $message,
             $this->declarationManager->exchange(),
             $topic
         );
+
+        if ($this->logger) {
+            $this->logger->debug(
+                'Published {payload} to topic "{topic}"',
+                [
+                    'topic' => $topic,
+                    'payload' => json_encode($payload),
+                ]
+            );
+        }
     }
 
     private $channel;

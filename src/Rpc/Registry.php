@@ -22,7 +22,7 @@ class Registry implements RegistryInterface
      *
      * @param string $name The public name of the procedure.
      *
-     * @return ProcedureInterface        The procedure with the given name.
+     * @return callable                  The procedure with the given name.
      * @throws UnknownProcedureException if the given procedure is not registered.
      */
     public function get($name)
@@ -57,15 +57,11 @@ class Registry implements RegistryInterface
     /**
      * Register a procedure.
      *
-     * @param string                      $name      The public name of the procedure.
-     * @param ProcedureInterface|callable $procedure The procedure to register.
+     * @param string   $name      The public name of the procedure.
+     * @param callable $procedure The procedure to register.
      */
-    public function register($name, $procedure)
+    public function register($name, callable $procedure)
     {
-        if (!$procedure instanceof ProcedureInterface) {
-            $procedure = new Procedure($procedure);
-        }
-
         $this->procedures[$name] = $procedure;
     }
 

@@ -8,6 +8,7 @@ use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit_Framework_TestCase;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
@@ -17,6 +18,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         $this->channel = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
         $this->serialization = new JsonSerialization();
+        $this->logger = Phake::mock(LoggerInterface::class);
         $this->callback = null;
 
         // Store the handler as soon as basic_consume is called ...
@@ -210,6 +212,42 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->channel, Phake::times(1))->basic_consume(
             Phake::anyParameters()
+        );
+    }
+
+    public function testCallLogging()
+    {
+        $this->client->setLogger($this->logger);
+
+        $this->client->call('procedure-name', [1, 2, 3]);
+
+        $callback = null;
+
+        Phake::verify($this->channel)->basic_consume(
+            '<response-queue>',
+            '',    // consumer tag
+            false, // no local
+            true,  // no ack
+            true,  // exclusive
+            false, // no wait
+            Phake::capture($callback)
+        );
+
+        Phake::verify($this->logger)->debug(
+            'RPC #{id} {request}',
+            [
+                'id' => 1,
+                'request' => Request::create('procedure-name', [1, 2, 3]),
+            ]
+        );
+
+        Phake::verify($this->logger)->debug(
+            'RPC #{id} {request} -> {response}',
+            [
+                'id' => 1,
+                'request' => Request::create('procedure-name', [1, 2, 3]),
+                'response' => Response::create(123),
+            ]
         );
     }
 

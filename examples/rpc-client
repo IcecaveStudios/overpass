@@ -4,34 +4,36 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Eloquent\Asplode\Asplode;
 use Icecave\Overpass\Amqp\Rpc\AmqpRpcClient;
+use Icecave\Overpass\Rpc\Registry;
+use Icecave\Stump\Logger;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 Asplode::install();
 
-$connection = new AMQPStreamConnection(
+// Parse the command line parameters ...
+list(, $sleep, $server, $port, $username, $password, $vhost) = $_SERVER['argv'] + [
+    null,
+    1,
     'localhost',
     5672,
     'guest',
     'guest',
     '/'
-);
+];
 
-$sleep = isset($_SERVER['argv'][1])
-        ? $_SERVER['argv'][1]
-        : 1000000;
+// Connect to the AMQP server ...
+$connection = new AMQPStreamConnection($server, $port, $username, $password, $vhost);
 
-$client = new AmqpRpcClient(
-    $connection->channel()
-);
+// Create an Overpass RPC client ...
+$client = new AmqpRpcClient($connection->channel());
+$client->setLogger(new Logger());
 
-$value = 0;
-
+// Make RPC calls forever ...
 while (true) {
-    printf('[client] ==> double(%d)' . PHP_EOL, $value++);
-
+    $value = rand(0, 100000);
+    $expected = $value * 2;
     $result = $client->double($value);
+    assert($expected === $result);
 
-    printf('[client] <== %s' . PHP_EOL, $result);
-
-    usleep($sleep);
+    usleep($sleep * 1000000);
 }

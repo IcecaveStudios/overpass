@@ -1,6 +1,7 @@
 <?php
 namespace Icecave\Overpass\Serialization;
 
+use Icecave\Overpass\Serialization\Exception\SerializationException;
 use Phake;
 use PHPUnit_Framework_TestCase;
 
@@ -22,7 +23,7 @@ class JsonSerializationTest extends PHPUnit_Framework_TestCase
     public function testSerializeWithInvalidPayload()
     {
         $this->setExpectedException(
-            'InvalidArgumentException',
+            SerializationException::class,
             'Payload must be an object or an array.'
         );
 
@@ -34,7 +35,7 @@ class JsonSerializationTest extends PHPUnit_Framework_TestCase
     public function testSerializeFailure()
     {
         $this->setExpectedException(
-            'InvalidArgumentException',
+            SerializationException::class,
             'Could not serialize payload.'
         );
 
@@ -68,7 +69,7 @@ class JsonSerializationTest extends PHPUnit_Framework_TestCase
     public function testUnserializeNull()
     {
         $this->setExpectedException(
-            'InvalidArgumentException',
+            SerializationException::class,
             'Payload must be an object or an array.'
         );
 
@@ -78,7 +79,7 @@ class JsonSerializationTest extends PHPUnit_Framework_TestCase
     public function testUnserializeFailure()
     {
         $this->setExpectedException(
-            'InvalidArgumentException',
+            SerializationException::class,
             'Could not unserialize payload.'
         );
 

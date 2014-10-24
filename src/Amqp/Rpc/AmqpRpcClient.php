@@ -8,10 +8,13 @@ use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\Log\LoggerAwareTrait;
 use RuntimeException;
 
 class AmqpRpcClient implements RpcClientInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @param AMQPChannel                 $channel
      * @param DeclarationManager|null     $declarationManager
@@ -40,13 +43,36 @@ class AmqpRpcClient implements RpcClientInterface
     {
         $this->initialize();
 
-        $this->send(
-            Request::create($name, $arguments)
-        );
+        $correlationId = ++$this->correlationId;
 
-        return $this
-            ->wait()
-            ->extract();
+        $request = Request::create($name, $arguments);
+
+        if ($this->logger) {
+            $this->logger->debug(
+                'RPC #{id} {request}',
+                [
+                    'id' => $correlationId,
+                    'request' => $request,
+                ]
+            );
+        }
+
+        $this->send($request);
+
+        $response = $this->wait();
+
+        if ($this->logger) {
+            $this->logger->debug(
+                'RPC #{id} {request} -> {response}',
+                [
+                    'id' => $correlationId,
+                    'request' => $request,
+                    'response' => $response,
+                ]
+            );
+        }
+
+        return $response->extract();
     }
 
     /**
@@ -99,7 +125,7 @@ class AmqpRpcClient implements RpcClientInterface
             $payload,
             [
                 'reply_to'       => $this->declarationManager->responseQueue(),
-                'correlation_id' => ++$this->correlationId,
+                'correlation_id' => $this->correlationId,
             ]
         );
 

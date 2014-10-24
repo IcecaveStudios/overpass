@@ -1,7 +1,9 @@
 <?php
 namespace Icecave\Overpass\PubSub;
 
-interface SubscriberInterface
+use Psr\Log\LoggerAwareInterface;
+
+interface SubscriberInterface extends LoggerAwareInterface
 {
     /**
      * Subscribe to the given topic.

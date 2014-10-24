@@ -4,32 +4,36 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Eloquent\Asplode\Asplode;
 use Icecave\Overpass\Amqp\PubSub\AmqpSubscriber;
+use Icecave\Stump\Logger;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 Asplode::install();
 
-$connection = new AMQPStreamConnection(
+// Parse the command line parameters ...
+list(, $sleep, $topic, $server, $port, $username, $password, $vhost) = $_SERVER['argv'] + [
+    null,
+    0,
+    'default-topic',
     'localhost',
     5672,
     'guest',
     'guest',
     '/'
-);
+];
 
-$subscriber = new AmqpSubscriber(
-    $connection->channel()
-);
+// Connect to the AMQP server ...
+$connection = new AMQPStreamConnection($server, $port, $username, $password, $vhost);
 
-$subscriber->subscribe(
-    isset($_SERVER['argv'][1])
-        ? $_SERVER['argv'][1]
-        : '*'
-);
+// Create an Overpass subscriber ...
+$subscriber = new AmqpSubscriber($connection->channel());
+$subscriber->setLogger(new Logger());
 
+// Consume messages forver ...
+$subscriber->subscribe($topic);
 $subscriber->consume(
-    function ($topic, $payload) {
-        printf('[subscriber] <== %s %s' . PHP_EOL, $topic, $payload->counter);
+    function ($topic, $payload) use ($sleep) {
+        usleep($sleep * 1000000);
 
-        return true;
+        return true; // Instructs the subscriber to continue consuming.
     }
 );
