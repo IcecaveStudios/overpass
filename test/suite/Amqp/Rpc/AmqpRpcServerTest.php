@@ -2,7 +2,6 @@
 namespace Icecave\Overpass\Amqp\Rpc;
 
 use Icecave\Overpass\Rpc\Message\ResponseCode;
-use Icecave\Overpass\Rpc\ProcedureInterface;
 use Icecave\Overpass\Rpc\Registry;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use Phake;
@@ -21,8 +20,9 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $this->declarationManager = Phake::mock(DeclarationManager::class);
         $this->serialization = new JsonSerialization();
         $this->logger = Phake::mock(LoggerInterface::class);
-        $this->procedure1 = Phake::mock(ProcedureInterface::class);
-        $this->procedure2 = Phake::mock(ProcedureInterface::class);
+        $this->procedure1 = function () { return '<procedure-1: ' . implode(', ', func_get_args()) . '>'; };
+        $this->procedure2 = function () { return '<procedure-2: ' . implode(', ', func_get_args()) . '>'; };
+        $this->procedure3 = function () { throw new RuntimeException('The procedure failed!'); };
         $this->consumerTagCounter = 0;
 
         Phake::when($this->channel)
@@ -58,16 +58,9 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 }
             );
 
-        Phake::when($this->procedure1)
-            ->invoke(Phake::anyParameters())
-            ->thenReturn('<procedure-1-result>');
-
-        Phake::when($this->procedure2)
-            ->invoke(Phake::anyParameters())
-            ->thenReturn('<procedure-2-result>');
-
         $this->server = new AmqpRpcServer(
             $this->registry,
+            $this->logger,
             $this->channel,
             $this->declarationManager,
             $this->serialization
@@ -134,11 +127,6 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
             ->thenGetReturnByLambda(
                 function () {
                     $this->server->stop();
-
-                    Phake::verify($this->channel)->basic_cancel('<consumer-tag-1>');
-                    Phake::verify($this->channel)->basic_cancel('<consumer-tag-2>');
-
-                    $this->channel->callbacks = [];
                 }
             );
 
@@ -146,6 +134,9 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $this->registry->register('procedure-2', $this->procedure2);
 
         $this->server->run();
+
+        Phake::verify($this->channel)->basic_cancel('<consumer-tag-1>');
+        Phake::verify($this->channel)->basic_cancel('<consumer-tag-2>');
     }
 
     public function testReceiveRequest()
@@ -182,7 +173,6 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         Phake::inOrder(
             Phake::verify($this->channel)->basic_ack('<delivery-tag>'),
-            Phake::verify($this->procedure1)->invoke([1, 2, 3]),
             Phake::verify($this->channel)->basic_publish(
                 Phake::capture($responseMessage),
                 '', // default direct exchange
@@ -192,7 +182,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             new AMQPMessage(
-                '[' . ResponseCode::SUCCESS . ',"<procedure-1-result>"]',
+                '[' . ResponseCode::SUCCESS . ',"<procedure-1: 1, 2, 3>"]',
                 [
                     'correlation_id' => 456,
                 ]
@@ -203,13 +193,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
     public function testReceiveRequestWithProcedureException()
     {
-        $exception = new RuntimeException('The procedure failed!');
-
-        Phake::when($this->procedure1)
-            ->invoke(Phake::anyParameters())
-            ->thenThrow($exception);
-
-        $this->registry->register('procedure-name', $this->procedure1);
+        $this->registry->register('procedure-name', $this->procedure3);
 
         $this->server->run();
 
@@ -240,7 +224,6 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         Phake::inOrder(
             Phake::verify($this->channel)->basic_ack('<delivery-tag>'),
-            Phake::verify($this->procedure1)->invoke([1, 2, 3]),
             Phake::verify($this->channel)->basic_publish(
                 Phake::capture($responseMessage),
                 '', // default direct exchange
@@ -282,11 +265,6 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         $handler($requestMessage);
 
-        Phake::inOrder(
-            Phake::verify($this->channel)->basic_ack('<delivery-tag>'),
-            Phake::verify($this->procedure1)->invoke([])
-        );
-
         Phake::verify($this->channel, Phake::never())->basic_publish(
             Phake::anyParameters()
         );
@@ -325,7 +303,6 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         Phake::inOrder(
             Phake::verify($this->channel)->basic_ack('<delivery-tag>'),
-            Phake::verify($this->procedure1)->invoke([]),
             Phake::verify($this->channel)->basic_publish(
                 Phake::capture($responseMessage),
                 '', // default direct exchange
@@ -335,42 +312,9 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             new AMQPMessage(
-                '[' . ResponseCode::SUCCESS . ',"<procedure-1-result>"]'
+                '[' . ResponseCode::SUCCESS . ',"<procedure-1: >"]'
             ),
             $responseMessage
         );
-    }
-
-    public function testReceiveRequestWithUnknownProcedure()
-    {
-        $this->registry->register('procedure-name', $this->procedure1);
-
-        $this->server->run();
-
-        $handler = null;
-
-        Phake::verify($this->channel)->basic_consume(
-            '<request-queue-procedure-name>',
-            '',    // consumer tag
-            false, // no local
-            false, // no ack
-            false, // exclusive
-            false, // no wait
-            Phake::capture($handler)
-        );
-
-        $requestMessage = new AMQPMessage(
-            '["unknown-procedure-name",[]]',
-            [
-                'reply_to' => '<response-queue>',
-                'correlation_id' => 456,
-            ]
-        );
-
-        $requestMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
-
-        $handler($requestMessage);
-
-        Phake::verify($this->channel)->basic_reject('<delivery-tag>', true);
     }
 }

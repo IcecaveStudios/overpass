@@ -84,6 +84,21 @@ class Request implements SerializableInterface
         return [$this->name, $this->arguments];
     }
 
+    public function __toString()
+    {
+        return sprintf(
+            '%s(%s)',
+            $this->name,
+            implode(
+                ', ',
+                array_map(
+                    'json_encode',
+                    $this->arguments
+                )
+            )
+        );
+    }
+
     private $name;
     private $arguments;
 }

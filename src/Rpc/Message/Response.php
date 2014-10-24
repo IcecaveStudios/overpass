@@ -136,6 +136,19 @@ class Response implements SerializableInterface
         return [$this->code->value(), $this->value];
     }
 
+    public function __toString()
+    {
+        if (ResponseCode::SUCCESS() === $this->code) {
+            return json_encode($this->value);
+        }
+
+        return sprintf(
+            '%s %s',
+            $this->code,
+            $this->value
+        );
+    }
+
     private $code;
     private $value;
 }

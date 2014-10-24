@@ -6,7 +6,6 @@ use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\RpcClientInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
-use Icecave\Repr\Repr;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerAwareTrait;
@@ -46,30 +45,29 @@ class AmqpRpcClient implements RpcClientInterface
 
         $correlationId = ++$this->correlationId;
 
+        $request = Request::create($name, $arguments);
+
         if ($this->logger) {
             $this->logger->debug(
-                'Call #{id} invoke "{procedure}" with {arguments}',
+                'RPC #{id} {request}',
                 [
-                    'procedure' => $name,
-                    'arguments' => Repr::repr($arguments),
-                    'id' => $correlationId
+                    'id' => $correlationId,
+                    'request' => $request,
                 ]
             );
         }
 
-        $this->send(
-            Request::create($name, $arguments)
-        );
+        $this->send($request);
 
         $response = $this->wait();
 
         if ($this->logger) {
             $this->logger->debug(
-                'Call #{id} invoke "{procedure}" with {arguments}: {code} {value}',
+                'RPC #{id} {request} -> {response}',
                 [
-                    'code' => $response->code()->key(),
-                    'value' => Repr::repr($response->value()),
-                    'id' => $correlationId
+                    'id' => $correlationId,
+                    'request' => $request,
+                    'response' => $response,
                 ]
             );
         }

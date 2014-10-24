@@ -2,14 +2,13 @@
 namespace Icecave\Overpass\Rpc;
 
 use Icecave\Overpass\Rpc\Exception\UnknownProcedureException;
-use Phake;
 use PHPUnit_Framework_TestCase;
 
 class RegistryTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->procedure = Phake::mock(ProcedureInterface::class);
+        $this->procedure = function () {};
 
         $this->registry = new Registry();
     }
@@ -20,28 +19,6 @@ class RegistryTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue(
             $this->registry->has('procedure-name')
-        );
-    }
-
-    public function testRegisterAdaptsCallable()
-    {
-        $this->registry->register(
-            'procedure-name',
-            function () {
-                return 123;
-            }
-        );
-
-        $procedure = $this->registry->get('procedure-name');
-
-        $this->assertInstanceOf(
-            ProcedureInterface::class,
-            $procedure
-        );
-
-        $this->assertSame(
-            123,
-            $procedure->invoke([])
         );
     }
 

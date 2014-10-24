@@ -5,34 +5,35 @@ require __DIR__ . '/../vendor/autoload.php';
 use Eloquent\Asplode\Asplode;
 use Icecave\Overpass\Amqp\Rpc\AmqpRpcServer;
 use Icecave\Overpass\Rpc\Registry;
+use Icecave\Stump\Logger;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 Asplode::install();
 
-$connection = new AMQPStreamConnection(
+// Parse the command line parameters ...
+list(, $server, $port, $username, $password, $vhost) = $_SERVER['argv'] + [
+    null,
     'localhost',
     5672,
     'guest',
     'guest',
     '/'
-);
+];
 
-$registry = new Registry;
+// Connect to the AMQP server ...
+$connection = new AMQPStreamConnection($server, $port, $username, $password, $vhost);
 
+// Create a procedure registry and expose a function that doubles a given number ...
+$registry = new Registry();
 $registry->register(
     'double',
     function ($value) {
-        printf('[server] <== double(%d)' . PHP_EOL, $value);
-        $result = $value * 2;
-        printf('[server] ==> %d' . PHP_EOL, $result);
-
-        return $result;
+        return $value * 2;
     }
 );
 
-$server = new AmqpRpcServer(
-    $registry,
-    $connection->channel()
-);
+// Create an Overpass RPC server ...
+$server = new AmqpRpcServer($registry, new Logger(), $connection->channel());
 
+// Service RPC requests forever ...
 $server->run();

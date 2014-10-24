@@ -3,9 +3,7 @@ namespace Icecave\Overpass\Amqp\Rpc;
 
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
-use Icecave\Overpass\Rpc\Message\ResponseCode;
 use Icecave\Overpass\Serialization\JsonSerialization;
-use Icecave\Repr\Repr;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -236,20 +234,19 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         );
 
         Phake::verify($this->logger)->debug(
-            'Call #{id} invoke "{procedure}" with {arguments}',
+            'RPC #{id} {request}',
             [
-                'procedure' => 'procedure-name',
-                'arguments' => Repr::repr([1, 2, 3]),
                 'id' => 1,
+                'request' => Request::create('procedure-name', [1, 2, 3]),
             ]
         );
 
         Phake::verify($this->logger)->debug(
-            'Call #{id} invoke "{procedure}" with {arguments}: {code} {value}',
+            'RPC #{id} {request} -> {response}',
             [
-                'code' => ResponseCode::SUCCESS()->key(),
-                'value' => Repr::repr(123),
                 'id' => 1,
+                'request' => Request::create('procedure-name', [1, 2, 3]),
+                'response' => Response::create(123),
             ]
         );
     }

@@ -2,7 +2,6 @@
 namespace Icecave\Overpass\Amqp\PubSub;
 
 use Icecave\Overpass\Serialization\SerializationInterface;
-use Icecave\Repr\Repr;
 use LogicException;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -301,7 +300,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
             'Received {payload} from topic "{topic}"',
             [
                 'topic' => 'subscription-topic',
-                'payload' => Repr::repr($this->payload),
+                'payload' => json_encode($this->payload),
             ]
         );
     }

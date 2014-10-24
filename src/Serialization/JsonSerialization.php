@@ -1,7 +1,7 @@
 <?php
 namespace Icecave\Overpass\Serialization;
 
-use InvalidArgumentException;
+use Icecave\Overpass\Serialization\Exception\SerializationException;
 use stdClass;
 
 /**
@@ -30,7 +30,7 @@ class JsonSerialization implements SerializationInterface
             return $buffer;
         }
 
-        throw new InvalidArgumentException('Could not serialize payload.');
+        throw new SerializationException('Could not serialize payload.');
     }
 
     /**
@@ -45,7 +45,7 @@ class JsonSerialization implements SerializationInterface
         $payload = @json_decode($buffer);
 
         if (null === $payload && strcasecmp(trim($buffer), 'null') !== 0) {
-            throw new InvalidArgumentException('Could not unserialize payload.');
+            throw new SerializationException('Could not unserialize payload.');
         }
 
         $this->validatePayload($payload);
@@ -59,7 +59,7 @@ class JsonSerialization implements SerializationInterface
             !is_array($payload)
             && !$payload instanceof stdClass
         ) {
-            throw new InvalidArgumentException('Payload must be an object or an array.');
+            throw new SerializationException('Payload must be an object or an array.');
         }
     }
 }

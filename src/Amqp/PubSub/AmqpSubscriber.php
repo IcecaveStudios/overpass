@@ -4,7 +4,6 @@ namespace Icecave\Overpass\Amqp\PubSub;
 use Icecave\Overpass\PubSub\SubscriberInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
-use Icecave\Repr\Repr;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerAwareTrait;
@@ -163,7 +162,7 @@ class AmqpSubscriber implements SubscriberInterface
                 'Received {payload} from topic "{topic}"',
                 [
                     'topic' => $topic,
-                    'payload' => Repr::repr($payload),
+                    'payload' => json_encode($payload),
                 ]
             );
         }
