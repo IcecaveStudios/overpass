@@ -4,7 +4,6 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Eloquent\Asplode\Asplode;
 use Icecave\Overpass\Amqp\Rpc\AmqpRpcServer;
-use Icecave\Overpass\Rpc\Registry;
 use Icecave\Stump\Logger;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
@@ -23,17 +22,14 @@ list(, $server, $port, $username, $password, $vhost) = $_SERVER['argv'] + [
 // Connect to the AMQP server ...
 $connection = new AMQPStreamConnection($server, $port, $username, $password, $vhost);
 
-// Create a procedure registry and expose a function that doubles a given number ...
-$registry = new Registry();
-$registry->register(
+// Create an Overpass RPC server ...
+$server = new AmqpRpcServer(new Logger(), $connection->channel());
+$server->expose(
     'double',
     function ($value) {
         return $value * 2;
     }
 );
-
-// Create an Overpass RPC server ...
-$server = new AmqpRpcServer($registry, new Logger(), $connection->channel());
 
 // Service RPC requests forever ...
 $server->run();

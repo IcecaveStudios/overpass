@@ -1,9 +1,10 @@
 <?php
 namespace Icecave\Overpass\Amqp\Rpc;
 
+use Icecave\Overpass\Rpc\Message\Request;
+use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
-use Icecave\Overpass\Rpc\Registry;
-use Icecave\Overpass\Serialization\JsonSerialization;
+use LogicException;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -15,10 +16,8 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->registry = Phake::partialMock(Registry::class);
         $this->channel = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
-        $this->serialization = new JsonSerialization();
         $this->logger = Phake::mock(LoggerInterface::class);
         $this->procedure1 = function () { return '<procedure-1: ' . implode(', ', func_get_args()) . '>'; };
         $this->procedure2 = function () { return '<procedure-2: ' . implode(', ', func_get_args()) . '>'; };
@@ -41,6 +40,14 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
             );
 
         Phake::when($this->channel)
+            ->basic_cancel(Phake::anyParameters())
+            ->thenGetReturnByLambda(
+                function ($tag) {
+                    unset($this->channel->callbacks[$tag]);
+                }
+            );
+
+        Phake::when($this->channel)
             ->wait()
             ->thenReturn(null)
             ->thenGetReturnByLambda(
@@ -59,26 +66,43 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
             );
 
         $this->server = new AmqpRpcServer(
-            $this->registry,
             $this->logger,
             $this->channel,
-            $this->declarationManager,
-            $this->serialization
+            $this->declarationManager
         );
     }
 
-    public function testRegistry()
+    public function testExposeWhileRunning()
     {
-        $this->assertSame(
-            $this->registry,
-            $this->server->registry()
+        Phake::when($this->channel)
+            ->wait()
+            ->thenGetReturnByLambda(
+                function () {
+                    $this->server->expose('procedure-2', $this->procedure2);
+                }
+            )->thenGetReturnByLambda(
+                function () {
+                    // unset the callback so the consumer stops waiting
+                    $this->channel->callbacks = [];
+                }
+            );
+
+        $this->server->expose('procedure-1', $this->procedure1);
+
+        $this->setExpectedException(
+            LogicException::class,
+            'Procedures can not be exposed while the server is running.'
         );
+
+        $this->server->run();
+
+        $this->server->expose('procedure-2', $this->procedure2);
     }
 
     public function testRun()
     {
-        $this->registry->register('procedure-1', $this->procedure1);
-        $this->registry->register('procedure-2', $this->procedure2);
+        $this->server->expose('procedure-1', $this->procedure1);
+        $this->server->expose('procedure-2', $this->procedure2);
 
         $this->server->run();
 
@@ -105,15 +129,13 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
 
         Phake::verify($this->channel, Phake::times(2))->wait();
-        Phake::verify($this->channel)->basic_cancel('<consumer-tag-1>');
-        Phake::verify($this->channel)->basic_cancel('<consumer-tag-2>');
 
         $this->assertTrue(
             is_callable($handler)
         );
     }
 
-    public function testRunWithEmptyRegistry()
+    public function testRunNoProcedures()
     {
         $this->server->run();
 
@@ -130,8 +152,8 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 }
             );
 
-        $this->registry->register('procedure-1', $this->procedure1);
-        $this->registry->register('procedure-2', $this->procedure2);
+        $this->server->expose('procedure-1', $this->procedure1);
+        $this->server->expose('procedure-2', $this->procedure2);
 
         $this->server->run();
 
@@ -141,7 +163,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
     public function testReceiveRequest()
     {
-        $this->registry->register('procedure-name', $this->procedure1);
+        $this->server->expose('procedure-name', $this->procedure1);
 
         $this->server->run();
 
@@ -193,7 +215,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
     public function testReceiveRequestWithProcedureException()
     {
-        $this->registry->register('procedure-name', $this->procedure3);
+        $this->server->expose('procedure-name', $this->procedure3);
 
         $this->server->run();
 
@@ -239,9 +261,57 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testReceiveRequestWithInvalidMessage()
+    {
+        $this->server->expose('procedure-name', $this->procedure3);
+
+        $this->server->run();
+
+        $handler = null;
+
+        Phake::verify($this->channel)->basic_consume(
+            '<request-queue-procedure-name>',
+            '',    // consumer tag
+            false, // no local
+            false, // no ack
+            false, // exclusive
+            false, // no wait
+            Phake::capture($handler)
+        );
+
+        $requestMessage = new AMQPMessage(
+            '[null]',
+            [
+                'reply_to' => '<response-queue>',
+            ]
+        );
+
+        $requestMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
+
+        $handler($requestMessage);
+
+        $responseMessage = null;
+
+        Phake::inOrder(
+            Phake::verify($this->channel)->basic_ack('<delivery-tag>'),
+            Phake::verify($this->channel)->basic_publish(
+                Phake::capture($responseMessage),
+                '', // default direct exchange
+                '<response-queue>'
+            )
+        );
+
+        $this->assertEquals(
+            new AMQPMessage(
+                '[' . ResponseCode::INVALID_MESSAGE . ',"Request payload must be a 2-tuple."]'
+            ),
+            $responseMessage
+        );
+    }
+
     public function testReceiveRequestWithoutReplyQueue()
     {
-        $this->registry->register('procedure-name', $this->procedure1);
+        $this->server->expose('procedure-name', $this->procedure1);
 
         $this->server->run();
 
@@ -272,7 +342,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
     public function testReceiveRequestWithoutCorrelationId()
     {
-        $this->registry->register('procedure-name', $this->procedure1);
+        $this->server->expose('procedure-name', $this->procedure1);
 
         $this->server->run();
 

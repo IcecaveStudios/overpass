@@ -1,11 +1,12 @@
 <?php
 namespace Icecave\Overpass\Amqp\Rpc;
 
+use Icecave\Overpass\Rpc\Message\MessageSerialization;
+use Icecave\Overpass\Rpc\Message\MessageSerializationInterface;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\RpcClientInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
-use Icecave\Overpass\Serialization\SerializationInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerAwareTrait;
@@ -16,18 +17,18 @@ class AmqpRpcClient implements RpcClientInterface
     use LoggerAwareTrait;
 
     /**
-     * @param AMQPChannel                 $channel
-     * @param DeclarationManager|null     $declarationManager
-     * @param SerializationInterface|null $serialization
+     * @param AMQPChannel                        $channel
+     * @param DeclarationManager|null            $declarationManager
+     * @param MessageSerializationInterface|null $serialization
      */
     public function __construct(
         AMQPChannel $channel,
         DeclarationManager $declarationManager = null,
-        SerializationInterface $serialization = null
+        MessageSerializationInterface $serialization = null
     ) {
         $this->channel = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization = $serialization ?: new JsonSerialization();
+        $this->serialization = $serialization ?: new MessageSerialization(new JsonSerialization());
         $this->correlationId = 0;
     }
 
@@ -43,15 +44,14 @@ class AmqpRpcClient implements RpcClientInterface
     {
         $this->initialize();
 
-        $correlationId = ++$this->correlationId;
-
         $request = Request::create($name, $arguments);
+        $correlationId = ++$this->correlationId;
 
         if ($this->logger) {
             $this->logger->debug(
                 'RPC #{id} {request}',
                 [
-                    'id' => $correlationId,
+                    'id'      => $correlationId,
                     'request' => $request,
                 ]
             );
@@ -65,8 +65,8 @@ class AmqpRpcClient implements RpcClientInterface
             $this->logger->debug(
                 'RPC #{id} {request} -> {response}',
                 [
-                    'id' => $correlationId,
-                    'request' => $request,
+                    'id'       => $correlationId,
+                    'request'  => $request,
                     'response' => $response,
                 ]
             );
@@ -97,17 +97,23 @@ class AmqpRpcClient implements RpcClientInterface
             return;
         }
 
-        $this->consumerTag = $this->channel->basic_consume(
-            $this->declarationManager->responseQueue(),
-            '',    // consumer tag
-            false, // no local
-            true,  // no ack
-            true,  // exclusive
-            false, // no wait
-            function ($message) {
-                $this->recv($message);
-            }
-        );
+        $queue = $this
+            ->declarationManager
+            ->responseQueue();
+
+        $this->consumerTag = $this
+            ->channel
+            ->basic_consume(
+                $queue,
+                '',    // consumer tag
+                false, // no local
+                true,  // no ack
+                true,  // exclusive
+                false, // no wait
+                function ($message) {
+                    $this->recv($message);
+                }
+            );
     }
 
     /**
@@ -119,21 +125,35 @@ class AmqpRpcClient implements RpcClientInterface
     {
         $payload = $this
             ->serialization
-            ->serialize($request);
+            ->serializeRequest($request);
+
+        $exchange = $this
+            ->declarationManager
+            ->exchange();
+
+        $requestQueue = $this
+            ->declarationManager
+            ->requestQueue($request->name());
+
+        $responseQueue = $this
+            ->declarationManager
+            ->responseQueue();
 
         $message = new AMQPMessage(
             $payload,
             [
-                'reply_to'       => $this->declarationManager->responseQueue(),
+                'reply_to'       => $responseQueue,
                 'correlation_id' => $this->correlationId,
             ]
         );
 
-        $this->channel->basic_publish(
-            $message,
-            '', // default direct exchange
-            $this->declarationManager->requestQueue($request->name())
-        );
+        $this
+            ->channel
+            ->basic_publish(
+                $message,
+                $exchange,
+                $request->name()
+            );
     }
 
     /**
@@ -153,11 +173,9 @@ class AmqpRpcClient implements RpcClientInterface
             );
         }
 
-        $payload = $this
+        $this->response = $this
             ->serialization
-            ->unserialize($message->body);
-
-        $this->response = Response::createFromPayload($payload);
+            ->unserializeResponse($message->body);
     }
 
     /**

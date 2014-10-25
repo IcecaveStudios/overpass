@@ -12,7 +12,25 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {
-        $response = Response::create('return-value');
+        $code  = ResponseCode::SUCCESS();
+        $value = '<value>';
+
+        $response = Response::create($code, $value);
+
+        $this->assertSame(
+            $code,
+            $response->code()
+        );
+
+        $this->assertSame(
+            '<value>',
+            $response->value()
+        );
+    }
+
+    public function testCreateFromValue()
+    {
+        $response = Response::createFromValue('<return-value>');
 
         $this->assertSame(
             ResponseCode::SUCCESS(),
@@ -20,7 +38,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertSame(
-            'return-value',
+            '<return-value>',
             $response->value()
         );
     }
@@ -59,37 +77,12 @@ class ResponseTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testCreateFromPayload()
-    {
-        $response = Response::createFromPayload([ResponseCode::SUCCESS, 'return-value']);
-
-        $this->assertSame(
-            ResponseCode::SUCCESS(),
-            $response->code()
-        );
-
-        $this->assertSame(
-            'return-value',
-            $response->value()
-        );
-    }
-
-    public function testCreateFromPayloadWithInvalidExceptionMessage()
-    {
-        $this->setExpectedException(
-            InvalidMessageException::class,
-            'Error message must be a string.'
-        );
-
-        Response::createFromPayload([ResponseCode::EXCEPTION, null]);
-    }
-
     public function testExtract()
     {
-        $response = Response::create('return-value');
+        $response = Response::createFromValue('<return-value>');
 
         $this->assertSame(
-            'return-value',
+            '<return-value>',
             $response->extract()
         );
     }
@@ -109,14 +102,6 @@ class ResponseTest extends PHPUnit_Framework_TestCase
         $response->extract();
     }
 
-    public function testPayload()
-    {
-        $this->assertSame(
-            [ResponseCode::SUCCESS, 'return-value'],
-            Response::create('return-value')->payload()
-        );
-    }
-
     public function extractTestVectors()
     {
         return [
@@ -124,5 +109,27 @@ class ResponseTest extends PHPUnit_Framework_TestCase
             [new InvalidMessageException('The exception message.')],
             [new UnknownProcedureException('procedure-name')],
         ];
+    }
+
+    public function testToString()
+    {
+        $response = Response::createFromValue('<return-value>');
+
+        $this->assertSame(
+            '"<return-value>"',
+            strval($response)
+        );
+    }
+
+    public function testToStringWithException()
+    {
+        $exception = new Exception('Error message!');
+
+        $response = Response::createFromException($exception);
+
+        $this->assertSame(
+            'EXCEPTION (Error message!)',
+            strval($response)
+        );
     }
 }

@@ -2,7 +2,6 @@
 namespace Icecave\Overpass\Serialization;
 
 use Icecave\Overpass\Serialization\Exception\SerializationException;
-use Phake;
 use PHPUnit_Framework_TestCase;
 
 class JsonSerializationTest extends PHPUnit_Framework_TestCase
@@ -41,20 +40,6 @@ class JsonSerializationTest extends PHPUnit_Framework_TestCase
 
         $this->serialization->serialize(
             [fopen(__FILE__, 'r')]
-        );
-    }
-
-    public function testSerializeWithSerializableObject()
-    {
-        $object = Phake::mock(SerializableInterface::class);
-
-        Phake::when($object)
-            ->payload()
-            ->thenReturn(['the-string']);
-
-        $this->assertSame(
-            '["the-string"]',
-            $this->serialization->serialize($object)
         );
     }
 

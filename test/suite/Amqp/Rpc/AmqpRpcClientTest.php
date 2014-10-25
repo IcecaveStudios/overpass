@@ -3,7 +3,6 @@ namespace Icecave\Overpass\Amqp\Rpc;
 
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
-use Icecave\Overpass\Serialization\JsonSerialization;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -17,7 +16,6 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
     {
         $this->channel = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
-        $this->serialization = new JsonSerialization();
         $this->logger = Phake::mock(LoggerInterface::class);
         $this->callback = null;
 
@@ -67,6 +65,10 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
             );
 
         Phake::when($this->declarationManager)
+            ->exchange()
+            ->thenReturn('<exchange>');
+
+        Phake::when($this->declarationManager)
             ->responseQueue()
             ->thenReturn('<response-queue>');
 
@@ -80,8 +82,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
 
         $this->client = new AmqpRpcClient(
             $this->channel,
-            $this->declarationManager,
-            $this->serialization
+            $this->declarationManager
         );
     }
 
@@ -110,8 +111,8 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->channel)->basic_publish(
             Phake::capture($message),
-            '', // default direct exchange
-            '<request-queue-procedure-name>'
+            '<exchange>',
+            'procedure-name'
         );
 
         $this->assertEquals(
@@ -165,8 +166,8 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->channel)->basic_publish(
             Phake::capture($message),
-            '', // default direct exchange
-            '<request-queue-procedure-name>'
+            '<exchange>',
+            'procedure-name'
         );
 
         $this->assertEquals(
@@ -246,7 +247,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
             [
                 'id' => 1,
                 'request' => Request::create('procedure-name', [1, 2, 3]),
-                'response' => Response::create(123),
+                'response' => Response::createFromValue(123),
             ]
         );
     }

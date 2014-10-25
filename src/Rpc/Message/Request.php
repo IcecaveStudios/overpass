@@ -1,13 +1,10 @@
 <?php
 namespace Icecave\Overpass\Rpc\Message;
 
-use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
-use Icecave\Overpass\Serialization\SerializableInterface;
-
 /**
  * Represents an RPC request.
  */
-class Request implements SerializableInterface
+class Request
 {
     /**
      * @param string $name      The name of the procedure to call.
@@ -33,28 +30,6 @@ class Request implements SerializableInterface
     }
 
     /**
-     * Create a request from payload data.
-     *
-     * @param array $payload
-     *
-     * @return Request
-     */
-    public static function createFromPayload($payload)
-    {
-        list($name, $arguments) = $payload;
-
-        if (!is_string($name)) {
-            throw new InvalidMessageException('Procedure name must be a string.');
-        }
-
-        if (!is_array($arguments)) {
-            throw new InvalidMessageException('Procedure arguments must be an array.');
-        }
-
-        return self::create($name, $arguments);
-    }
-
-    /**
      * Get the name of the procedure to call.
      *
      * @return string The name of the procedure to call.
@@ -72,16 +47,6 @@ class Request implements SerializableInterface
     public function arguments()
     {
         return $this->arguments;
-    }
-
-    /**
-     * Get the object's serializable payload.
-     *
-     * @return array
-     */
-    public function payload()
-    {
-        return [$this->name, $this->arguments];
     }
 
     public function __toString()

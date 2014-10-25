@@ -40,11 +40,21 @@ class AmqpSubscriber implements SubscriberInterface
             return;
         }
 
-        $this->channel->queue_bind(
-            $this->declarationManager->queue(),
-            $this->declarationManager->exchange(),
-            $normalizedTopic
-        );
+        $queue = $this
+            ->declarationManager
+            ->queue();
+
+        $exchange = $this
+            ->declarationManager
+            ->exchange();
+
+        $this
+            ->channel
+            ->queue_bind(
+                $queue,
+                $exchange,
+                $normalizedTopic
+            );
 
         $this->subscriptions[$normalizedTopic] = true;
 
@@ -71,11 +81,21 @@ class AmqpSubscriber implements SubscriberInterface
             return;
         }
 
-        $this->channel->queue_unbind(
-            $this->declarationManager->queue(),
-            $this->declarationManager->exchange(),
-            $normalizedTopic
-        );
+        $queue = $this
+            ->declarationManager
+            ->queue();
+
+        $exchange = $this
+            ->declarationManager
+            ->exchange();
+
+        $this
+            ->channel
+            ->queue_unbind(
+                $this->declarationManager->queue(),
+                $this->declarationManager->exchange(),
+                $normalizedTopic
+            );
 
         unset($this->subscriptions[$normalizedTopic]);
 
@@ -109,17 +129,19 @@ class AmqpSubscriber implements SubscriberInterface
 
         $this->consumerCallback = $callback;
 
-        $this->consumerTag = $this->channel->basic_consume(
-            $this->declarationManager->queue(),
-            '',    // consumer tag
-            false, // no local
-            true,  // no ack
-            true,  // exclusive
-            false, // no wait
-            function ($message) {
-                $this->dispatch($message);
-            }
-        );
+        $this->consumerTag = $this
+            ->channel
+            ->basic_consume(
+                $this->declarationManager->queue(),
+                '',    // consumer tag
+                false, // no local
+                true,  // no ack
+                true,  // exclusive
+                false, // no wait
+                function ($message) {
+                    $this->dispatch($message);
+                }
+            );
 
         while ($this->channel->callbacks) {
             $this->channel->wait();
@@ -178,7 +200,11 @@ class AmqpSubscriber implements SubscriberInterface
             return;
         }
 
-        $this->channel->basic_cancel($this->consumerTag);
+        $this
+            ->channel
+            ->basic_cancel(
+                $this->consumerTag
+            );
 
         $this->consumerCallback = null;
         $this->consumerTag = null;

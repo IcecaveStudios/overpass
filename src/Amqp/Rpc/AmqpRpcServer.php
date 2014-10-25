@@ -2,15 +2,16 @@
 namespace Icecave\Overpass\Amqp\Rpc;
 
 use Exception;
+use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
 use Icecave\Overpass\Rpc\Invoker;
 use Icecave\Overpass\Rpc\InvokerInterface;
+use Icecave\Overpass\Rpc\Message\MessageSerialization;
+use Icecave\Overpass\Rpc\Message\MessageSerializationInterface;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
-use Icecave\Overpass\Rpc\RegistryInterface;
 use Icecave\Overpass\Rpc\RpcServerInterface;
-use Icecave\Overpass\Serialization\Exception\SerializationException;
 use Icecave\Overpass\Serialization\JsonSerialization;
-use Icecave\Overpass\Serialization\SerializationInterface;
+use LogicException;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerAwareTrait;
@@ -21,40 +22,46 @@ class AmqpRpcServer implements RpcServerInterface
     use LoggerAwareTrait;
 
     /**
-     * @param RegistryInterface           $registry
-     * @param LoggerInterface             $logger
-     * @param AMQPChannel                 $channel
-     * @param DeclarationManager|null     $declarationManager
-     * @param SerializationInterface|null $serialization
-     * @param InvokerInterface|null       $invoker
+     * @param LoggerInterface                    $logger
+     * @param AMQPChannel                        $channel
+     * @param DeclarationManager|null            $declarationManager
+     * @param MessageSerializationInterface|null $serialization
+     * @param InvokerInterface|null              $invoker
      */
     public function __construct(
-        RegistryInterface $registry,
         LoggerInterface $logger,
         AMQPChannel $channel,
         DeclarationManager $declarationManager = null,
-        SerializationInterface $serialization = null,
+        MessageSerializationInterface $serialization = null,
         InvokerInterface $invoker = null
     ) {
-        $this->registry = $registry;
         $this->channel = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization = $serialization ?: new JsonSerialization();
+        $this->serialization = $serialization ?: new MessageSerialization(new JsonSerialization());
         $this->invoker = $invoker ?: new Invoker();
-        $this->isRunning = false;
+        $this->procedures = [];
         $this->consumerTags = [];
 
         $this->setLogger($logger);
     }
 
     /**
-     * Get the registry used by this server to resolve procedure names.
+     * Expose a procedure.
      *
-     * @return RegistryInterface The procedure registry.
+     * @param string   $name      The public name of the procedure.
+     * @param callable $procedure The procedure implementation.
+     *
+     * @throws LogicException if the server is already running.
      */
-    public function registry()
+    public function expose($name, callable $procedure)
     {
-        return $this->registry;
+        if ($this->channel->callbacks) {
+            throw new LogicException(
+                'Procedures can not be exposed while the server is running.'
+            );
+        }
+
+        $this->procedures[$name] = $procedure;
     }
 
     /**
@@ -62,37 +69,34 @@ class AmqpRpcServer implements RpcServerInterface
      */
     public function run()
     {
-        if ($this->registry->isEmpty()) {
-            $this->logger->warning(
-                'Cannot start RPC server - no procedures have been registered'
-            );
+        $this->logger->info(
+            'RPC server starting'
+        );
 
-            return;
-        }
-
-        $this->logger->info('RPC server starting');
-
-        $procedures = $this->registry->procedures();
-
-        foreach ($procedures as $procedureName) {
+        // Bind queues / consumers ...
+        foreach ($this->procedures as $procedureName => $procedure) {
             $this->bind($procedureName);
         }
 
-        $this->isRunning = true;
-        $this->logger->info('RPC server started successfully');
+        $this->logger->info(
+            'RPC server started successfully (procedures: {procedures})',
+            [
+                'procedures' => implode(
+                    ', ',
+                    array_keys($this->procedures)
+                ) ?: '<none>'
+            ]
+        );
 
-        while (
-            $this->isRunning
-            && $this->channel->callbacks
-        ) {
+        // Wait for the server to be stopped ...
+        while ($this->channel->callbacks) {
+            // var_dump($this->channel->callbacks);
             $this->channel->wait();
         }
 
-        foreach ($procedures as $procedureName) {
-            $this->unbind($procedureName);
-        }
-
-        $this->logger->info('RPC server shutdown gracefully');
+        $this->logger->info(
+            'RPC server shutdown gracefully'
+        );
     }
 
     /**
@@ -100,9 +104,14 @@ class AmqpRpcServer implements RpcServerInterface
      */
     public function stop()
     {
-        if ($this->isRunning) {
-            $this->isRunning = false;
-            $this->logger->info('RPC server stopped');
+        if ($this->channel->callbacks) {
+            foreach (array_keys($this->consumerTags) as $procedureName) {
+                $this->unbind($procedureName);
+            }
+
+            $this->logger->info(
+                'RPC server stopped'
+            );
         }
     }
 
@@ -123,7 +132,7 @@ class AmqpRpcServer implements RpcServerInterface
         // Serialize the response payload ...
         $payload = $this
             ->serialization
-            ->serialize($response);
+            ->serializeResponse($response);
 
         // Include the correlation ID in the response if one was provided ...
         $properties = [];
@@ -154,41 +163,35 @@ class AmqpRpcServer implements RpcServerInterface
             $correlationId = '???';
         }
 
-        try {
-            $payload = $this
-                ->serialization
-                ->unserialize($message->body);
+        // Commit to handle this request. The acknowledgement must be sent
+        // *before* the procedure is called, otherwise a procedure that
+        // fails midway through may be retried and we cannot guarantee that
+        // such behaviour is safe for all exposed procedures ...
+        $this->channel->basic_ack(
+            $message->get('delivery_tag')
+        );
 
-            $request = Request::createFromPayload($payload);
+        try {
+            $request = $this
+                ->serialization
+                ->unserializeRequest($message->body);
 
             $this->logger->info(
                 'RPC #{id} {request}',
                 [
-                    'id' => $correlationId,
+                    'id'      => $correlationId,
                     'request' => $request,
                 ]
             );
 
-            $procedure = $this->registry->get(
-                $request->name()
-            );
-
-            // Commit to handle this request. The acknowledgement must be sent
-            // *before* the procedure is called, otherwise a procedure that
-            // fails midway through may be retried and we cannot guarantee that
-            // such behaviour is safe for all exposed procedures ...
-            $this->channel->basic_ack(
-                $message->get('delivery_tag')
-            );
-
-            $response = $this->invoker->invoke(
-                $procedure,
-                $request
-            );
-
-        } catch (SerializationException $e) {
-            $response = Response::createFromException($e);
-        } catch (RpcExceptionInterface $e) {
+            $response = $this
+                ->invoker
+                ->invoke(
+                    $request,
+                    $this->procedures[$request->name()]
+                );
+        } catch (InvalidMessageException $e) {
+            $request  = '<invalid-request>';
             $response = Response::createFromException($e);
         }
 
@@ -197,8 +200,8 @@ class AmqpRpcServer implements RpcServerInterface
         $this->logger->info(
             'RPC #{id} {request} -> {response}',
             [
-                'id' => $correlationId,
-                'request' => $request,
+                'id'       => $correlationId,
+                'request'  => $request,
                 'response' => $response,
             ]
         );
@@ -223,11 +226,6 @@ class AmqpRpcServer implements RpcServerInterface
                     $this->recv($message);
                 }
             );
-
-        $this->logger->info(
-            'Accepting requests for procedure: {procedure}',
-            ['procedure' => $procedureName]
-        );
     }
 
     private function unbind($procedureName)
@@ -241,11 +239,10 @@ class AmqpRpcServer implements RpcServerInterface
         unset($this->consumerTags[$procedureName]);
     }
 
-    private $registry;
     private $channel;
     private $declarationManager;
     private $serialization;
     private $invoker;
-    private $isRunning;
+    private $procedures;
     private $consumerTags;
 }

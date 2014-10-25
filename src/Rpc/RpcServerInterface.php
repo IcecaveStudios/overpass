@@ -6,11 +6,14 @@ use Psr\Log\LoggerAwareInterface;
 interface RpcServerInterface extends LoggerAwareInterface
 {
     /**
-     * Get the registry used by this server to resolve procedure names.
+     * Expose a procedure.
      *
-     * @return RegistryInterface The procedure registry.
+     * @param string   $name      The public name of the procedure.
+     * @param callable $procedure The procedure implementation.
+     *
+     * @throws LogicException if the server is already running.
      */
-    public function registry();
+    public function expose($name, callable $procedure);
 
     /**
      * Run the RPC server.

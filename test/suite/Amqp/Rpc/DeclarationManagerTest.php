@@ -82,7 +82,7 @@ class DeclarationManagerTest extends PHPUnit_Framework_TestCase
             false, // passive
             false, // durable
             true,  // exclusive
-            false  // auto delete
+            true   // auto delete
         );
 
         $this->assertSame(

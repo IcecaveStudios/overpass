@@ -6,12 +6,11 @@ use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
 use Icecave\Overpass\Rpc\Exception\RpcException;
 use Icecave\Overpass\Rpc\Exception\RpcExceptionInterface;
 use Icecave\Overpass\Rpc\Exception\UnknownProcedureException;
-use Icecave\Overpass\Serialization\SerializableInterface;
 
 /**
  * Represents an RPC response.
  */
-class Response implements SerializableInterface
+class Response
 {
     /**
      * @param ResponseCode The response code.
@@ -24,13 +23,29 @@ class Response implements SerializableInterface
     }
 
     /**
+     * Create a response.
+     *
+     * @param ResponseCode The response code.
+     * @param mixed The return value or exception message.
+     *
+     * @return Response
+     */
+    public static function create(ResponseCode $code, $value)
+    {
+        return new static(
+            $code,
+            $value
+        );
+    }
+
+    /**
      * Create a success response.
      *
      * @param mixed $value The return value.
      *
      * @return Response
      */
-    public static function create($value)
+    public static function createFromValue($value)
     {
         return new static(
             ResponseCode::SUCCESS(),
@@ -56,29 +71,6 @@ class Response implements SerializableInterface
         return new static(
             $exception->responseCode(),
             $exception->getMessage()
-        );
-    }
-
-    /**
-     * Create a response from payload data.
-     *
-     * @param array $payload
-     *
-     * @return Response
-     */
-    public static function createFromPayload($payload)
-    {
-        list($code, $value) = $payload;
-
-        $code = ResponseCode::memberByValue($code);
-
-        if (ResponseCode::SUCCESS() !== $code && !is_string($value)) {
-            throw new InvalidMessageException('Error message must be a string.');
-        }
-
-        return new static(
-            $code,
-            $value
         );
     }
 
@@ -126,16 +118,6 @@ class Response implements SerializableInterface
         throw new RpcException($this->value);
     }
 
-    /**
-     * Get the object's serializable payload.
-     *
-     * @return array
-     */
-    public function payload()
-    {
-        return [$this->code->value(), $this->value];
-    }
-
     public function __toString()
     {
         if (ResponseCode::SUCCESS() === $this->code) {
@@ -143,7 +125,7 @@ class Response implements SerializableInterface
         }
 
         return sprintf(
-            '%s %s',
+            '%s (%s)',
             $this->code,
             $this->value
         );

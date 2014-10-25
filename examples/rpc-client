@@ -4,7 +4,6 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Eloquent\Asplode\Asplode;
 use Icecave\Overpass\Amqp\Rpc\AmqpRpcClient;
-use Icecave\Overpass\Rpc\Registry;
 use Icecave\Stump\Logger;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 

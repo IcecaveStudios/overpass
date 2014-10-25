@@ -41,11 +41,17 @@ class AmqpPublisher implements PublisherInterface
                 ->serialize($payload)
         );
 
-        $this->channel->basic_publish(
-            $message,
-            $this->declarationManager->exchange(),
-            $topic
-        );
+        $exchange = $this
+            ->declarationManager
+            ->exchange();
+
+        $this
+            ->channel
+            ->basic_publish(
+                $message,
+                $exchange,
+                $topic
+            );
 
         if ($this->logger) {
             $this->logger->debug(

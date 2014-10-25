@@ -11,7 +11,7 @@ interface SerializationInterface
     /**
      * Serialize the given payload.
      *
-     * @param SerializableInterface|stdClass|array $payload
+     * @param stdClass|array $payload
      *
      * @return string
      */

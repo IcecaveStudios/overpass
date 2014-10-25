@@ -12,16 +12,12 @@ class JsonSerialization implements SerializationInterface
     /**
      * Serialize the given payload.
      *
-     * @param SerializableInterface|stdClass|array $payload
+     * @param stdClass|array $payload
      *
      * @return string
      */
     public function serialize($payload)
     {
-        while ($payload instanceof SerializableInterface) {
-            $payload = $payload->payload();
-        }
-
         $this->validatePayload($payload);
 
         $buffer = @json_encode($payload);

@@ -15,6 +15,32 @@ class DeclarationManager
     }
 
     /**
+     * @return string
+     */
+    public function exchange()
+    {
+        if ($this->exchange) {
+            return $this->exchange;
+        }
+
+        $name = 'overpass/rpc';
+
+        $this
+            ->channel
+            ->exchange_declare(
+                $name,
+                'direct',
+                false, // passive,
+                false, // durable,
+                false  // auto delete
+            );
+
+        $this->exchange = $name;
+
+        return $this->exchange;
+    }
+
+    /**
      * @param string $procedureName
      *
      * @return string
@@ -25,13 +51,23 @@ class DeclarationManager
             return $this->requestQueues[$procedureName];
         }
 
-        list($queueName) = $this->channel->queue_declare(
-            'overpass/rpc/' . $procedureName,
-            false, // passive
-            false, // durable
-            false, // exclusive
-            false  // auto delete
-        );
+        list($queueName) = $this
+            ->channel
+            ->queue_declare(
+                'overpass/rpc/' . $procedureName,
+                false, // passive
+                false, // durable
+                false, // exclusive
+                false  // auto delete
+            );
+
+        $this
+            ->channel
+            ->queue_bind(
+                $queueName,
+                $this->exchange(),
+                $procedureName
+            );
 
         $this->requestQueues[$procedureName] = $queueName;
 
@@ -47,17 +83,20 @@ class DeclarationManager
             return $this->responseQueue;
         }
 
-        list($this->responseQueue) = $this->channel->queue_declare(
-            '',
-            false, // passive
-            false, // durable
-            true,  // exclusive
-            false  // auto delete
-        );
+        list($this->responseQueue) = $this
+            ->channel
+            ->queue_declare(
+                '',
+                false, // passive
+                false, // durable
+                true,  // exclusive
+                true   // auto delete
+            );
 
         return $this->responseQueue;
     }
 
+    private $exchange;
     private $requestQueues;
     private $responseQueue;
 }

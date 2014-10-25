@@ -12,12 +12,12 @@ class Invoker implements InvokerInterface
     /**
      * Invoke a procedure based on a request.
      *
-     * @param callable $procedure The procedure to invoke.
      * @param Request  $request   The RPC request.
+     * @param callable $procedure The procedure to invoke.
      *
      * @return Response The RPC response.
      */
-    public function invoke(callable $procedure, Request $request)
+    public function invoke(Request $request, callable $procedure)
     {
         $value = null;
         $exception = null;
@@ -33,7 +33,7 @@ class Invoker implements InvokerInterface
                 $request->arguments()
             );
 
-            return Response::create($value);
+            return Response::createFromValue($value);
         } catch (Exception $e) {
             return Response::createFromException($e);
         }
