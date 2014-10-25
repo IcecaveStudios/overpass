@@ -9,4 +9,5 @@ class ResponseCode extends AbstractEnumeration
     const EXCEPTION = 10;
     const INVALID_MESSAGE = 11;
     const UNKNOWN_PROCEDURE = 12;
+    const INVALID_ARGUMENTS = 13;
 }
