@@ -1,16 +1,10 @@
 <?php
-namespace Icecave\Overpass;
+namespace Icecave\Overpass\PubSub;
 
-interface PubSubClientInterface
+use Psr\Log\LoggerAwareInterface;
+
+interface SubscriberInterface extends LoggerAwareInterface
 {
-    /**
-     * Publish a message.
-     *
-     * @param string $topic   The topic that the payload is published to.
-     * @param mixed  $payload The payload to publish.
-     */
-    public function publish($topic, $payload);
-
     /**
      * Subscribe to the given topic.
      *

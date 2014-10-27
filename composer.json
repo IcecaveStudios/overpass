@@ -1,7 +1,18 @@
 {
     "name": "icecave/overpass",
     "description": "A basic pub/sub and RPC system.",
-    "keywords": [],
+    "keywords": [
+        "pubsub",
+        "publish",
+        "subscribe",
+        "rpc",
+        "rmi",
+        "remote",
+        "procedure",
+        "call",
+        "amqp",
+        "rabbit"
+    ],
     "homepage": "https://github.com/IcecaveStudios/overpass",
     "license": "MIT",
     "authors": [
@@ -13,12 +24,15 @@
     ],
     "require": {
         "php": ">=5.5",
-        "ext-amqp": "*",
-        "icecave/isolator": "~2|~3"
+        "eloquent/enumeration": "~5",
+        "icecave/isolator": "~2|3",
+        "psr/log": "~1",
+        "videlalvaro/php-amqplib": "~2.4"
     },
     "require-dev": {
-        "eloquent/phony": "dev-develop",
-        "icecave/archer": "~1"
+        "eloquent/asplode": "~2.0",
+        "icecave/archer": "~1",
+        "icecave/stump": "~0.2.0"
     },
     "autoload": {
         "psr-4": {
@@ -29,11 +43,5 @@
         "branch-alias": {
             "dev-develop": "0.1.x-dev"
         }
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/ezzatron/phony"
-        }
-    ]
+    }
 }
