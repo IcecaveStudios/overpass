@@ -4,8 +4,10 @@ namespace Icecave\Overpass\Rpc;
 use Exception;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
+use Icecave\Overpass\Rpc\Message\ResponseCode;
 use ReflectionFunction;
 use ReflectionMethod;
+use ReflectionParameter;
 
 class Invoker implements InvokerInterface
 {
@@ -22,11 +24,16 @@ class Invoker implements InvokerInterface
         $value = null;
         $exception = null;
 
+        $response = $this->validateArguments(
+            $procedure,
+            $request->arguments()
+        );
+
+        if ($response) {
+            return $response;
+        }
+
         try {
-            $this->validateArguments(
-                $procedure,
-                $request->arguments()
-            );
 
             $value = call_user_func_array(
                 $procedure,
@@ -39,29 +46,94 @@ class Invoker implements InvokerInterface
         }
     }
 
-    public function validateArguments(callable $procedure, array $arguments)
+    private function validateArguments(callable $procedure, array $arguments)
     {
-        // TODO
+        $reflector = $this->reflector($procedure);
 
-        // // The implementation is a string representing a static method ...
-        // if (is_string($implementation) && $pos = strpos($implementation, '::')) {
-        //     $this->reflector = new ReflectionMethod(
-        //         substr($implementation, 0, $pos),
-        //         substr($implementation, $pos + 2)
-        //     );
+        $count    = count($arguments);
+        $minArity = $reflector->getNumberOfRequiredParameters();
+        $maxArity = $reflector->getNumberOfParameters();
 
-        // // The implementation is an array representing a method ...
-        // } elseif (is_array($implementation)) {
-        //     list($classOrObject, $method) = $implementation;
+        if ($count < $minArity) {
+            return Response::create(
+                ResponseCode::INVALID_ARGUMENTS(),
+                'At least ' . $minArity . ' arguments are required.'
+            );
+        }
 
-        //     $this->reflector = new ReflectionMethod(
-        //         $classOrObject,
-        //         $method
-        //     );
+        $parameters = $reflector->getParameters();
 
-        // // The implementation is a global function, callable object, etc ...
-        // } else {
-        //     $this->reflector = new ReflectionFunction($implementation);
-        // }
+        for ($index = 0; $index < min($count, $maxArity); ++$index) {
+            $error = $this->validateArgument(
+                $parameters[$index],
+                $arguments[$index]
+            );
+
+            if ($error) {
+                return Response::create(
+                    ResponseCode::INVALID_ARGUMENTS(),
+                    sprintf(
+                        'Argument "%s" %s.',
+                        $parameters[$index]->getName(),
+                        $error
+                    )
+                );
+            }
+        }
+
+        return null;
+    }
+
+    private function validateArgument(ReflectionParameter $parameter, $argument)
+    {
+        if ($parameter->allowsNull()) {
+            $suffix = ' or null';
+
+            if (null === $argument) {
+                return null;
+            }
+        } else {
+            $suffix = '';
+        }
+
+        if ($parameter->isArray()) {
+            if (!is_array($argument)) {
+                return 'must be an array' . $suffix;
+            }
+        } elseif ($parameter->isCallable()) {
+            if (!is_callable($argument)) {
+                return 'must be callable' . $suffix;
+            }
+        } elseif ($hint = $parameter->getClass()) {
+            if (!is_object($argument) || !$hint->isInstance($argument)) {
+                return 'must be an instance of "' . $hint->getName() . '"' . $suffix;
+            }
+        }
+
+        return null;
+    }
+
+    private function reflector(callable $procedure)
+    {
+        // The implementation is a string representing a static method ...
+        if (is_string($procedure) && $pos = strpos($procedure, '::')) {
+            return new ReflectionMethod(
+                substr($procedure, 0, $pos),
+                substr($procedure, $pos + 2)
+            );
+
+        // The implementation is an array representing a method ...
+        } elseif (is_array($procedure)) {
+            list($classOrObject, $method) = $procedure;
+
+            return new ReflectionMethod(
+                $classOrObject,
+                $method
+            );
+
+        // The implementation is a global function, callable object, etc ...
+        } else {
+            return new ReflectionFunction($procedure);
+        }
     }
 }
