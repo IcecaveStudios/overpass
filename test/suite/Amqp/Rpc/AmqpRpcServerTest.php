@@ -108,27 +108,35 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         $handler = null;
 
-        Phake::verify($this->channel)->basic_consume(
-            '<request-queue-procedure-1>',
-            '',    // consumer tag
-            false, // no local
-            false, // no ack
-            false, // exclusive
-            false, // no wait
-            Phake::capture($handler)
+        Phake::inOrder(
+            Phake::verify($this->logger)->info('RPC server starting'),
+            Phake::verify($this->channel)->basic_consume(
+                '<request-queue-procedure-1>',
+                '',    // consumer tag
+                false, // no local
+                false, // no ack
+                false, // exclusive
+                false, // no wait
+                Phake::capture($handler)
+            ),
+            Phake::verify($this->channel)->basic_consume(
+                '<request-queue-procedure-2>',
+                '',    // consumer tag
+                false, // no local
+                false, // no ack
+                false, // exclusive
+                false, // no wait
+                $handler
+            ),
+            Phake::verify($this->logger)->info(
+                'RPC server started successfully (procedures: {procedures})',
+                [
+                    'procedures' => 'procedure-1, procedure-2'
+                ]
+            ),
+            Phake::verify($this->channel, Phake::times(2))->wait(),
+            Phake::verify($this->logger)->info('RPC server shutdown gracefully')
         );
-
-        Phake::verify($this->channel)->basic_consume(
-            '<request-queue-procedure-2>',
-            '',    // consumer tag
-            false, // no local
-            false, // no ack
-            false, // exclusive
-            false, // no wait
-            $handler
-        );
-
-        Phake::verify($this->channel, Phake::times(2))->wait();
 
         $this->assertTrue(
             is_callable($handler)
@@ -138,6 +146,17 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
     public function testRunNoProcedures()
     {
         $this->server->run();
+
+        Phake::inOrder(
+            Phake::verify($this->logger)->info('RPC server starting'),
+            Phake::verify($this->logger)->info(
+                'RPC server started successfully (procedures: {procedures})',
+                [
+                    'procedures' => '<none>'
+                ]
+            ),
+            Phake::verify($this->logger)->info('RPC server shutdown gracefully')
+        );
 
         Phake::verifyNoInteraction($this->channel);
     }
@@ -157,6 +176,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         $this->server->run();
 
+        Phake::verify($this->logger)->info('RPC server stopping');
         Phake::verify($this->channel)->basic_cancel('<consumer-tag-1>');
         Phake::verify($this->channel)->basic_cancel('<consumer-tag-2>');
     }
@@ -193,12 +213,30 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         $responseMessage = null;
 
+        $expectedRequest = Request::create('procedure-name', [1, 2, 3]);
+        $expectedResponse = Response::createFromValue('<procedure-1: 1, 2, 3>');
+
         Phake::inOrder(
             Phake::verify($this->channel)->basic_ack('<delivery-tag>'),
+            Phake::verify($this->logger)->info(
+                'RPC #{id} {request}',
+                [
+                    'id'      => 456,
+                    'request' => $expectedRequest,
+                ]
+            ),
             Phake::verify($this->channel)->basic_publish(
                 Phake::capture($responseMessage),
                 '', // default direct exchange
                 '<response-queue>'
+            ),
+            Phake::verify($this->logger)->info(
+                'RPC #{id} {request} -> {response}',
+                [
+                    'id'      => 456,
+                    'request' => $expectedRequest,
+                    'response' => $expectedResponse,
+                ]
             )
         );
 

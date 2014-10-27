@@ -105,13 +105,13 @@ class AmqpRpcServer implements RpcServerInterface
     public function stop()
     {
         if ($this->channel->callbacks) {
+            $this->logger->info(
+                'RPC server stopping'
+            );
+
             foreach (array_keys($this->consumerTags) as $procedureName) {
                 $this->unbind($procedureName);
             }
-
-            $this->logger->info(
-                'RPC server stopped'
-            );
         }
     }
 
