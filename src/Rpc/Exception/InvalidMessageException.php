@@ -4,7 +4,8 @@ namespace Icecave\Overpass\Rpc\Exception;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
 use LogicException;
 
-class InvalidMessageException extends LogicException implements RpcExceptionInterface
+class InvalidMessageException extends LogicException implements
+    RemoteExceptionInterface
 {
     /**
      * @param string $message The exception message.

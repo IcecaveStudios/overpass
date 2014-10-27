@@ -4,11 +4,11 @@ namespace Icecave\Overpass\Rpc\Exception;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
 use PHPUnit_Framework_TestCase;
 
-class RpcExceptionTest extends PHPUnit_Framework_TestCase
+class ExecutionExceptionTest extends PHPUnit_Framework_TestCase
 {
     public function testException()
     {
-        $exception = new RpcException('The exception message.');
+        $exception = new ExecutionException('The exception message.');
 
         $this->assertSame(
             ResponseCode::EXCEPTION(),

@@ -14,6 +14,7 @@
     "require": {
         "php": ">=5.5",
         "eloquent/enumeration": "~5",
+        "icecave/isolator": "~2|3",
         "psr/log": "~1",
         "videlalvaro/php-amqplib": "~2.4"
     },

@@ -1,10 +1,14 @@
 <?php
 namespace Icecave\Overpass\Amqp\Rpc;
 
+use Exception;
+use Icecave\Isolator\Isolator;
+use Icecave\Overpass\Rpc\Exception\TimeoutException;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit_Framework_TestCase;
 use Psr\Log\LoggerInterface;
@@ -17,6 +21,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         $this->channel = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
         $this->logger = Phake::mock(LoggerInterface::class);
+        $this->isolator = Phake::mock(Isolator::class);
         $this->callback = null;
 
         // Store the handler as soon as basic_consume is called ...
@@ -82,8 +87,11 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
 
         $this->client = new AmqpRpcClient(
             $this->channel,
+            1.5,
             $this->declarationManager
         );
+
+        $this->client->setIsolator($this->isolator);
     }
 
     public function testCall()
@@ -109,18 +117,22 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
 
         $message = null;
 
-        Phake::verify($this->channel)->basic_publish(
-            Phake::capture($message),
-            '<exchange>',
-            'procedure-name'
+        Phake::inOrder(
+            Phake::verify($this->channel)->basic_publish(
+                Phake::capture($message),
+                '<exchange>',
+                'procedure-name'
+            ),
+            Phake::verify($this->channel)->wait(null, false, 1.5)
         );
 
         $this->assertEquals(
             new AMQPMessage(
                 '["procedure-name",[1,2,3]]',
                 [
-                    'reply_to' => '<response-queue>',
+                    'reply_to'       => '<response-queue>',
                     'correlation_id' => 1,
+                    'expiration'     => 1500
                 ]
             ),
             $message
@@ -181,6 +193,31 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSetTimeout()
+    {
+        $this->assertSame(
+            1.5,
+            $this->client->timeout()
+        );
+
+        $this->client->setTimeout(15);
+
+        $this->assertSame(
+            15,
+            $this->client->timeout()
+        );
+    }
+
+    public function testSetTimeoutFailure()
+    {
+        $this->setExpectedException(
+            'InvalidArgumentException',
+            'Timeout must be greater than zero.'
+        );
+
+        $this->client->setTimeout(-10);
+    }
+
     public function testCallFailsWithFutureResponses()
     {
         Phake::when($this->channel)
@@ -237,7 +274,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         Phake::verify($this->logger)->debug(
             'RPC #{id} {request}',
             [
-                'id' => 1,
+                'id'      => 1,
                 'request' => Request::create('procedure-name', [1, 2, 3]),
             ]
         );
@@ -245,11 +282,93 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         Phake::verify($this->logger)->debug(
             'RPC #{id} {request} -> {response}',
             [
-                'id' => 1,
-                'request' => Request::create('procedure-name', [1, 2, 3]),
+                'id'       => 1,
+                'request'  => Request::create('procedure-name', [1, 2, 3]),
                 'response' => Response::createFromValue(123),
             ]
         );
+    }
+
+    public function testCallLoggingWithTimeout()
+    {
+        $this->client->setLogger($this->logger);
+
+        $exception = new AMQPTimeoutException('Timeout!');
+
+        Phake::when($this->channel)
+            ->wait(Phake::anyParameters())
+            ->thenThrow($exception);
+
+        $this->setExpectedException(
+            TimeoutException::class
+        );
+
+        try {
+            $this->client->call('procedure-name', [1, 2, 3]);
+        } catch (TimeoutException $e) {
+            Phake::verify($this->logger)->warning(
+                'RPC #{id} {request} -> <timed out after {timeout} seconds>',
+                [
+                    'id'      => 1,
+                    'request' => Request::create('procedure-name', [1, 2, 3]),
+                    'timeout' => 1.5
+                ]
+            );
+
+            throw $e;
+        }
+    }
+
+    public function testCallWithAmqpTimeout()
+    {
+        $exception = new AMQPTimeoutException('Timeout!');
+
+        Phake::when($this->channel)
+            ->wait(Phake::anyParameters())
+            ->thenThrow($exception);
+
+        $this->setExpectedException(
+            TimeoutException::class
+        );
+
+        $this->client->call('procedure-name', [1, 2, 3]);
+    }
+
+    public function testCallWithElapsedTimeTimeout()
+    {
+        $this->client->setTimeout(2.5);
+
+        Phake::when($this->isolator)
+            ->microtime(true)
+            ->thenReturn(0)
+            ->thenReturn(1)
+            ->thenReturn(2)
+            ->thenReturn(3);
+
+        Phake::when($this->channel)
+            ->wait(Phake::anyParameters())
+            ->thenReturn(null)
+            ->thenReturn(null)
+            ->thenReturn(null)
+            ->thenThrow(
+                new Exception('Timeout code possibly stuck in an infinite loop.')
+            );
+
+        $this->setExpectedException(
+            TimeoutException::class
+        );
+
+        try {
+            $this->client->call('procedure-name', [1, 2, 3]);
+        } catch (TimeoutException $e) {
+            Phake::inOrder(
+                Phake::verify($this->channel)->wait(null, false, 2.5),
+                Phake::verify($this->channel)->wait(null, false, 1.5),
+                Phake::verify($this->channel)->wait(null, false, 0.5)
+            );
+
+            throw $e;
+        }
     }
 
     public function testCallMagicMethod()

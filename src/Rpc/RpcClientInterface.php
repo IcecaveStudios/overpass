@@ -24,4 +24,18 @@ interface RpcClientInterface extends LoggerAwareInterface
      * @return mixed The return value.
      */
     public function __call($name, array $arguments);
+
+    /**
+     * Get the RPC response timeout.
+     *
+     * @return integer|float The RPC response timeout in seconds.
+     */
+    public function timeout();
+
+    /**
+     * Set the RPC response timeout.
+     *
+     * @param integer|float The RPC response timeout in seconds.
+     */
+    public function setTimeout($timeout);
 }

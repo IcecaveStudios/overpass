@@ -5,9 +5,11 @@ use Exception;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
 
 /**
- * Represents an arbitrary exception that occurred while invoking a procedure.
+ * Represents an arbitrary exception that occurred while invoking a procedure as
+ * opposed to an error in the call syntax or RPC system itself.
  */
-class RpcException extends Exception implements RpcExceptionInterface
+class ExecutionException extends Exception implements
+    RemoteExceptionInterface
 {
     /**
      * @param string $message The exception message.

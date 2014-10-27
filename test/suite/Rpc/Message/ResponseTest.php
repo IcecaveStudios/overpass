@@ -2,8 +2,8 @@
 namespace Icecave\Overpass\Rpc\Message;
 
 use Exception;
+use Icecave\Overpass\Rpc\Exception\ExecutionException;
 use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
-use Icecave\Overpass\Rpc\Exception\RpcException;
 use Icecave\Overpass\Rpc\Exception\UnknownProcedureException;
 use LogicException;
 use PHPUnit_Framework_TestCase;
@@ -105,7 +105,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
     public function extractTestVectors()
     {
         return [
-            [new LogicException('The exception message.'), RpcException::class],
+            [new LogicException('The exception message.'), ExecutionException::class],
             [new InvalidMessageException('The exception message.')],
             [new UnknownProcedureException('procedure-name')],
         ];

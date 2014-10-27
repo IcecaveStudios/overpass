@@ -4,15 +4,17 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Eloquent\Asplode\Asplode;
 use Icecave\Overpass\Amqp\Rpc\AmqpRpcClient;
+use ICecave\Overpass\Rpc\Exception\TimeoutException;
 use Icecave\Stump\Logger;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 Asplode::install();
 
 // Parse the command line parameters ...
-list(, $sleep, $server, $port, $username, $password, $vhost) = $_SERVER['argv'] + [
+list(, $sleep, $timeout, $server, $port, $username, $password, $vhost) = $_SERVER['argv'] + [
     null,
     1,
+    2,
     'localhost',
     5672,
     'guest',
@@ -24,15 +26,19 @@ list(, $sleep, $server, $port, $username, $password, $vhost) = $_SERVER['argv'] 
 $connection = new AMQPStreamConnection($server, $port, $username, $password, $vhost);
 
 // Create an Overpass RPC client ...
-$client = new AmqpRpcClient($connection->channel());
+$client = new AmqpRpcClient($connection->channel(), $timeout);
 $client->setLogger(new Logger());
 
 // Make RPC calls forever ...
 while (true) {
     $value = rand(0, 100000);
     $expected = $value * 2;
-    $result = $client->double($value);
-    assert($expected === $result);
 
-    usleep($sleep * 1000000);
+    try {
+        $result = $client->double($value);
+        assert($expected === $result);
+        usleep($sleep * 1000000);
+    } catch (TimeoutException $e) {
+        // ignore
+    }
 }

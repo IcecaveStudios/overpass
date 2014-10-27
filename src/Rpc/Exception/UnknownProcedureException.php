@@ -4,7 +4,8 @@ namespace Icecave\Overpass\Rpc\Exception;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
 use LogicException;
 
-class UnknownProcedureException extends LogicException implements RpcExceptionInterface
+class UnknownProcedureException extends LogicException implements
+    RemoteExceptionInterface
 {
     /**
      * @param string $name The procedure name.

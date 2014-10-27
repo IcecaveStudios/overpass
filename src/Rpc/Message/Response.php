@@ -3,8 +3,8 @@ namespace Icecave\Overpass\Rpc\Message;
 
 use Exception;
 use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
-use Icecave\Overpass\Rpc\Exception\RpcException;
-use Icecave\Overpass\Rpc\Exception\RpcExceptionInterface;
+use Icecave\Overpass\Rpc\Exception\RemoteExceptionInterface;
+use Icecave\Overpass\Rpc\Exception\ExecutionException;
 use Icecave\Overpass\Rpc\Exception\UnknownProcedureException;
 
 /**
@@ -62,8 +62,8 @@ class Response
      */
     public static function createFromException(Exception $exception)
     {
-        if (!$exception instanceof RpcExceptionInterface) {
-            $exception = new RpcException(
+        if (!$exception instanceof RemoteExceptionInterface) {
+            $exception = new ExecutionException(
                 $exception->getMessage()
             );
         }
@@ -100,8 +100,8 @@ class Response
     /**
      * Extract the return value or exception.
      *
-     * @return mixed                 The return value (if the response was successful).
-     * @throws RpcExceptionInterface if the response was not successful.
+     * @return mixed                    The return value (if the response was successful).
+     * @throws RemoteExceptionInterface if the response was not successful.
      */
     public function extract()
     {
@@ -115,7 +115,7 @@ class Response
         }
 
         // ResponseCode::EXCEPTION()
-        throw new RpcException($this->value);
+        throw new ExecutionException($this->value);
     }
 
     public function __toString()

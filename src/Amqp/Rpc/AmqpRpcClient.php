@@ -1,28 +1,35 @@
 <?php
 namespace Icecave\Overpass\Amqp\Rpc;
 
+use Icecave\Isolator\IsolatorTrait;
+use Icecave\Overpass\Rpc\Exception\TimeoutException;
 use Icecave\Overpass\Rpc\Message\MessageSerialization;
 use Icecave\Overpass\Rpc\Message\MessageSerializationInterface;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\RpcClientInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
+use InvalidArgumentException;
 use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerAwareTrait;
 use RuntimeException;
 
 class AmqpRpcClient implements RpcClientInterface
 {
+    use IsolatorTrait;
     use LoggerAwareTrait;
 
     /**
      * @param AMQPChannel                        $channel
+     * @param integer                            $timeout
      * @param DeclarationManager|null            $declarationManager
      * @param MessageSerializationInterface|null $serialization
      */
     public function __construct(
         AMQPChannel $channel,
+        $timeout = 10,
         DeclarationManager $declarationManager = null,
         MessageSerializationInterface $serialization = null
     ) {
@@ -30,6 +37,8 @@ class AmqpRpcClient implements RpcClientInterface
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
         $this->serialization = $serialization ?: new MessageSerialization(new JsonSerialization());
         $this->correlationId = 0;
+
+        $this->setTimeout($timeout);
     }
 
     /**
@@ -61,6 +70,21 @@ class AmqpRpcClient implements RpcClientInterface
 
         $response = $this->wait();
 
+        if (null === $response) {
+            if ($this->logger) {
+                $this->logger->warning(
+                    'RPC #{id} {request} -> <timed out after {timeout} seconds>',
+                    [
+                        'id'      => $correlationId,
+                        'request' => $request,
+                        'timeout' => $this->timeout,
+                    ]
+                );
+            }
+
+            throw new TimeoutException($this->timeout);
+        }
+
         if ($this->logger) {
             $this->logger->debug(
                 'RPC #{id} {request} -> {response}',
@@ -86,6 +110,30 @@ class AmqpRpcClient implements RpcClientInterface
     public function __call($name, array $arguments)
     {
         return $this->call($name, $arguments);
+    }
+
+    /**
+     * Get the RPC response timeout.
+     *
+     * @return integer|float The RPC response timeout in seconds.
+     */
+    public function timeout()
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * Set the RPC response timeout.
+     *
+     * @param integer|float The RPC response timeout in seconds.
+     */
+    public function setTimeout($timeout)
+    {
+        if (!is_numeric($timeout) || $timeout <= 0) {
+            throw new InvalidArgumentException('Timeout must be greater than zero.');
+        }
+
+        $this->timeout = $timeout;
     }
 
     /**
@@ -144,6 +192,9 @@ class AmqpRpcClient implements RpcClientInterface
             [
                 'reply_to'       => $responseQueue,
                 'correlation_id' => $this->correlationId,
+                'expiration'     => strval(
+                    intval($this->timeout * 1000)
+                ),
             ]
         );
 
@@ -185,13 +236,31 @@ class AmqpRpcClient implements RpcClientInterface
      */
     private function wait()
     {
-        while (
-            !$this->response
-            && $this->channel->callbacks
-        ) {
-            $this->channel->wait();
+        $iso     = $this->isolator();
+        $start   = $iso->microtime(true);
+        $elapsed = 0;
+
+        while (null === $this->response) {
+            try {
+                $this
+                    ->channel
+                    ->wait(
+                        null,    // allowed methods
+                        false,   // non-blocking
+                        $this->timeout - $elapsed
+                    );
+            } catch (AMQPTimeoutException $e) {
+                return null;
+            }
+
+            $elapsed = $iso->microtime(true) - $start;
+
+            if ($elapsed > $this->timeout) {
+                return null;
+            }
         }
 
+        // A response was received ...
         $response = $this->response;
         $this->response = null;
 
@@ -201,6 +270,7 @@ class AmqpRpcClient implements RpcClientInterface
     private $channel;
     private $declarationManager;
     private $serialization;
+    private $timeout;
     private $correlationId;
     private $consumerTag;
     private $response;
