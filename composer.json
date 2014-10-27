@@ -1,7 +1,18 @@
 {
     "name": "icecave/overpass",
     "description": "A basic pub/sub and RPC system.",
-    "keywords": [],
+    "keywords": [
+        "pubsub",
+        "publish",
+        "subscribe",
+        "rpc",
+        "rmi",
+        "remote",
+        "procedure",
+        "call",
+        "amqp",
+        "rabbit"
+    ],
     "homepage": "https://github.com/IcecaveStudios/overpass",
     "license": "MIT",
     "authors": [

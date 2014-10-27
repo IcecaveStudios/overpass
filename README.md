@@ -4,7 +4,7 @@
 [![Test Coverage]](https://coveralls.io/r/IcecaveStudios/overpass?branch=develop)
 [![SemVer]](http://semver.org)
 
-**Overpass** needs a description!
+**Overpass** is a basic pub/sub and RPC system for PHP.
 
 * Install via [Composer](http://getcomposer.org) package [icecave/overpass](https://packagist.org/packages/icecave/overpass)
 * Read the [API documentation](http://icecavestudios.github.io/overpass/artifacts/documentation/api/)
