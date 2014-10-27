@@ -1,32 +1,21 @@
 #!/usr/bin/env php
 <?php
-require __DIR__ . '/../vendor/autoload.php';
-
-use Eloquent\Asplode\Asplode;
-use Icecave\Overpass\Amqp\PubSub\AmqpSubscriber;
-use Icecave\Stump\Logger;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-
-Asplode::install();
+// Initialize the AMQP connection, logger, etc.
+require __DIR__ . '/common.php';
 
 // Parse the command line parameters ...
-list(, $sleep, $topic, $server, $port, $username, $password, $vhost) = $_SERVER['argv'] + [
+list(, $sleep, $topic) = $_SERVER['argv'] + [
     null,
-    0,
-    'default-topic',
-    'localhost',
-    5672,
-    'guest',
-    'guest',
-    '/'
+    0,               // sleep
+    'default-topic', // topic
 ];
 
-// Connect to the AMQP server ...
-$connection = new AMQPStreamConnection($server, $port, $username, $password, $vhost);
-
 // Create an Overpass subscriber ...
-$subscriber = new AmqpSubscriber($connection->channel());
-$subscriber->setLogger(new Logger());
+$subscriber = new Icecave\Overpass\Amqp\PubSub\AmqpSubscriber(
+    $amqpChannel
+);
+
+$subscriber->setLogger($logger);
 
 // Consume messages forver ...
 $subscriber->subscribe($topic);

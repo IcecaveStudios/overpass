@@ -1,33 +1,22 @@
 #!/usr/bin/env php
 <?php
-require __DIR__ . '/../vendor/autoload.php';
-
-use Eloquent\Asplode\Asplode;
-use Icecave\Overpass\Amqp\Rpc\AmqpRpcClient;
-use ICecave\Overpass\Rpc\Exception\TimeoutException;
-use Icecave\Stump\Logger;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-
-Asplode::install();
+// Initialize the AMQP connection, logger, etc.
+require __DIR__ . '/common.php';
 
 // Parse the command line parameters ...
-list(, $sleep, $timeout, $server, $port, $username, $password, $vhost) = $_SERVER['argv'] + [
+list(, $sleep, $timeout) = $_SERVER['argv'] + [
     null,
-    1,
-    2,
-    'localhost',
-    5672,
-    'guest',
-    'guest',
-    '/'
+    1, // sleep
+    5, // timeout
 ];
 
-// Connect to the AMQP server ...
-$connection = new AMQPStreamConnection($server, $port, $username, $password, $vhost);
-
 // Create an Overpass RPC client ...
-$client = new AmqpRpcClient($connection->channel(), $timeout);
-$client->setLogger(new Logger());
+$client = new Icecave\Overpass\Amqp\Rpc\AmqpRpcClient(
+    $amqpChannel,
+    $timeout
+);
+
+$client->setLogger($logger);
 
 // Make RPC calls forever ...
 while (true) {
@@ -35,10 +24,12 @@ while (true) {
     $expected = $value * 2;
 
     try {
+
         $result = $client->double($value);
         assert($expected === $result);
         usleep($sleep * 1000000);
-    } catch (TimeoutException $e) {
+
+    } catch (Icecave\Overpass\Rpc\Exception\TimeoutException $e) {
         // ignore
     }
 }
