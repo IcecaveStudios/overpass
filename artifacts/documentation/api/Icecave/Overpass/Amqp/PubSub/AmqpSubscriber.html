@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="robots" content="index, follow, all" />
+        <title>Icecave\Overpass\Amqp\PubSub\AmqpSubscriber | icecave/overpass API</title>
+                    <link rel="stylesheet" type="text/css" href="../../../../stylesheet.css">
+                            </head>
+        <body id="class">
+            <div class="header">
+        <ul>
+            <li><a href="../../../../classes.html">Classes</a></li>
+                            <li><a href="../../../../namespaces.html">Namespaces</a></li>
+                        <li><a href="../../../../interfaces.html">Interfaces</a></li>
+            <li><a href="../../../../doc-index.html">Index</a></li>
+            
+        </ul>
+
+        <div id="title">icecave/overpass API</div>
+
+            <div class="type">Class</div>
+    <h1><a href="../../../../Icecave/Overpass/Amqp/PubSub.html">Icecave\Overpass\Amqp\PubSub</a>\AmqpSubscriber</h1>
+    </div>
+        <div class="content">
+                <p>class    <strong>AmqpSubscriber</strong>        implements
+        <a href="../../../../Icecave/Overpass/PubSub/SubscriberInterface.html"><abbr title="Icecave\Overpass\PubSub\SubscriberInterface">SubscriberInterface</abbr></a></p>
+
+    
+    
+    
+            <h2>Methods</h2>
+
+            <table>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method___construct">__construct</a>(<abbr title="PhpAmqpLib\Channel\AMQPChannel">AMQPChannel</abbr> $channel, <a href="../../../../Icecave/Overpass/Amqp/PubSub/DeclarationManager.html"><abbr title="Icecave\Overpass\Amqp\PubSub\DeclarationManager">DeclarationManager</abbr></a> $declarationManager = null, <a href="../../../../Icecave/Overpass/Serialization/SerializationInterface.html"><abbr title="Icecave\Overpass\Serialization\SerializationInterface">SerializationInterface</abbr></a> $serialization = null)
+                    <p>
+</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_subscribe">subscribe</a>(string $topic)
+                    <p>Subscribe to the given topic.</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_unsubscribe">unsubscribe</a>(string $topic)
+                    <p>Unsubscribe from the given topic.</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_consume">consume</a>(<abbr title="Icecave\Overpass\Amqp\PubSub\callable">callable</abbr> $callback)
+                    <p>Consume messages from subscriptions.</p>
+                </td>
+                <td></td>
+            </tr>
+            </table>
+
+
+        <h2>Details</h2>
+
+                        <h3 id="method___construct">
+        <div class="location">at line 20</div>
+        <code>            public            
+    <strong>__construct</strong>(<abbr title="PhpAmqpLib\Channel\AMQPChannel">AMQPChannel</abbr> $channel, <a href="../../../../Icecave/Overpass/Amqp/PubSub/DeclarationManager.html"><abbr title="Icecave\Overpass\Amqp\PubSub\DeclarationManager">DeclarationManager</abbr></a> $declarationManager = null, <a href="../../../../Icecave/Overpass/Serialization/SerializationInterface.html"><abbr title="Icecave\Overpass\Serialization\SerializationInterface">SerializationInterface</abbr></a> $serialization = null)</code>
+    </h3>
+    <div class="details">
+        <p>
+</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><abbr title="PhpAmqpLib\Channel\AMQPChannel">AMQPChannel</abbr></td>
+                <td>$channel</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../../../Icecave/Overpass/Amqp/PubSub/DeclarationManager.html"><abbr title="Icecave\Overpass\Amqp\PubSub\DeclarationManager">DeclarationManager</abbr></a></td>
+                <td>$declarationManager</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../../../Icecave/Overpass/Serialization/SerializationInterface.html"><abbr title="Icecave\Overpass\Serialization\SerializationInterface">SerializationInterface</abbr></a></td>
+                <td>$serialization</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_subscribe">
+        <div class="location">at line 35</div>
+        <code>            public            
+    <strong>subscribe</strong>(string $topic)</code>
+    </h3>
+    <div class="details">
+        <p>Subscribe to the given topic.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>string</td>
+                <td>$topic</td>
+                <td>The topic or topic pattern to subscribe to.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_unsubscribe">
+        <div class="location">at line 76</div>
+        <code>            public            
+    <strong>unsubscribe</strong>(string $topic)</code>
+    </h3>
+    <div class="details">
+        <p>Unsubscribe from the given topic.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>string</td>
+                <td>$topic</td>
+                <td>The topic or topic pattern to unsubscribe from.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_consume">
+        <div class="location">at line 124</div>
+        <code>            public            
+    <strong>consume</strong>(<abbr title="Icecave\Overpass\Amqp\PubSub\callable">callable</abbr> $callback)</code>
+    </h3>
+    <div class="details">
+        <p>Consume messages from subscriptions.</p>
+        <p>When a message is received the callback is invoked with two parameters,
+the first is the topic to which the message was published, the second is
+the message payload.</p>
+
+<p>The callback must return true in order to keep consuming messages, or
+false to end consumption.</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><abbr title="Icecave\Overpass\Amqp\PubSub\callable">callable</abbr></td>
+                <td>$callback</td>
+                <td>The callback to invoke when a message is received.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+    
+            </div>
+            <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/" target="_top">Sami, the API Documentation Generator</a>.
+    </div>
+    </body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="robots" content="index, follow, all" />
+        <title>Icecave\Overpass\Rpc\Message\MessageSerializationInterface | icecave/overpass API</title>
+                    <link rel="stylesheet" type="text/css" href="../../../../stylesheet.css">
+                            </head>
+        <body id="class">
+            <div class="header">
+        <ul>
+            <li><a href="../../../../classes.html">Classes</a></li>
+                            <li><a href="../../../../namespaces.html">Namespaces</a></li>
+                        <li><a href="../../../../interfaces.html">Interfaces</a></li>
+            <li><a href="../../../../doc-index.html">Index</a></li>
+            
+        </ul>
+
+        <div id="title">icecave/overpass API</div>
+
+            <div class="type">Interface</div>
+    <h1><a href="../../../../Icecave/Overpass/Rpc/Message.html">Icecave\Overpass\Rpc\Message</a>\MessageSerializationInterface</h1>
+    </div>
+        <div class="content">
+                <p>interface    <strong>MessageSerializationInterface</strong></p>
+
+    
+    
+    
+            <h2>Methods</h2>
+
+            <table>
+                    <tr>
+                <td class="type">
+                    string
+                </td>
+                <td class="last">
+                    <a href="#method_serializeRequest">serializeRequest</a>(<a href="../../../../Icecave/Overpass/Rpc/Message/Request.html"><abbr title="Icecave\Overpass\Rpc\Message\Request">Request</abbr></a> $request)
+                    <p>Serialize a request message.</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    string
+                </td>
+                <td class="last">
+                    <a href="#method_serializeResponse">serializeResponse</a>(<a href="../../../../Icecave/Overpass/Rpc/Message/Response.html"><abbr title="Icecave\Overpass\Rpc\Message\Response">Response</abbr></a> $response)
+                    <p>Serialize a response message.</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../../../Icecave/Overpass/Rpc/Message/Request.html"><abbr title="Icecave\Overpass\Rpc\Message\Request">Request</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_unserializeRequest">unserializeRequest</a>(string $buffer)
+                    <p>Unserialize a request message.</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../../../Icecave/Overpass/Rpc/Message/Response.html"><abbr title="Icecave\Overpass\Rpc\Message\Response">Response</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_unserializeResponse">unserializeResponse</a>(string $buffer)
+                    <p>Unserialize a response message.</p>
+                </td>
+                <td></td>
+            </tr>
+            </table>
+
+
+        <h2>Details</h2>
+
+                        <h3 id="method_serializeRequest">
+        <div class="location">at line 15</div>
+        <code>            public            string
+    <strong>serializeRequest</strong>(<a href="../../../../Icecave/Overpass/Rpc/Message/Request.html"><abbr title="Icecave\Overpass\Rpc\Message\Request">Request</abbr></a> $request)</code>
+    </h3>
+    <div class="details">
+        <p>Serialize a request message.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../../../Icecave/Overpass/Rpc/Message/Request.html"><abbr title="Icecave\Overpass\Rpc\Message\Request">Request</abbr></a></td>
+                <td>$request</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>string</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_serializeResponse">
+        <div class="location">at line 24</div>
+        <code>            public            string
+    <strong>serializeResponse</strong>(<a href="../../../../Icecave/Overpass/Rpc/Message/Response.html"><abbr title="Icecave\Overpass\Rpc\Message\Response">Response</abbr></a> $response)</code>
+    </h3>
+    <div class="details">
+        <p>Serialize a response message.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../../../Icecave/Overpass/Rpc/Message/Response.html"><abbr title="Icecave\Overpass\Rpc\Message\Response">Response</abbr></a></td>
+                <td>$response</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>string</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_unserializeRequest">
+        <div class="location">at line 34</div>
+        <code>            public            <a href="../../../../Icecave/Overpass/Rpc/Message/Request.html"><abbr title="Icecave\Overpass\Rpc\Message\Request">Request</abbr></a>
+    <strong>unserializeRequest</strong>(string $buffer)</code>
+    </h3>
+    <div class="details">
+        <p>Unserialize a request message.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>string</td>
+                <td>$buffer</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../../../Icecave/Overpass/Rpc/Message/Request.html"><abbr title="Icecave\Overpass\Rpc\Message\Request">Request</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><abbr title="InvalidMessageException">InvalidMessageException</abbr></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_unserializeResponse">
+        <div class="location">at line 44</div>
+        <code>            public            <a href="../../../../Icecave/Overpass/Rpc/Message/Response.html"><abbr title="Icecave\Overpass\Rpc\Message\Response">Response</abbr></a>
+    <strong>unserializeResponse</strong>(string $buffer)</code>
+    </h3>
+    <div class="details">
+        <p>Unserialize a response message.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>string</td>
+                <td>$buffer</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../../../Icecave/Overpass/Rpc/Message/Response.html"><abbr title="Icecave\Overpass\Rpc\Message\Response">Response</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><abbr title="InvalidMessageException">InvalidMessageException</abbr></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+    
+            </div>
+            <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/" target="_top">Sami, the API Documentation Generator</a>.
+    </div>
+    </body>
+</html>
