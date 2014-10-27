@@ -3,7 +3,6 @@ namespace Icecave\Overpass\Rpc\Exception;
 
 use Icecave\Overpass\Rpc\Message\ResponseCode;
 use InvalidArgumentException;
-use LogicException;
 
 class InvalidArgumentsException extends InvalidArgumentException implements RpcExceptionInterface
 {

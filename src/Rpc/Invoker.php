@@ -2,11 +2,12 @@
 namespace Icecave\Overpass\Rpc;
 
 use Exception;
-use Icecave\Overpass\Rpc\Exception\InvalidArgumentsException;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
+use Icecave\Overpass\Rpc\Message\ResponseCode;
 use ReflectionFunction;
 use ReflectionMethod;
+use ReflectionParameter;
 
 class Invoker implements InvokerInterface
 {
@@ -23,11 +24,16 @@ class Invoker implements InvokerInterface
         $value = null;
         $exception = null;
 
+        $response = $this->validateArguments(
+            $procedure,
+            $request->arguments()
+        );
+
+        if ($response) {
+            return $response;
+        }
+
         try {
-            $this->validateArguments(
-                $procedure,
-                $request->arguments()
-            );
 
             $value = call_user_func_array(
                 $procedure,
@@ -44,107 +50,81 @@ class Invoker implements InvokerInterface
     {
         $reflector = $this->reflector($procedure);
 
-        $arity = $reflector->getNumberOfRequiredParameters();
+        $count    = count($arguments);
+        $minArity = $reflector->getNumberOfRequiredParameters();
+        $maxArity = $reflector->getNumberOfParameters();
 
-        if (count($arguments) < $arity) {
-            throw new InvalidArgumentsException(
-                'At least ' . $arity . ' arguments are required.'
+        if ($count < $minArity) {
+            return Response::create(
+                ResponseCode::INVALID_ARGUMENTS(),
+                'At least ' . $minArity . ' arguments are required.'
             );
         }
 
         $parameters = $reflector->getParameters();
 
-        $index = 0;
-
-        foreach ($arguments as $argument) {
-            $parameter = $parameters[$index++];
-
+        for ($index = 0; $index < min($count, $maxArity); ++$index) {
             $error = $this->validateArgument(
-                $parameter,
-                $argument
+                $parameters[$index],
+                $arguments[$index]
             );
 
             if ($error) {
-                throw new InvalidArgumentException(
+                return Response::create(
+                    ResponseCode::INVALID_ARGUMENTS(),
                     sprintf(
-                        'Argument %s: %s',
-                        $parameter->getName(),
+                        'Argument "%s" %s.',
+                        $parameters[$index]->getName(),
                         $error
                     )
                 );
             }
         }
+
+        return null;
     }
 
     private function validateArgument(ReflectionParameter $parameter, $argument)
     {
-        if (null === $argument && $parameter->allowNull()) {
-            return null;
-        } elseif ($parameter->isArray()) {
-            if (!is_array($argument)) {
-                return 'Must be an array.';
-            }
-        } elseif ($parameter->isCallable())
+        if ($parameter->allowsNull()) {
+            $suffix = ' or null';
 
-        if (null === $argument) {
-            if (!$parameter->allowsNull()) {
-                return 'Must not be null.'
-                throw new InvalidArgumentException(
-                    'Argument ' . $parameter
-                );
+            if (null === $argument) {
+                return null;
             }
+        } else {
+            $suffix = '';
         }
+
         if ($parameter->isArray()) {
-
-        }
-            if ($hint = $parameter->getClass()) {
-                $hint->isInstance($argument)
-
-                throw new InvalidArgumentsException(
-                    'Argument ' . $parameter->getName() . ' must be an instance of ' . $hint->getName() . '.'
-                );
+            if (!is_array($argument)) {
+                return 'must be an array' . $suffix;
             }
+        } elseif ($parameter->isCallable()) {
+            if (!is_callable($argument)) {
+                return 'must be callable' . $suffix;
+            }
+        } elseif ($hint = $parameter->getClass()) {
+            if (!is_object($argument) || !$hint->isInstance($argument)) {
+                return 'must be an instance of "' . $hint->getName() . '"' . $suffix;
+            }
+        }
 
-            if ($parameter->isArray())
-
-    }
-
-        // TODO
-
-        // // The implementation is a string representing a static method ...
-        // if (is_string($implementation) && $pos = strpos($implementation, '::')) {
-        //     $this->reflector = new ReflectionMethod(
-        //         substr($implementation, 0, $pos),
-        //         substr($implementation, $pos + 2)
-        //     );
-
-        // // The implementation is an array representing a method ...
-        // } elseif (is_array($implementation)) {
-        //     list($classOrObject, $method) = $implementation;
-
-        //     $this->reflector = new ReflectionMethod(
-        //         $classOrObject,
-        //         $method
-        //     );
-
-        // // The implementation is a global function, callable object, etc ...
-        // } else {
-        //     $this->reflector = new ReflectionFunction($implementation);
-        // }
+        return null;
     }
 
     private function reflector(callable $procedure)
     {
         // The implementation is a string representing a static method ...
-        if (is_string($implementation) && $pos = strpos($implementation, '::')) {
+        if (is_string($procedure) && $pos = strpos($procedure, '::')) {
             return new ReflectionMethod(
-                substr($implementation, 0, $pos),
-                substr($implementation, $pos + 2)
+                substr($procedure, 0, $pos),
+                substr($procedure, $pos + 2)
             );
 
         // The implementation is an array representing a method ...
-        } elseif (is_array($implementation)) {
-            list($classOrObject, $method) = $implementation;
+        } elseif (is_array($procedure)) {
+            list($classOrObject, $method) = $procedure;
 
             return new ReflectionMethod(
                 $classOrObject,
@@ -153,7 +133,7 @@ class Invoker implements InvokerInterface
 
         // The implementation is a global function, callable object, etc ...
         } else {
-            return new ReflectionFunction($implementation);
+            return new ReflectionFunction($procedure);
         }
     }
 }

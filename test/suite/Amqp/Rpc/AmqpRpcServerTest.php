@@ -1,6 +1,7 @@
 <?php
 namespace Icecave\Overpass\Amqp\Rpc;
 
+use Icecave\Overpass\Rpc\Invoker;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
@@ -19,6 +20,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $this->channel = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
         $this->logger = Phake::mock(LoggerInterface::class);
+        $this->invoker = Phake::partialMock(Invoker::class);
         $this->procedure1 = function () { return '<procedure-1: ' . implode(', ', func_get_args()) . '>'; };
         $this->procedure2 = function () { return '<procedure-2: ' . implode(', ', func_get_args()) . '>'; };
         $this->procedure3 = function () { throw new RuntimeException('The procedure failed!'); };
@@ -68,7 +70,9 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $this->server = new AmqpRpcServer(
             $this->logger,
             $this->channel,
-            $this->declarationManager
+            $this->declarationManager,
+            null,
+            $this->invoker
         );
     }
 
@@ -225,6 +229,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                     'request' => $expectedRequest,
                 ]
             ),
+            Phake::verify($this->invoker)->invoke($expectedRequest, $this->procedure1),
             Phake::verify($this->channel)->basic_publish(
                 Phake::capture($responseMessage),
                 '', // default direct exchange
