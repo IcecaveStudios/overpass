@@ -1,9 +1,14 @@
 #!/usr/bin/env php
 <?php
-// Initialize the AMQP connection, logger, etc.
+/**
+ * Initialize the logger and AMQP connection.
+ */
 require __DIR__ . '/common.php';
 
-// Create an Overpass RPC server ...
+/**
+ * Create an Overpass RPC server that exposes a single procedure named 'double'
+ * which takes a single number as input and doubles it.
+ */
 $server = new Icecave\Overpass\Amqp\Rpc\AmqpRpcServer(
     $logger,
     $amqpChannel
@@ -16,5 +21,7 @@ $server->expose(
     }
 );
 
-// Service RPC requests forever ...
+/**
+ * Service RPC requests forever!
+ */
 $server->run();

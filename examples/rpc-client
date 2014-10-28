@@ -1,16 +1,25 @@
 #!/usr/bin/env php
 <?php
-// Initialize the AMQP connection, logger, etc.
+/**
+ * Initialize the logger and AMQP connection.
+ */
 require __DIR__ . '/common.php';
 
-// Parse the command line parameters ...
+/**
+ * Parse the command line parameters.
+ *
+ * sleep: Number of seconds to wait between making RPC requests.
+ * timeout: The call timeout in seconds.
+ */
 list(, $sleep, $timeout) = $_SERVER['argv'] + [
     null,
     1, // sleep
     5, // timeout
 ];
 
-// Create an Overpass RPC client ...
+/**
+ * Create an Overpass RPC client.
+ */
 $client = new Icecave\Overpass\Amqp\Rpc\AmqpRpcClient(
     $amqpChannel,
     $timeout
@@ -18,7 +27,9 @@ $client = new Icecave\Overpass\Amqp\Rpc\AmqpRpcClient(
 
 $client->setLogger($logger);
 
-// Make RPC calls forever ...
+/**
+ * Make RPC calls forever!
+ */
 while (true) {
     $value = rand(0, 100000);
     $expected = $value * 2;
@@ -30,6 +41,6 @@ while (true) {
         usleep($sleep * 1000000);
 
     } catch (Icecave\Overpass\Rpc\Exception\TimeoutException $e) {
-        // ignore
+        // ignore timeout exceptions (they will be logged anyway)
     }
 }

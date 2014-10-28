@@ -1,31 +1,40 @@
 #!/usr/bin/env php
 <?php
-// Initialize the AMQP connection, logger, etc.
+/**
+ * Initialize the logger and AMQP connection.
+ */
 require __DIR__ . '/common.php';
 
-// Parse the command line parameters ...
+/**
+ * Parse the command line parameters.
+ *
+ * sleep: Number of seconds to wait between publishing messages.
+ * topic: The topic to which messages are published.
+ */
 list(, $sleep, $topic) = $_SERVER['argv'] + [
     null,
     1,               // sleep
     'default-topic', // topic
 ];
 
-// Create an Overpass publisher ...
+/**
+ * Create an Overpass publisher.
+ *
+ * The publisher has a single method for pushing messages to a particular topic.
+ */
 $publisher = new Icecave\Overpass\Amqp\PubSub\AmqpPublisher(
     $amqpChannel
 );
 
 $publisher->setLogger($logger);
 
-// Publish messages forever...
+/**
+ * Publish messages forever!
+ */
 $payloadCounter = 1;
 
 while (true) {
-    $payload = (object) [
-        'counter' => $payloadCounter++
-    ];
-
+    $payload = (object) ['counter' => $payloadCounter++];
     $publisher->publish($topic, $payload);
-
     usleep($sleep * 1000000);
 }
