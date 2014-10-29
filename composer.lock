@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6dad83e0600ad94f25b9a08f0c7d898b",
+    "hash": "16f2a0c381dcf8397acbf15ea4cba24b",
     "packages": [
         {
             "name": "eloquent/enumeration",
@@ -57,16 +57,16 @@
         },
         {
             "name": "icecave/isolator",
-            "version": "2.3.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/IcecaveStudios/isolator.git",
-                "reference": "97c51fafa39c57a8f1a31f978a48fbe6cea4a5d5"
+                "reference": "7d975e5324cec69d2bcc2cda1e19c8f52923a48f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IcecaveStudios/isolator/zipball/97c51fafa39c57a8f1a31f978a48fbe6cea4a5d5",
-                "reference": "97c51fafa39c57a8f1a31f978a48fbe6cea4a5d5",
+                "url": "https://api.github.com/repos/IcecaveStudios/isolator/zipball/7d975e5324cec69d2bcc2cda1e19c8f52923a48f",
+                "reference": "7d975e5324cec69d2bcc2cda1e19c8f52923a48f",
                 "shasum": ""
             },
             "require": {
@@ -75,14 +75,19 @@
             "require-dev": {
                 "icecave/archer": "~1"
             },
-            "suggest": {
-                "eloquent/asplode": "Drop-in exception-based error handling."
-            },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "3.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Icecave\\Isolator\\": "src"
-                }
+                },
+                "files": [
+                    "src/register-autoloader.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -98,14 +103,15 @@
             "description": "Dependency injection for global functions.",
             "homepage": "https://github.com/IcecaveStudios/isolator",
             "keywords": [
+                "Double",
                 "fake",
                 "mock",
-                "phake",
                 "phpunit",
+                "stub",
                 "test",
                 "unit"
             ],
-            "time": "2014-08-12 03:16:11"
+            "time": "2014-10-08 01:06:45"
         },
         {
             "name": "psr/log",
@@ -261,20 +267,20 @@
         },
         {
             "name": "eloquent/asplode",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eloquent/asplode.git",
-                "reference": "3365af7eca041bf07eb5d41def12e53478f52d1b"
+                "reference": "6c15bfa11d72b76be9b0a31a145dc2b122db455b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eloquent/asplode/zipball/3365af7eca041bf07eb5d41def12e53478f52d1b",
-                "reference": "3365af7eca041bf07eb5d41def12e53478f52d1b",
+                "url": "https://api.github.com/repos/eloquent/asplode/zipball/6c15bfa11d72b76be9b0a31a145dc2b122db455b",
+                "reference": "6c15bfa11d72b76be9b0a31a145dc2b122db455b",
                 "shasum": ""
             },
             "require": {
-                "icecave/isolator": "~2",
+                "icecave/isolator": "~2|~3",
                 "php": ">=5.3"
             },
             "require-dev": {
@@ -308,7 +314,7 @@
                 "handler",
                 "handling"
             ],
-            "time": "2014-01-25 12:31:54"
+            "time": "2014-10-29 00:15:53"
         },
         {
             "name": "guzzle/guzzle",
