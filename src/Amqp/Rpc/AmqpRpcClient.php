@@ -44,12 +44,28 @@ class AmqpRpcClient implements RpcClientInterface
     /**
      * Invoke a remote procedure.
      *
+     * @param string $name         The name of the procedure to invoke
+     * @param mixed  $argument,... The arguments to pass.
+     *
+     * @return mixed The return value.
+     */
+    public function invoke($name)
+    {
+        return $this->invokeArray(
+            $name,
+            array_slice(func_get_args(), 1)
+        );
+    }
+
+    /**
+     * Invoke a remote procedure.
+     *
      * @param string $name      The name of the procedure to invoke
      * @param array  $arguments The arguments to pass.
      *
      * @return mixed The return value.
      */
-    public function call($name, array $arguments)
+    public function invokeArray($name, array $arguments)
     {
         $this->initialize();
 
@@ -109,7 +125,7 @@ class AmqpRpcClient implements RpcClientInterface
      */
     public function __call($name, array $arguments)
     {
-        return $this->call($name, $arguments);
+        return $this->invokeArray($name, $arguments);
     }
 
     /**
