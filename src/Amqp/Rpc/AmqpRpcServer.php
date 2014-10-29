@@ -16,6 +16,7 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
+use ReflectionClass;
 
 class AmqpRpcServer implements RpcServerInterface
 {
@@ -62,6 +63,32 @@ class AmqpRpcServer implements RpcServerInterface
         }
 
         $this->procedures[$name] = $procedure;
+    }
+
+    /**
+     * Expose all public methods on an object.
+     *
+     * @param object $object The object with the methods to expose.
+     * @param string $prefix A string to prefix to all method names.
+     */
+    public function exposeObject($object, $prefix = '')
+    {
+        $reflector = new ReflectionClass($object);
+
+        foreach ($reflector->getMethods() as $method) {
+            if ($method->isStatic()) {
+                continue;
+            } elseif (!$method->isPublic()) {
+                continue;
+            }
+
+            $name = $prefix . $method->getName();
+
+            $this->expose(
+                $name,
+                [$object, $method->getName()]
+            );
+        }
     }
 
     /**

@@ -1,42 +1,40 @@
 #!/usr/bin/env php
 <?php
-require __DIR__ . '/../vendor/autoload.php';
+/**
+ * Initialize the logger and AMQP connection.
+ */
+require __DIR__ . '/common.php';
 
-use Eloquent\Asplode\Asplode;
-use Icecave\Overpass\Amqp\PubSub\AmqpPublisher;
-use Icecave\Stump\Logger;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-
-Asplode::install();
-
-// Parse the command line parameters ...
-list(, $sleep, $topic, $server, $port, $username, $password, $vhost) = $_SERVER['argv'] + [
+/**
+ * Parse the command line parameters.
+ *
+ * sleep: Number of seconds to wait between publishing messages.
+ * topic: The topic to which messages are published.
+ */
+list(, $sleep, $topic) = $_SERVER['argv'] + [
     null,
-    1,
-    'default-topic',
-    'localhost',
-    5672,
-    'guest',
-    'guest',
-    '/'
+    1,               // sleep
+    'default-topic', // topic
 ];
 
-// Connect to the AMQP server ...
-$connection = new AMQPStreamConnection($server, $port, $username, $password, $vhost);
+/**
+ * Create an Overpass publisher.
+ *
+ * The publisher has a single method for pushing messages to a particular topic.
+ */
+$publisher = new Icecave\Overpass\Amqp\PubSub\AmqpPublisher(
+    $amqpChannel
+);
 
-// Create an Overpass publisher ...
-$publisher = new AmqpPublisher($connection->channel());
-$publisher->setLogger(new Logger());
+$publisher->setLogger($logger);
 
-// Publish messages forever...
+/**
+ * Publish messages forever!
+ */
 $payloadCounter = 1;
 
 while (true) {
-    $payload = (object) [
-        'counter' => $payloadCounter++
-    ];
-
+    $payload = (object) ['counter' => $payloadCounter++];
     $publisher->publish($topic, $payload);
-
     usleep($sleep * 1000000);
 }

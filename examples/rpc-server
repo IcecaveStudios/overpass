@@ -1,29 +1,19 @@
 #!/usr/bin/env php
 <?php
-require __DIR__ . '/../vendor/autoload.php';
+/**
+ * Initialize the logger and AMQP connection.
+ */
+require __DIR__ . '/common.php';
 
-use Eloquent\Asplode\Asplode;
-use Icecave\Overpass\Amqp\Rpc\AmqpRpcServer;
-use Icecave\Stump\Logger;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
+/**
+ * Create an Overpass RPC server that exposes a single procedure named 'double'
+ * which takes a single number as input and doubles it.
+ */
+$server = new Icecave\Overpass\Amqp\Rpc\AmqpRpcServer(
+    $logger,
+    $amqpChannel
+);
 
-Asplode::install();
-
-// Parse the command line parameters ...
-list(, $server, $port, $username, $password, $vhost) = $_SERVER['argv'] + [
-    null,
-    'localhost',
-    5672,
-    'guest',
-    'guest',
-    '/'
-];
-
-// Connect to the AMQP server ...
-$connection = new AMQPStreamConnection($server, $port, $username, $password, $vhost);
-
-// Create an Overpass RPC server ...
-$server = new AmqpRpcServer(new Logger(), $connection->channel());
 $server->expose(
     'double',
     function ($value) {
@@ -31,5 +21,7 @@ $server->expose(
     }
 );
 
-// Service RPC requests forever ...
+/**
+ * Service RPC requests forever!
+ */
 $server->run();
