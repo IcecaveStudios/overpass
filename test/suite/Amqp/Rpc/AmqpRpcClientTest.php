@@ -94,9 +94,9 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         $this->client->setIsolator($this->isolator);
     }
 
-    public function testCall()
+    public function testInvoke()
     {
-        $result = $this->client->call('procedure-name', [1, 2, 3]);
+        $result = $this->client->invoke('procedure-name', 1, 2, 3);
 
         $callback = null;
 
@@ -144,7 +144,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testCallIgnoresPreviousResponses()
+    public function testInvokeIgnoresPreviousResponses()
     {
         Phake::when($this->channel)
             ->wait(Phake::anyParameters())
@@ -172,7 +172,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
                 }
             );
 
-        $result = $this->client->call('procedure-name', [1, 2, 3]);
+        $result = $this->client->invoke('procedure-name', 1, 2, 3);
 
         $message = null;
 
@@ -193,32 +193,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testSetTimeout()
-    {
-        $this->assertSame(
-            1.5,
-            $this->client->timeout()
-        );
-
-        $this->client->setTimeout(15);
-
-        $this->assertSame(
-            15,
-            $this->client->timeout()
-        );
-    }
-
-    public function testSetTimeoutFailure()
-    {
-        $this->setExpectedException(
-            'InvalidArgumentException',
-            'Timeout must be greater than zero.'
-        );
-
-        $this->client->setTimeout(-10);
-    }
-
-    public function testCallFailsWithFutureResponses()
+    public function testInvokeFailsWithFutureResponses()
     {
         Phake::when($this->channel)
             ->wait(Phake::anyParameters())
@@ -240,24 +215,24 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
             'Out-of-order RPC response returned by server.'
         );
 
-        $this->client->call('procedure-name', [1, 2, 3]);
+        $this->client->invoke('procedure-name', 1, 2, 3);
     }
 
-    public function testCallInitializesOnce()
+    public function testInvokeInitializesOnce()
     {
-        $result = $this->client->call('procedure-1', [1, 2, 3]);
-        $result = $this->client->call('procedure-2', [1, 2, 3]);
+        $result = $this->client->invoke('procedure-1', 1, 2, 3);
+        $result = $this->client->invoke('procedure-2', 1, 2, 3);
 
         Phake::verify($this->channel, Phake::times(1))->basic_consume(
             Phake::anyParameters()
         );
     }
 
-    public function testCallLogging()
+    public function testInvokeLogging()
     {
         $this->client->setLogger($this->logger);
 
-        $this->client->call('procedure-name', [1, 2, 3]);
+        $this->client->invoke('procedure-name', 1, 2, 3);
 
         $callback = null;
 
@@ -289,7 +264,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testCallLoggingWithTimeout()
+    public function testInvokeLoggingWithTimeout()
     {
         $this->client->setLogger($this->logger);
 
@@ -304,7 +279,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         );
 
         try {
-            $this->client->call('procedure-name', [1, 2, 3]);
+            $this->client->invoke('procedure-name', 1, 2, 3);
         } catch (TimeoutException $e) {
             Phake::verify($this->logger)->warning(
                 'RPC #{id} {request} -> <timed out after {timeout} seconds>',
@@ -319,7 +294,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function testCallWithAmqpTimeout()
+    public function testInvokeWithAmqpTimeout()
     {
         $exception = new AMQPTimeoutException('Timeout!');
 
@@ -331,10 +306,10 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
             TimeoutException::class
         );
 
-        $this->client->call('procedure-name', [1, 2, 3]);
+        $this->client->invoke('procedure-name', 1, 2, 3);
     }
 
-    public function testCallWithElapsedTimeTimeout()
+    public function testInvokeWithElapsedTimeTimeout()
     {
         $this->client->setTimeout(2.5);
 
@@ -359,7 +334,7 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         );
 
         try {
-            $this->client->call('procedure-name', [1, 2, 3]);
+            $this->client->invoke('procedure-name', 1, 2, 3);
         } catch (TimeoutException $e) {
             Phake::inOrder(
                 Phake::verify($this->channel)->wait(null, false, 2.5),
@@ -379,5 +354,30 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
             123,
             $result
         );
+    }
+
+    public function testSetTimeout()
+    {
+        $this->assertSame(
+            1.5,
+            $this->client->timeout()
+        );
+
+        $this->client->setTimeout(15);
+
+        $this->assertSame(
+            15,
+            $this->client->timeout()
+        );
+    }
+
+    public function testSetTimeoutFailure()
+    {
+        $this->setExpectedException(
+            'InvalidArgumentException',
+            'Timeout must be greater than zero.'
+        );
+
+        $this->client->setTimeout(-10);
     }
 }
