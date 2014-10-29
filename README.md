@@ -32,4 +32,4 @@
 <!-- references -->
 [Build Status]: http://img.shields.io/travis/IcecaveStudios/overpass/develop.svg?style=flat-square
 [Test Coverage]: http://img.shields.io/coveralls/IcecaveStudios/overpass/develop.svg?style=flat-square
-[SemVer]: http://img.shields.io/:semver-0.2.0-yellow.svg?style=flat-square
+[SemVer]: http://img.shields.io/:semver-0.3.0-yellow.svg?style=flat-square
