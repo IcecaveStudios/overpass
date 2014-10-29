@@ -67,7 +67,8 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 }
             );
 
-        $this->server = new AmqpRpcServer(
+        $this->server = Phake::partialMock(
+            AmqpRpcServer::class,
             $this->logger,
             $this->channel,
             $this->declarationManager,
@@ -101,6 +102,50 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $this->server->run();
 
         $this->server->expose('procedure-2', $this->procedure2);
+    }
+
+    public function testExposeObject()
+    {
+        $object = new ExposedObject();
+
+        $this->server->exposeObject($object);
+
+        Phake::verify($this->server)->expose(
+            'methodOne',
+            [$object, 'methodOne']
+        );
+
+        Phake::verify($this->server)->expose(
+            'methodTwo',
+            [$object, 'methodTwo']
+        );
+
+        Phake::verify($this->server, Phake::never())->expose(
+            'privateMethod',
+            Phake::anyParameters()
+        );
+
+        Phake::verify($this->server, Phake::never())->expose(
+            'staticMethod',
+            Phake::anyParameters()
+        );
+    }
+
+    public function testExposeObjectWithPrefix()
+    {
+        $object = new ExposedObject();
+
+        $this->server->exposeObject($object, 'foo.');
+
+        Phake::verify($this->server)->expose(
+            'foo.methodOne',
+            [$object, 'methodOne']
+        );
+
+        Phake::verify($this->server)->expose(
+            'foo.methodTwo',
+            [$object, 'methodTwo']
+        );
     }
 
     public function testRun()

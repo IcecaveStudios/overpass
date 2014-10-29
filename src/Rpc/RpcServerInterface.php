@@ -16,6 +16,14 @@ interface RpcServerInterface extends LoggerAwareInterface
     public function expose($name, callable $procedure);
 
     /**
+     * Expose all public methods on an object.
+     *
+     * @param object $object The object with the methods to expose.
+     * @param string $prefix A string to prefix to all method names.
+     */
+    public function exposeObject($object, $prefix = '');
+
+    /**
      * Run the RPC server.
      */
     public function run();
