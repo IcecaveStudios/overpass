@@ -80,6 +80,8 @@ class AmqpRpcServer implements RpcServerInterface
                 continue;
             } elseif (!$method->isPublic()) {
                 continue;
+            } elseif ('_' === $method->getName()[0]) {
+                continue;
             }
 
             $name = $prefix . $method->getName();

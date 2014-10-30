@@ -121,6 +121,21 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
 
         Phake::verify($this->server, Phake::never())->expose(
+            '__construct',
+            Phake::anyParameters()
+        );
+
+        Phake::verify($this->server, Phake::never())->expose(
+            '__destruct',
+            Phake::anyParameters()
+        );
+
+        Phake::verify($this->server, Phake::never())->expose(
+            '__toString',
+            Phake::anyParameters()
+        );
+
+        Phake::verify($this->server, Phake::never())->expose(
             'privateMethod',
             Phake::anyParameters()
         );
