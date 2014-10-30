@@ -1,5 +1,9 @@
 # Overpass Changelog
 
+### 0.3.1 (2014-10-30)
+
+* **[FIXED]** `AmqpRpcServer::exposeObject()` no longer exposes methods with names that begin with an underscore
+
 ### 0.3.0 (2014-10-29)
 
 * **[BC]** Renamed `RpcClientInterface::call()` to `invokeArray()` and added `invoke($name, ...)`
