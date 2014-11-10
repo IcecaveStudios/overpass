@@ -17,11 +17,11 @@
 ## Examples
 
 * Pub/Sub
-  * [Publisher](src/examples/pubsub-publisher)
-  * [Subscriber](src/examples/pubsub-subscriber)
+  * [Publisher](examples/pubsub-publisher)
+  * [Subscriber](examples/pubsub-subscriber)
 * RPC
-  * [Server](src/examples/rpc-server)
-  * [Client](src/examples/rpc-client)
+  * [Server](examples/rpc-server)
+  * [Client](examples/rpc-client)
 
 ## Contact us
 
