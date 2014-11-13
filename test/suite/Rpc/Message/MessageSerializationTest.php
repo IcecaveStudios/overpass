@@ -16,7 +16,7 @@ class MessageSerializationTest extends PHPUnit_Framework_TestCase
         $this->responseBuffer = '[0,"<return-value>"]';
 
         $this->serialization = new MessageSerialization(
-            new JsonSerialization()
+            new JsonSerialization
         );
     }
 

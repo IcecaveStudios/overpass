@@ -13,7 +13,7 @@ class InvokerTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->invoker = new Invoker();
+        $this->invoker = new Invoker;
     }
 
     public function testInvokeWithClosure()

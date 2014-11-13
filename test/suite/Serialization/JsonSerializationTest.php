@@ -8,7 +8,7 @@ class JsonSerializationTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->serialization = new JsonSerialization();
+        $this->serialization = new JsonSerialization;
     }
 
     public function testSerialize()

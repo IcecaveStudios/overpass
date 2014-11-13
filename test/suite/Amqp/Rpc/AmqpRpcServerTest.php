@@ -106,7 +106,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
     public function testExposeObject()
     {
-        $object = new ExposedObject();
+        $object = new ExposedObject;
 
         $this->server->exposeObject($object);
 
@@ -148,7 +148,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
     public function testExposeObjectWithPrefix()
     {
-        $object = new ExposedObject();
+        $object = new ExposedObject;
 
         $this->server->exposeObject($object, 'foo.');
 
