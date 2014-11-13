@@ -22,9 +22,9 @@ class AmqpSubscriber implements SubscriberInterface
         DeclarationManager $declarationManager = null,
         SerializationInterface $serialization = null
     ) {
-        $this->channel = $channel;
+        $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization = $serialization ?: new JsonSerialization();
+        $this->serialization      = $serialization ?: new JsonSerialization();
     }
 
     /**
@@ -183,7 +183,7 @@ class AmqpSubscriber implements SubscriberInterface
             $this->logger->debug(
                 'Received {payload} from topic "{topic}"',
                 [
-                    'topic' => $topic,
+                    'topic'   => $topic,
                     'payload' => json_encode($payload),
                 ]
             );
@@ -207,7 +207,7 @@ class AmqpSubscriber implements SubscriberInterface
             );
 
         $this->consumerCallback = null;
-        $this->consumerTag = null;
+        $this->consumerTag      = null;
     }
 
     private $channel;

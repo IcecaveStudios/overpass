@@ -9,10 +9,10 @@ class MessageSerializationTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->request = Request::create('procedure-name', [1, 2, 3]);
+        $this->request  = Request::create('procedure-name', [1, 2, 3]);
         $this->response = Response::createFromValue('<return-value>');
 
-        $this->requestBuffer = '["procedure-name",[1,2,3]]';
+        $this->requestBuffer  = '["procedure-name",[1,2,3]]';
         $this->responseBuffer = '[0,"<return-value>"]';
 
         $this->serialization = new MessageSerialization(

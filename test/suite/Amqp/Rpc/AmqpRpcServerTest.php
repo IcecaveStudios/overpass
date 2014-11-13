@@ -6,10 +6,10 @@ use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
 use LogicException;
+use PHPUnit_Framework_TestCase;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
-use PHPUnit_Framework_TestCase;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
@@ -17,11 +17,11 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->channel = Phake::mock(AMQPChannel::class);
+        $this->channel            = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
-        $this->logger = Phake::mock(LoggerInterface::class);
-        $this->invoker = Phake::partialMock(Invoker::class);
-        $this->procedure1 = function () { return '<procedure-1: ' . implode(', ', func_get_args()) . '>'; };
+        $this->logger             = Phake::mock(LoggerInterface::class);
+        $this->invoker            = Phake::partialMock(Invoker::class);
+        $this->procedure1         = function () { return '<procedure-1: ' . implode(', ', func_get_args()) . '>'; };
         $this->procedure2 = function () { return '<procedure-2: ' . implode(', ', func_get_args()) . '>'; };
         $this->procedure3 = function () { throw new RuntimeException('The procedure failed!'); };
         $this->consumerTagCounter = 0;
@@ -266,7 +266,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $requestMessage = new AMQPMessage(
             '["procedure-name",[1,2,3]]',
             [
-                'reply_to' => '<response-queue>',
+                'reply_to'       => '<response-queue>',
                 'correlation_id' => 456,
             ]
         );
@@ -277,7 +277,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         $responseMessage = null;
 
-        $expectedRequest = Request::create('procedure-name', [1, 2, 3]);
+        $expectedRequest  = Request::create('procedure-name', [1, 2, 3]);
         $expectedResponse = Response::createFromValue('<procedure-1: 1, 2, 3>');
 
         Phake::inOrder(
@@ -298,8 +298,8 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
             Phake::verify($this->logger)->info(
                 'RPC #{id} {request} -> {response}',
                 [
-                    'id'      => 456,
-                    'request' => $expectedRequest,
+                    'id'       => 456,
+                    'request'  => $expectedRequest,
                     'response' => $expectedResponse,
                 ]
             )

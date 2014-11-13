@@ -1,7 +1,6 @@
 <?php
 namespace Icecave\Overpass\Amqp\Rpc;
 
-use Exception;
 use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
 use Icecave\Overpass\Rpc\Invoker;
 use Icecave\Overpass\Rpc\InvokerInterface;
@@ -36,12 +35,12 @@ class AmqpRpcServer implements RpcServerInterface
         MessageSerializationInterface $serialization = null,
         InvokerInterface $invoker = null
     ) {
-        $this->channel = $channel;
+        $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization = $serialization ?: new MessageSerialization(new JsonSerialization());
-        $this->invoker = $invoker ?: new Invoker();
-        $this->procedures = [];
-        $this->consumerTags = [];
+        $this->serialization      = $serialization ?: new MessageSerialization(new JsonSerialization());
+        $this->invoker            = $invoker ?: new Invoker();
+        $this->procedures         = [];
+        $this->consumerTags       = [];
 
         $this->setLogger($logger);
     }

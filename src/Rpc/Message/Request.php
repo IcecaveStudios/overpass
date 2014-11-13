@@ -12,7 +12,7 @@ class Request
      */
     private function __construct($name, array $arguments)
     {
-        $this->name = $name;
+        $this->name      = $name;
         $this->arguments = $arguments;
     }
 

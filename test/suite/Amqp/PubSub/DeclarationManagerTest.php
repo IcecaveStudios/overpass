@@ -1,9 +1,9 @@
 <?php
 namespace Icecave\Overpass\Amqp\PubSub;
 
+use PHPUnit_Framework_TestCase;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
-use PHPUnit_Framework_TestCase;
 
 class DeclarationManagerTest extends PHPUnit_Framework_TestCase
 {

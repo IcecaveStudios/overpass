@@ -33,10 +33,10 @@ class AmqpRpcClient implements RpcClientInterface
         DeclarationManager $declarationManager = null,
         MessageSerializationInterface $serialization = null
     ) {
-        $this->channel = $channel;
+        $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization = $serialization ?: new MessageSerialization(new JsonSerialization());
-        $this->correlationId = 0;
+        $this->serialization      = $serialization ?: new MessageSerialization(new JsonSerialization());
+        $this->correlationId      = 0;
 
         $this->setTimeout($timeout);
     }
@@ -69,7 +69,7 @@ class AmqpRpcClient implements RpcClientInterface
     {
         $this->initialize();
 
-        $request = Request::create($name, $arguments);
+        $request       = Request::create($name, $arguments);
         $correlationId = ++$this->correlationId;
 
         if ($this->logger) {
@@ -277,7 +277,7 @@ class AmqpRpcClient implements RpcClientInterface
         }
 
         // A response was received ...
-        $response = $this->response;
+        $response       = $this->response;
         $this->response = null;
 
         return $response;

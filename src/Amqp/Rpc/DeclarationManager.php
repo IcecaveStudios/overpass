@@ -10,7 +10,7 @@ class DeclarationManager
 {
     public function __construct(AMQPChannel $channel)
     {
-        $this->channel = $channel;
+        $this->channel       = $channel;
         $this->requestQueues = [];
     }
 

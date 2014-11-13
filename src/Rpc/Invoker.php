@@ -21,7 +21,7 @@ class Invoker implements InvokerInterface
      */
     public function invoke(Request $request, callable $procedure)
     {
-        $value = null;
+        $value     = null;
         $exception = null;
 
         $response = $this->validateArguments(
@@ -34,7 +34,6 @@ class Invoker implements InvokerInterface
         }
 
         try {
-
             $value = call_user_func_array(
                 $procedure,
                 $request->arguments()
