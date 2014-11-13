@@ -37,8 +37,8 @@ class AmqpRpcServer implements RpcServerInterface
     ) {
         $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization      = $serialization ?: new MessageSerialization(new JsonSerialization());
-        $this->invoker            = $invoker ?: new Invoker();
+        $this->serialization      = $serialization ?: new MessageSerialization(new JsonSerialization);
+        $this->invoker            = $invoker ?: new Invoker;
         $this->procedures         = [];
         $this->consumerTags       = [];
 

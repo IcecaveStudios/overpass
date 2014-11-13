@@ -35,7 +35,7 @@ class AmqpRpcClient implements RpcClientInterface
     ) {
         $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization      = $serialization ?: new MessageSerialization(new JsonSerialization());
+        $this->serialization      = $serialization ?: new MessageSerialization(new JsonSerialization);
         $this->correlationId      = 0;
 
         $this->setTimeout($timeout);

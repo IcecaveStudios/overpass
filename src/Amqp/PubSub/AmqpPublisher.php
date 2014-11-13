@@ -24,7 +24,7 @@ class AmqpPublisher implements PublisherInterface
     ) {
         $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization      = $serialization ?: new JsonSerialization();
+        $this->serialization      = $serialization ?: new JsonSerialization;
     }
 
     /**

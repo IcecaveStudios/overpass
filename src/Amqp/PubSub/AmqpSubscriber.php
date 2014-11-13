@@ -24,7 +24,7 @@ class AmqpSubscriber implements SubscriberInterface
     ) {
         $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization      = $serialization ?: new JsonSerialization();
+        $this->serialization      = $serialization ?: new JsonSerialization;
     }
 
     /**
