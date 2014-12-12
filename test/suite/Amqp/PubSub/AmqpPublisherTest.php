@@ -53,7 +53,7 @@ class AmqpPublisherTest extends PHPUnit_Framework_TestCase
         $this->publisher->publish('subscription-topic', 'bar');
 
         Phake::verify($this->logger)->debug(
-            'Published {payload} to topic "{topic}"',
+            'pubsub.publisher {topic} publish: {payload}',
             [
                 'topic'   => 'subscription-topic',
                 'payload' => json_encode('bar'),

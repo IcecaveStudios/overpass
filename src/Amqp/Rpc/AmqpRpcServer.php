@@ -99,7 +99,7 @@ class AmqpRpcServer implements RpcServerInterface
     public function run()
     {
         $this->logger->info(
-            'RPC server starting'
+            'rpc.server starting'
         );
 
         // Bind queues / consumers ...
@@ -108,7 +108,7 @@ class AmqpRpcServer implements RpcServerInterface
         }
 
         $this->logger->info(
-            'RPC server started successfully (procedures: {procedures})',
+            'rpc.server started successfully (procedures: {procedures})',
             [
                 'procedures' => implode(
                     ', ',
@@ -124,7 +124,7 @@ class AmqpRpcServer implements RpcServerInterface
         }
 
         $this->logger->info(
-            'RPC server shutdown gracefully'
+            'rpc.server shutdown gracefully'
         );
     }
 
@@ -135,7 +135,7 @@ class AmqpRpcServer implements RpcServerInterface
     {
         if ($this->channel->callbacks) {
             $this->logger->info(
-                'RPC server stopping'
+                'rpc.server stopping'
             );
 
             foreach (array_keys($this->consumerTags) as $procedureName) {
@@ -186,6 +186,12 @@ class AmqpRpcServer implements RpcServerInterface
      */
     private function recv(AMQPMessage $message)
     {
+        if ($message->has('reply_to')) {
+            $responseQueue = $message->get('reply_to');
+        } else {
+            $responseQueue = '???';
+        }
+
         if ($message->has('correlation_id')) {
             $correlationId = $message->get('correlation_id');
         } else {
@@ -208,9 +214,10 @@ class AmqpRpcServer implements RpcServerInterface
             $procedureName = $request->name();
 
             $this->logger->debug(
-                'RPC #{id} Request {request}',
+                'rpc.server {queue} #{id} request: {request}',
                 [
                     'id'      => $correlationId,
+                    'queue'   => $responseQueue,
                     'request' => $request,
                 ]
             );
@@ -222,35 +229,43 @@ class AmqpRpcServer implements RpcServerInterface
                     $this->procedures[$request->name()]
                 );
         } catch (InvalidMessageException $e) {
-            $procedureName = '<invalid-request>';
-            $response = Response::createFromException($e);
+            $procedureName = '???';
+            $response      = Response::createFromException($e);
         }
 
         $this->send($message, $response);
 
-        if (ResponseCode::SUCCESS() === $response->code()) {
-            $infoValue = 'OK';
-        } else {
-            $infoValue = $response->value();
-        }
-
-        $this->logger->info(
-            'RPC #{id} {procedure} {code} {value}',
-            [
-                'id'          => $correlationId,
-                'procedure'   => $procedureName,
-                'code'        => $response->code()->value(),
-                'value'       => $infoValue,
-            ]
-        );
-
         $this->logger->debug(
-            'RPC #{id} Response {response}',
+            'rpc.server {queue} #{id} response: {response}',
             [
                 'id'       => $correlationId,
+                'queue'    => $responseQueue,
                 'response' => $response,
             ]
         );
+
+        if (ResponseCode::SUCCESS() === $response->code()) {
+            $this->logger->info(
+                'rpc.server {queue} #{id} {procedure} -> {code}',
+                [
+                    'id'        => $correlationId,
+                    'queue'     => $responseQueue,
+                    'procedure' => $procedureName,
+                    'code'      => $response->code(),
+                ]
+            );
+        } else {
+            $this->logger->info(
+                'rpc.server {queue} #{id} {procedure} -> {code} ({value})',
+                [
+                    'id'        => $correlationId,
+                    'queue'     => $responseQueue,
+                    'procedure' => $procedureName,
+                    'code'      => $response->code(),
+                    'value'     => $response->value(),
+                ]
+            );
+        }
     }
 
     private function bind($procedureName)

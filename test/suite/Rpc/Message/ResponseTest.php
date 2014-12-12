@@ -116,7 +116,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
         $response = Response::createFromValue('<return-value>');
 
         $this->assertSame(
-            '"<return-value>"',
+            'SUCCESS ("<return-value>")',
             strval($response)
         );
     }

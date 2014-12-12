@@ -55,7 +55,7 @@ class AmqpPublisher implements PublisherInterface
 
         if ($this->logger) {
             $this->logger->debug(
-                'Published {payload} to topic "{topic}"',
+                'pubsub.publisher {topic} publish: {payload}',
                 [
                     'topic'   => $topic,
                     'payload' => json_encode($payload),

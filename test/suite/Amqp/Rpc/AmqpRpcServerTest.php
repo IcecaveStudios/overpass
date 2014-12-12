@@ -173,7 +173,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $handler = null;
 
         Phake::inOrder(
-            Phake::verify($this->logger)->info('RPC server starting'),
+            Phake::verify($this->logger)->info('rpc.server starting'),
             Phake::verify($this->channel)->basic_consume(
                 '<request-queue-procedure-1>',
                 '',    // consumer tag
@@ -193,13 +193,13 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 $handler
             ),
             Phake::verify($this->logger)->info(
-                'RPC server started successfully (procedures: {procedures})',
+                'rpc.server started successfully (procedures: {procedures})',
                 [
                     'procedures' => 'procedure-1, procedure-2'
                 ]
             ),
             Phake::verify($this->channel, Phake::times(2))->wait(),
-            Phake::verify($this->logger)->info('RPC server shutdown gracefully')
+            Phake::verify($this->logger)->info('rpc.server shutdown gracefully')
         );
 
         $this->assertTrue(
@@ -212,14 +212,14 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $this->server->run();
 
         Phake::inOrder(
-            Phake::verify($this->logger)->info('RPC server starting'),
+            Phake::verify($this->logger)->info('rpc.server starting'),
             Phake::verify($this->logger)->info(
-                'RPC server started successfully (procedures: {procedures})',
+                'rpc.server started successfully (procedures: {procedures})',
                 [
                     'procedures' => '<none>'
                 ]
             ),
-            Phake::verify($this->logger)->info('RPC server shutdown gracefully')
+            Phake::verify($this->logger)->info('rpc.server shutdown gracefully')
         );
 
         Phake::verifyNoInteraction($this->channel);
@@ -240,7 +240,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         $this->server->run();
 
-        Phake::verify($this->logger)->info('RPC server stopping');
+        Phake::verify($this->logger)->info('rpc.server stopping');
         Phake::verify($this->channel)->basic_cancel('<consumer-tag-1>');
         Phake::verify($this->channel)->basic_cancel('<consumer-tag-2>');
     }
@@ -283,9 +283,10 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         Phake::inOrder(
             Phake::verify($this->channel)->basic_ack('<delivery-tag>'),
             Phake::verify($this->logger)->debug(
-                'RPC #{id} Request {request}',
+                'rpc.server {queue} #{id} request: {request}',
                 [
                     'id'      => 456,
+                    'queue'   => '<response-queue>',
                     'request' => $expectedRequest,
                 ]
             ),
@@ -295,20 +296,21 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 '', // default direct exchange
                 '<response-queue>'
             ),
-            Phake::verify($this->logger)->info(
-                'RPC #{id} {procedure} {code} {value}',
-                [
-                    'id'        => 456,
-                    'procedure' => 'procedure-name',
-                    'code'      => ResponseCode::SUCCESS,
-                    'value'     => 'OK',
-                ]
-            ),
             Phake::verify($this->logger)->debug(
-                'RPC #{id} Response {response}',
+                'rpc.server {queue} #{id} response: {response}',
                 [
                     'id'       => 456,
+                    'queue'    => '<response-queue>',
                     'response' => $expectedResponse,
+                ]
+            ),
+            Phake::verify($this->logger)->info(
+                'rpc.server {queue} #{id} {procedure} -> {code}',
+                [
+                    'id'        => 456,
+                    'queue'     => '<response-queue>',
+                    'procedure' => 'procedure-name',
+                    'code'      => ResponseCode::SUCCESS(),
                 ]
             )
         );
@@ -413,14 +415,15 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
 
         Phake::verify($this->logger)->info(
-                'RPC #{id} {procedure} {code} {value}',
-                [
-                    'id'        => '???',
-                    'procedure' => '<invalid-request>',
-                    'code'      => ResponseCode::INVALID_MESSAGE,
-                    'value'     => 'Request payload must be a 2-tuple.',
-                ]
-            );
+            'rpc.server {queue} #{id} {procedure} -> {code} ({value})',
+            [
+                'id'        => '???',
+                'queue'     => '<response-queue>',
+                'procedure' => '???',
+                'code'      => ResponseCode::INVALID_MESSAGE(),
+                'value'     => 'Request payload must be a 2-tuple.'
+            ]
+        );
 
         $this->assertEquals(
             new AMQPMessage(

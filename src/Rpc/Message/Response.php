@@ -121,13 +121,15 @@ class Response
     public function __toString()
     {
         if (ResponseCode::SUCCESS() === $this->code) {
-            return json_encode($this->value);
+            $value = json_encode($this->value);
+        } else {
+            $value = $this->value;
         }
 
         return sprintf(
             '%s (%s)',
             $this->code,
-            $this->value
+            $value
         );
     }
 

@@ -60,7 +60,7 @@ class AmqpSubscriber implements SubscriberInterface
 
         if ($this->logger) {
             $this->logger->debug(
-                'Subscribed to topic "{topic}"',
+                'pubsub.subscriber {topic} subscribe',
                 [
                     'topic' => $topic,
                 ]
@@ -101,7 +101,7 @@ class AmqpSubscriber implements SubscriberInterface
 
         if ($this->logger) {
             $this->logger->debug(
-                'Unsubscribed from topic "{topic}"',
+                'pubsub.subscriber {topic} unsubscribe',
                 [
                     'topic' => $topic,
                 ]
@@ -181,7 +181,7 @@ class AmqpSubscriber implements SubscriberInterface
 
         if ($this->logger) {
             $this->logger->debug(
-                'Received {payload} from topic "{topic}"',
+                'pubsub.subscriber {topic} receive: {payload}',
                 [
                     'topic'   => $topic,
                     'payload' => json_encode($payload),

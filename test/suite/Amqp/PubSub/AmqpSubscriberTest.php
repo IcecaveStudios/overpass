@@ -122,7 +122,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         $this->subscriber->subscribe('subscription.?.topic');
 
         Phake::verify($this->logger)->debug(
-            'Subscribed to topic "{topic}"',
+            'pubsub.subscriber {topic} subscribe',
             [
                 'topic' => 'subscription.?.topic',
             ]
@@ -182,7 +182,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         $this->subscriber->unsubscribe('subscription.?.topic');
 
         Phake::verify($this->logger)->debug(
-            'Unsubscribed from topic "{topic}"',
+            'pubsub.subscriber {topic} unsubscribe',
             [
                 'topic' => 'subscription.?.topic',
             ]
@@ -297,7 +297,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         $handler($this->message);
 
         Phake::verify($this->logger)->debug(
-            'Received {payload} from topic "{topic}"',
+            'pubsub.subscriber {topic} receive: {payload}',
             [
                 'topic'   => 'subscription-topic',
                 'payload' => json_encode($this->payload),

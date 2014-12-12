@@ -247,18 +247,19 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         );
 
         Phake::verify($this->logger)->debug(
-            'RPC #{id} {request}',
+            'rpc.client {queue} #{id} request: {request}',
             [
                 'id'      => 1,
+                'queue'   => '<response-queue>',
                 'request' => Request::create('procedure-name', [1, 2, 3]),
             ]
         );
 
         Phake::verify($this->logger)->debug(
-            'RPC #{id} {request} -> {response}',
+            'rpc.client {queue} #{id} response: {response}',
             [
                 'id'       => 1,
-                'request'  => Request::create('procedure-name', [1, 2, 3]),
+                'queue'    => '<response-queue>',
                 'response' => Response::createFromValue(123),
             ]
         );
@@ -282,11 +283,11 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
             $this->client->invoke('procedure-name', 1, 2, 3);
         } catch (TimeoutException $e) {
             Phake::verify($this->logger)->warning(
-                'RPC #{id} {request} -> <timed out after {timeout} seconds>',
+                'rpc.client {queue} #{id} response: TIMEOUT ({timeout} seconds)',
                 [
                     'id'      => 1,
-                    'request' => Request::create('procedure-name', [1, 2, 3]),
-                    'timeout' => 1.5
+                    'queue'   => '<response-queue>',
+                    'timeout' => 1.5,
                 ]
             );
 
