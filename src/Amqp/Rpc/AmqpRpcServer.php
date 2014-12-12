@@ -8,6 +8,7 @@ use Icecave\Overpass\Rpc\Message\MessageSerialization;
 use Icecave\Overpass\Rpc\Message\MessageSerializationInterface;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
+use Icecave\Overpass\Rpc\Message\ResponseCode;
 use Icecave\Overpass\Rpc\RpcServerInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use LogicException;
@@ -204,8 +205,10 @@ class AmqpRpcServer implements RpcServerInterface
                 ->serialization
                 ->unserializeRequest($message->body);
 
-            $this->logger->info(
-                'RPC #{id} {request}',
+            $procedureName = $request->name();
+
+            $this->logger->debug(
+                'RPC #{id} Request {request}',
                 [
                     'id'      => $correlationId,
                     'request' => $request,
@@ -219,17 +222,32 @@ class AmqpRpcServer implements RpcServerInterface
                     $this->procedures[$request->name()]
                 );
         } catch (InvalidMessageException $e) {
-            $request  = '<invalid-request>';
+            $procedureName = '<invalid-request>';
             $response = Response::createFromException($e);
         }
 
         $this->send($message, $response);
 
+        if (ResponseCode::SUCCESS() === $response->code()) {
+            $infoValue = 'OK';
+        } else {
+            $infoValue = $response->value();
+        }
+
         $this->logger->info(
-            'RPC #{id} {request} -> {response}',
+            'RPC #{id} {procedure} {code} {value}',
+            [
+                'id'          => $correlationId,
+                'procedure'   => $procedureName,
+                'code'        => $response->code()->value(),
+                'value'       => $infoValue,
+            ]
+        );
+
+        $this->logger->debug(
+            'RPC #{id} Response {response}',
             [
                 'id'       => $correlationId,
-                'request'  => $request,
                 'response' => $response,
             ]
         );

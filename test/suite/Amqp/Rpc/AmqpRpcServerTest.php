@@ -282,8 +282,8 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         Phake::inOrder(
             Phake::verify($this->channel)->basic_ack('<delivery-tag>'),
-            Phake::verify($this->logger)->info(
-                'RPC #{id} {request}',
+            Phake::verify($this->logger)->debug(
+                'RPC #{id} Request {request}',
                 [
                     'id'      => 456,
                     'request' => $expectedRequest,
@@ -296,10 +296,18 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 '<response-queue>'
             ),
             Phake::verify($this->logger)->info(
-                'RPC #{id} {request} -> {response}',
+                'RPC #{id} {procedure} {code} {value}',
+                [
+                    'id'        => 456,
+                    'procedure' => 'procedure-name',
+                    'code'      => ResponseCode::SUCCESS,
+                    'value'     => 'OK',
+                ]
+            ),
+            Phake::verify($this->logger)->debug(
+                'RPC #{id} Response {response}',
                 [
                     'id'       => 456,
-                    'request'  => $expectedRequest,
                     'response' => $expectedResponse,
                 ]
             )
@@ -403,6 +411,16 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 '<response-queue>'
             )
         );
+
+        Phake::verify($this->logger)->info(
+                'RPC #{id} {procedure} {code} {value}',
+                [
+                    'id'        => '???',
+                    'procedure' => '<invalid-request>',
+                    'code'      => ResponseCode::INVALID_MESSAGE,
+                    'value'     => 'Request payload must be a 2-tuple.',
+                ]
+            );
 
         $this->assertEquals(
             new AMQPMessage(
