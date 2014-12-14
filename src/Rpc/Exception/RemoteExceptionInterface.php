@@ -4,7 +4,7 @@ namespace Icecave\Overpass\Rpc\Exception;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
 
 /**
- * Interface for all RPC excpetions that can occur on the server-side.
+ * Interface for all RPC exceptions that can occur on the server-side.
  */
 interface RemoteExceptionInterface
 {

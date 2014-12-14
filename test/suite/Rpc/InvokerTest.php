@@ -2,6 +2,7 @@
 namespace Icecave\Overpass\Rpc;
 
 use Exception;
+use Icecave\Overpass\Rpc\Exception\ExecutionException;
 use Icecave\Overpass\Rpc\Exception\InvalidArgumentsException;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
@@ -74,9 +75,26 @@ class InvokerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInvokeWithProcedureThatThrows()
+    public function testInvokeWithProcedureThatThrowsArbitraryException()
     {
         $exception = new Exception('Error message!');
+
+        $this->setExpectedException(
+            Exception::class,
+            'Error message!'
+        );
+
+        $this->invoker->invoke(
+            Request::create('procedure-name', [1, 2, 3]),
+            function () use ($exception) {
+                throw $exception;
+            }
+        );
+    }
+
+    public function testInvokeWithProcedureThatThrowsExecutionException()
+    {
+        $exception = new ExecutionException('Error message!');
 
         $response = $this->invoker->invoke(
             Request::create('procedure-name', [1, 2, 3]),

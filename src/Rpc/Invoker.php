@@ -2,6 +2,7 @@
 namespace Icecave\Overpass\Rpc;
 
 use Exception;
+use ICecave\Overpass\Rpc\Exception\ExecutionException;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
@@ -40,7 +41,7 @@ class Invoker implements InvokerInterface
             );
 
             return Response::createFromValue($value);
-        } catch (Exception $e) {
+        } catch (ExecutionException $e) {
             return Response::createFromException($e);
         }
     }

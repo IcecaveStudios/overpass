@@ -1,6 +1,8 @@
 <?php
 namespace Icecave\Overpass\Amqp\Rpc;
 
+use Exception;
+use Icecave\Overpass\Rpc\Exception\ExecutionException;
 use Icecave\Overpass\Rpc\Invoker;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
@@ -11,7 +13,6 @@ use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 
 class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 {
@@ -21,9 +22,12 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $this->declarationManager = Phake::mock(DeclarationManager::class);
         $this->logger             = Phake::mock(LoggerInterface::class);
         $this->invoker            = Phake::partialMock(Invoker::class);
+        $this->executionException = new ExecutionException('The procedure failed!');
+        $this->arbitraryException = new Exception('The procedure imploded spectacularly!');
         $this->procedure1         = function () { return '<procedure-1: ' . implode(', ', func_get_args()) . '>'; };
-        $this->procedure2 = function () { return '<procedure-2: ' . implode(', ', func_get_args()) . '>'; };
-        $this->procedure3 = function () { throw new RuntimeException('The procedure failed!'); };
+        $this->procedure2         = function () { return '<procedure-2: ' . implode(', ', func_get_args()) . '>'; };
+        $this->procedure3         = function () { throw $this->executionException; };
+        $this->procedure4         = function () { throw $this->arbitraryException; };
         $this->consumerTagCounter = 0;
 
         Phake::when($this->channel)
@@ -326,7 +330,65 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testReceiveRequestWithProcedureException()
+    public function testReceiveRequestWithArbitraryException()
+    {
+        $this->server->expose('procedure-name', $this->procedure4);
+
+        $this->server->run();
+
+        $handler = null;
+
+        Phake::verify($this->channel)->basic_consume(
+            '<request-queue-procedure-name>',
+            '',    // consumer tag
+            false, // no local
+            false, // no ack
+            false, // exclusive
+            false, // no wait
+            Phake::capture($handler)
+        );
+
+        $requestMessage = new AMQPMessage(
+            '["procedure-name",[1,2,3]]',
+            [
+                'reply_to' => '<response-queue>',
+            ]
+        );
+
+        $requestMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
+
+        $handler($requestMessage);
+
+        $responseMessage = null;
+
+        Phake::inOrder(
+            Phake::verify($this->channel)->basic_ack('<delivery-tag>'),
+            Phake::verify($this->channel)->basic_publish(
+                Phake::capture($responseMessage),
+                '', // default direct exchange
+                '<response-queue>'
+            )
+        );
+
+        $this->assertEquals(
+            new AMQPMessage(
+                '[' . ResponseCode::EXCEPTION . ',"Internal server error."]'
+            ),
+            $responseMessage
+        );
+
+        Phake::verify($this->logger)->error(
+            'rpc.server {queue} #{id} error: {message}',
+            [
+                'id'        => '???',
+                'queue'     => '<response-queue>',
+                'message'   => 'The procedure imploded spectacularly!',
+                'exception' => $this->arbitraryException,
+            ]
+        );
+    }
+
+    public function testReceiveRequestWithExecutionException()
     {
         $this->server->expose('procedure-name', $this->procedure3);
 

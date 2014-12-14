@@ -1,6 +1,7 @@
 <?php
 namespace Icecave\Overpass\Amqp\Rpc;
 
+use Exception;
 use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
 use Icecave\Overpass\Rpc\Invoker;
 use Icecave\Overpass\Rpc\InvokerInterface;
@@ -231,6 +232,21 @@ class AmqpRpcServer implements RpcServerInterface
         } catch (InvalidMessageException $e) {
             $procedureName = '???';
             $response      = Response::createFromException($e);
+        } catch (Exception $e) {
+            $response = Response::create(
+                ResponseCode::EXCEPTION(),
+                'Internal server error.'
+            );
+
+            $this->logger->error(
+                'rpc.server {queue} #{id} error: {message}',
+                [
+                    'id'        => $correlationId,
+                    'queue'     => $responseQueue,
+                    'message'   => $e->getMessage(),
+                    'exception' => $e,
+                ]
+            );
         }
 
         $this->send($message, $response);
