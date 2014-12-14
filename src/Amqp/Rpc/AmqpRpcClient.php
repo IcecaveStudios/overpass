@@ -33,10 +33,10 @@ class AmqpRpcClient implements RpcClientInterface
         DeclarationManager $declarationManager = null,
         MessageSerializationInterface $serialization = null
     ) {
-        $this->channel = $channel;
+        $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization = $serialization ?: new MessageSerialization(new JsonSerialization());
-        $this->correlationId = 0;
+        $this->serialization      = $serialization ?: new MessageSerialization(new JsonSerialization);
+        $this->correlationId      = 0;
 
         $this->setTimeout($timeout);
     }
@@ -69,14 +69,17 @@ class AmqpRpcClient implements RpcClientInterface
     {
         $this->initialize();
 
-        $request = Request::create($name, $arguments);
-        $correlationId = ++$this->correlationId;
+        ++$this->correlationId;
+
+        $request       = Request::create($name, $arguments);
+        $responseQueue = $this->declarationManager->responseQueue();
 
         if ($this->logger) {
             $this->logger->debug(
-                'RPC #{id} {request}',
+                'rpc.client {queue} #{id} request: {request}',
                 [
-                    'id'      => $correlationId,
+                    'id'      => $this->correlationId,
+                    'queue'   => $responseQueue,
                     'request' => $request,
                 ]
             );
@@ -89,10 +92,10 @@ class AmqpRpcClient implements RpcClientInterface
         if (null === $response) {
             if ($this->logger) {
                 $this->logger->warning(
-                    'RPC #{id} {request} -> <timed out after {timeout} seconds>',
+                    'rpc.client {queue} #{id} response: TIMEOUT ({timeout} seconds)',
                     [
-                        'id'      => $correlationId,
-                        'request' => $request,
+                        'id'      => $this->correlationId,
+                        'queue'   => $responseQueue,
                         'timeout' => $this->timeout,
                     ]
                 );
@@ -103,10 +106,10 @@ class AmqpRpcClient implements RpcClientInterface
 
         if ($this->logger) {
             $this->logger->debug(
-                'RPC #{id} {request} -> {response}',
+                'rpc.client {queue} #{id} response: {response}',
                 [
-                    'id'       => $correlationId,
-                    'request'  => $request,
+                    'id'       => $this->correlationId,
+                    'queue'    => $responseQueue,
                     'response' => $response,
                 ]
             );
@@ -277,7 +280,7 @@ class AmqpRpcClient implements RpcClientInterface
         }
 
         // A response was received ...
-        $response = $this->response;
+        $response       = $this->response;
         $this->response = null;
 
         return $response;

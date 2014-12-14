@@ -6,11 +6,11 @@ use Icecave\Isolator\Isolator;
 use Icecave\Overpass\Rpc\Exception\TimeoutException;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
+use PHPUnit_Framework_TestCase;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage;
-use PHPUnit_Framework_TestCase;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
@@ -18,11 +18,11 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->channel = Phake::mock(AMQPChannel::class);
+        $this->channel            = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
-        $this->logger = Phake::mock(LoggerInterface::class);
-        $this->isolator = Phake::mock(Isolator::class);
-        $this->callback = null;
+        $this->logger             = Phake::mock(LoggerInterface::class);
+        $this->isolator           = Phake::mock(Isolator::class);
+        $this->callback           = null;
 
         // Store the handler as soon as basic_consume is called ...
         Phake::when($this->channel)
@@ -247,18 +247,19 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
         );
 
         Phake::verify($this->logger)->debug(
-            'RPC #{id} {request}',
+            'rpc.client {queue} #{id} request: {request}',
             [
                 'id'      => 1,
+                'queue'   => '<response-queue>',
                 'request' => Request::create('procedure-name', [1, 2, 3]),
             ]
         );
 
         Phake::verify($this->logger)->debug(
-            'RPC #{id} {request} -> {response}',
+            'rpc.client {queue} #{id} response: {response}',
             [
                 'id'       => 1,
-                'request'  => Request::create('procedure-name', [1, 2, 3]),
+                'queue'    => '<response-queue>',
                 'response' => Response::createFromValue(123),
             ]
         );
@@ -282,11 +283,11 @@ class AmqpRpcClientTest extends PHPUnit_Framework_TestCase
             $this->client->invoke('procedure-name', 1, 2, 3);
         } catch (TimeoutException $e) {
             Phake::verify($this->logger)->warning(
-                'RPC #{id} {request} -> <timed out after {timeout} seconds>',
+                'rpc.client {queue} #{id} response: TIMEOUT ({timeout} seconds)',
                 [
                     'id'      => 1,
-                    'request' => Request::create('procedure-name', [1, 2, 3]),
-                    'timeout' => 1.5
+                    'queue'   => '<response-queue>',
+                    'timeout' => 1.5,
                 ]
             );
 

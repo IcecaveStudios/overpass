@@ -22,9 +22,9 @@ class AmqpSubscriber implements SubscriberInterface
         DeclarationManager $declarationManager = null,
         SerializationInterface $serialization = null
     ) {
-        $this->channel = $channel;
+        $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization = $serialization ?: new JsonSerialization();
+        $this->serialization      = $serialization ?: new JsonSerialization;
     }
 
     /**
@@ -60,7 +60,7 @@ class AmqpSubscriber implements SubscriberInterface
 
         if ($this->logger) {
             $this->logger->debug(
-                'Subscribed to topic "{topic}"',
+                'pubsub.subscriber {topic} subscribe',
                 [
                     'topic' => $topic,
                 ]
@@ -101,7 +101,7 @@ class AmqpSubscriber implements SubscriberInterface
 
         if ($this->logger) {
             $this->logger->debug(
-                'Unsubscribed from topic "{topic}"',
+                'pubsub.subscriber {topic} unsubscribe',
                 [
                     'topic' => $topic,
                 ]
@@ -181,9 +181,9 @@ class AmqpSubscriber implements SubscriberInterface
 
         if ($this->logger) {
             $this->logger->debug(
-                'Received {payload} from topic "{topic}"',
+                'pubsub.subscriber {topic} receive: {payload}',
                 [
-                    'topic' => $topic,
+                    'topic'   => $topic,
                     'payload' => json_encode($payload),
                 ]
             );
@@ -207,7 +207,7 @@ class AmqpSubscriber implements SubscriberInterface
             );
 
         $this->consumerCallback = null;
-        $this->consumerTag = null;
+        $this->consumerTag      = null;
     }
 
     private $channel;

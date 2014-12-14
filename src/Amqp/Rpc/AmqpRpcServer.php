@@ -9,6 +9,7 @@ use Icecave\Overpass\Rpc\Message\MessageSerialization;
 use Icecave\Overpass\Rpc\Message\MessageSerializationInterface;
 use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
+use Icecave\Overpass\Rpc\Message\ResponseCode;
 use Icecave\Overpass\Rpc\RpcServerInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use LogicException;
@@ -36,12 +37,12 @@ class AmqpRpcServer implements RpcServerInterface
         MessageSerializationInterface $serialization = null,
         InvokerInterface $invoker = null
     ) {
-        $this->channel = $channel;
+        $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization = $serialization ?: new MessageSerialization(new JsonSerialization());
-        $this->invoker = $invoker ?: new Invoker();
-        $this->procedures = [];
-        $this->consumerTags = [];
+        $this->serialization      = $serialization ?: new MessageSerialization(new JsonSerialization);
+        $this->invoker            = $invoker ?: new Invoker;
+        $this->procedures         = [];
+        $this->consumerTags       = [];
 
         $this->setLogger($logger);
     }
@@ -99,7 +100,7 @@ class AmqpRpcServer implements RpcServerInterface
     public function run()
     {
         $this->logger->info(
-            'RPC server starting'
+            'rpc.server starting'
         );
 
         // Bind queues / consumers ...
@@ -108,7 +109,7 @@ class AmqpRpcServer implements RpcServerInterface
         }
 
         $this->logger->info(
-            'RPC server started successfully (procedures: {procedures})',
+            'rpc.server started successfully (procedures: {procedures})',
             [
                 'procedures' => implode(
                     ', ',
@@ -124,7 +125,7 @@ class AmqpRpcServer implements RpcServerInterface
         }
 
         $this->logger->info(
-            'RPC server shutdown gracefully'
+            'rpc.server shutdown gracefully'
         );
     }
 
@@ -135,7 +136,7 @@ class AmqpRpcServer implements RpcServerInterface
     {
         if ($this->channel->callbacks) {
             $this->logger->info(
-                'RPC server stopping'
+                'rpc.server stopping'
             );
 
             foreach (array_keys($this->consumerTags) as $procedureName) {
@@ -186,6 +187,12 @@ class AmqpRpcServer implements RpcServerInterface
      */
     private function recv(AMQPMessage $message)
     {
+        if ($message->has('reply_to')) {
+            $responseQueue = $message->get('reply_to');
+        } else {
+            $responseQueue = '???';
+        }
+
         if ($message->has('correlation_id')) {
             $correlationId = $message->get('correlation_id');
         } else {
@@ -205,10 +212,13 @@ class AmqpRpcServer implements RpcServerInterface
                 ->serialization
                 ->unserializeRequest($message->body);
 
-            $this->logger->info(
-                'RPC #{id} {request}',
+            $procedureName = $request->name();
+
+            $this->logger->debug(
+                'rpc.server {queue} #{id} request: {request}',
                 [
                     'id'      => $correlationId,
+                    'queue'   => $responseQueue,
                     'request' => $request,
                 ]
             );
@@ -220,20 +230,58 @@ class AmqpRpcServer implements RpcServerInterface
                     $this->procedures[$request->name()]
                 );
         } catch (InvalidMessageException $e) {
-            $request  = '<invalid-request>';
-            $response = Response::createFromException($e);
+            $procedureName = '???';
+            $response      = Response::createFromException($e);
+        } catch (Exception $e) {
+            $response = Response::create(
+                ResponseCode::EXCEPTION(),
+                'Internal server error.'
+            );
+
+            $this->logger->error(
+                'rpc.server {queue} #{id} error: {message}',
+                [
+                    'id'        => $correlationId,
+                    'queue'     => $responseQueue,
+                    'message'   => $e->getMessage(),
+                    'exception' => $e,
+                ]
+            );
         }
 
         $this->send($message, $response);
 
-        $this->logger->info(
-            'RPC #{id} {request} -> {response}',
+        $this->logger->debug(
+            'rpc.server {queue} #{id} response: {response}',
             [
                 'id'       => $correlationId,
-                'request'  => $request,
+                'queue'    => $responseQueue,
                 'response' => $response,
             ]
         );
+
+        if (ResponseCode::SUCCESS() === $response->code()) {
+            $this->logger->info(
+                'rpc.server {queue} #{id} {procedure} -> {code}',
+                [
+                    'id'        => $correlationId,
+                    'queue'     => $responseQueue,
+                    'procedure' => $procedureName,
+                    'code'      => $response->code(),
+                ]
+            );
+        } else {
+            $this->logger->info(
+                'rpc.server {queue} #{id} {procedure} -> {code} ({value})',
+                [
+                    'id'        => $correlationId,
+                    'queue'     => $responseQueue,
+                    'procedure' => $procedureName,
+                    'code'      => $response->code(),
+                    'value'     => $response->value(),
+                ]
+            );
+        }
     }
 
     private function bind($procedureName)

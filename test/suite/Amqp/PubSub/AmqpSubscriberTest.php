@@ -3,23 +3,23 @@ namespace Icecave\Overpass\Amqp\PubSub;
 
 use Icecave\Overpass\Serialization\SerializationInterface;
 use LogicException;
+use PHPUnit_Framework_TestCase;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
-use PHPUnit_Framework_TestCase;
 use Psr\Log\LoggerInterface;
 
 class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->channel = Phake::mock(AMQPChannel::class);
-        $this->declarationManager = Phake::mock(DeclarationManager::class);
-        $this->serialization = Phake::mock(SerializationInterface::class);
-        $this->logger = Phake::mock(LoggerInterface::class);
-        $this->message = new AMQPMessage('<payload>');
+        $this->channel                               = Phake::mock(AMQPChannel::class);
+        $this->declarationManager                    = Phake::mock(DeclarationManager::class);
+        $this->serialization                         = Phake::mock(SerializationInterface::class);
+        $this->logger                                = Phake::mock(LoggerInterface::class);
+        $this->message                               = new AMQPMessage('<payload>');
         $this->message->delivery_info['routing_key'] = 'subscription-topic';
-        $this->payload = (object) ['payload' => true];
+        $this->payload                               = (object) ['payload' => true];
 
         Phake::when($this->channel)
             ->basic_consume(Phake::anyParameters())
@@ -122,7 +122,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         $this->subscriber->subscribe('subscription.?.topic');
 
         Phake::verify($this->logger)->debug(
-            'Subscribed to topic "{topic}"',
+            'pubsub.subscriber {topic} subscribe',
             [
                 'topic' => 'subscription.?.topic',
             ]
@@ -182,7 +182,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         $this->subscriber->unsubscribe('subscription.?.topic');
 
         Phake::verify($this->logger)->debug(
-            'Unsubscribed from topic "{topic}"',
+            'pubsub.subscriber {topic} unsubscribe',
             [
                 'topic' => 'subscription.?.topic',
             ]
@@ -191,7 +191,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
 
     public function testConsume()
     {
-        $calls = [];
+        $calls    = [];
         $consumer = function () use (&$calls) {
             $calls[] = func_get_args();
 
@@ -297,9 +297,9 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         $handler($this->message);
 
         Phake::verify($this->logger)->debug(
-            'Received {payload} from topic "{topic}"',
+            'pubsub.subscriber {topic} receive: {payload}',
             [
-                'topic' => 'subscription-topic',
+                'topic'   => 'subscription-topic',
                 'payload' => json_encode($this->payload),
             ]
         );

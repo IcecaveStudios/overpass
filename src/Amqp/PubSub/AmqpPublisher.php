@@ -22,9 +22,9 @@ class AmqpPublisher implements PublisherInterface
         DeclarationManager $declarationManager = null,
         SerializationInterface $serialization = null
     ) {
-        $this->channel = $channel;
+        $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization = $serialization ?: new JsonSerialization();
+        $this->serialization      = $serialization ?: new JsonSerialization;
     }
 
     /**
@@ -55,9 +55,9 @@ class AmqpPublisher implements PublisherInterface
 
         if ($this->logger) {
             $this->logger->debug(
-                'Published {payload} to topic "{topic}"',
+                'pubsub.publisher {topic} publish: {payload}',
                 [
-                    'topic' => $topic,
+                    'topic'   => $topic,
                     'payload' => json_encode($payload),
                 ]
             );

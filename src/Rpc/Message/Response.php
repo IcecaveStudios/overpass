@@ -2,9 +2,9 @@
 namespace Icecave\Overpass\Rpc\Message;
 
 use Exception;
+use Icecave\Overpass\Rpc\Exception\ExecutionException;
 use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
 use Icecave\Overpass\Rpc\Exception\RemoteExceptionInterface;
-use Icecave\Overpass\Rpc\Exception\ExecutionException;
 use Icecave\Overpass\Rpc\Exception\UnknownProcedureException;
 
 /**
@@ -18,7 +18,7 @@ class Response
      */
     private function __construct(ResponseCode $code, $value)
     {
-        $this->code = $code;
+        $this->code  = $code;
         $this->value = $value;
     }
 
@@ -121,13 +121,15 @@ class Response
     public function __toString()
     {
         if (ResponseCode::SUCCESS() === $this->code) {
-            return json_encode($this->value);
+            $value = json_encode($this->value);
+        } else {
+            $value = $this->value;
         }
 
         return sprintf(
             '%s (%s)',
             $this->code,
-            $this->value
+            $value
         );
     }
 
