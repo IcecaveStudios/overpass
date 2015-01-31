@@ -1,8 +1,12 @@
 # Overpass Changelog
 
+### 0.3.3 (2015-01-31)
+
+* **[IMPROVED]** Improved logging and removed some noisy log messages
+
 ### 0.3.2 (2014-12-14)
 
-* **[FIXED]** RPC exception messages are no longer propagated unless the exception is an `ExecutionException`
+* **[FIXED]** RPC exception messages are no longer propagated to the client unless the exception is an `ExecutionException`
 * **[IMPROVED]** Improved consistency of logging
 
 ### 0.3.1 (2014-10-30)
