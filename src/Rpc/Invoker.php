@@ -57,7 +57,7 @@ class Invoker implements InvokerInterface
         if ($count < $minArity) {
             return Response::create(
                 ResponseCode::INVALID_ARGUMENTS(),
-                'At least ' . $minArity . ' arguments are required.'
+                'Not enough arguments - ' . $minArity . ' argument(s) required.'
             );
         }
 

@@ -199,7 +199,7 @@ class InvokerTest extends PHPUnit_Framework_TestCase
             'arity' => [
                 function ($a, $b, $c) { },
                 [],
-                'At least 3 arguments are required.',
+                'Not enough arguments - 3 argument(s) required.',
             ],
             'array type hint' => [
                 function (array $a) { },
