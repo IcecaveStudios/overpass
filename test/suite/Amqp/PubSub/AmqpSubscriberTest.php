@@ -1,6 +1,7 @@
 <?php
 namespace Icecave\Overpass\Amqp\PubSub;
 
+use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\Serialization\SerializationInterface;
 use LogicException;
 use PHPUnit_Framework_TestCase;
@@ -16,6 +17,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         $this->channel                               = Phake::mock(AMQPChannel::class);
         $this->declarationManager                    = Phake::mock(DeclarationManager::class);
         $this->serialization                         = Phake::mock(SerializationInterface::class);
+        $this->channelDispatcher                     = Phake::mock(ChannelDispatcher::class);
         $this->logger                                = Phake::mock(LoggerInterface::class);
         $this->message                               = new AMQPMessage('<payload>');
         $this->message->delivery_info['routing_key'] = 'subscription-topic';
@@ -37,8 +39,8 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
                 }
             );
 
-        Phake::when($this->channel)
-            ->wait()
+        Phake::when($this->channelDispatcher)
+            ->wait($this->channel)
             ->thenReturn(null)
             ->thenGetReturnByLambda(
                 function () {
@@ -62,7 +64,8 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         $this->subscriber = new AmqpSubscriber(
             $this->channel,
             $this->declarationManager,
-            $this->serialization
+            $this->serialization,
+            $this->channelDispatcher
         );
     }
 
@@ -224,7 +227,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
             $calls
         );
 
-        Phake::verify($this->channel, Phake::times(2))->wait();
+        Phake::verify($this->channelDispatcher, Phake::times(2))->wait($this->channel);
         Phake::verify($this->channel, Phake::never())->basic_cancel(Phake::anyParameters());
     }
 
@@ -249,7 +252,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
             Phake::capture($handler)
         );
 
-        Phake::verify($this->channel, Phake::times(2))->wait();
+        Phake::verify($this->channelDispatcher, Phake::times(2))->wait($this->channel);
 
         $this->assertTrue(
             is_callable($handler)

@@ -21,6 +21,13 @@ $server->expose(
     }
 );
 
+pcntl_signal(
+    SIGINT,
+    function() use ($server) {
+        $server->stop();
+    }
+);
+
 /**
  * Service RPC requests forever!
  */

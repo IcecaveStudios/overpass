@@ -2,6 +2,8 @@
 namespace Icecave\Overpass\Amqp\Rpc;
 
 use Exception;
+use Icecave\Isolator\IsolatorTrait;
+use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
 use Icecave\Overpass\Rpc\Invoker;
 use Icecave\Overpass\Rpc\InvokerInterface;
@@ -23,6 +25,7 @@ use ReflectionClass;
 
 class AmqpRpcServer implements RpcServerInterface
 {
+    use IsolatorTrait;
     use LoggerAwareTrait;
 
     /**
@@ -31,18 +34,21 @@ class AmqpRpcServer implements RpcServerInterface
      * @param DeclarationManager|null            $declarationManager
      * @param MessageSerializationInterface|null $serialization
      * @param InvokerInterface|null              $invoker
+     * @param ChannelDispatcher                  $channelDispatcher
      */
     public function __construct(
         LoggerInterface $logger,
         AMQPChannel $channel,
         DeclarationManager $declarationManager = null,
         MessageSerializationInterface $serialization = null,
-        InvokerInterface $invoker = null
+        InvokerInterface $invoker = null,
+        ChannelDispatcher $channelDispatcher = null
     ) {
         $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
         $this->serialization      = $serialization ?: new MessageSerialization(new JsonSerialization);
         $this->invoker            = $invoker ?: new Invoker;
+        $this->channelDispatcher  = $channelDispatcher ?: new ChannelDispatcher;
         $this->procedures         = [];
         $this->consumerTags       = [];
 
@@ -101,6 +107,8 @@ class AmqpRpcServer implements RpcServerInterface
      */
     public function run()
     {
+        $this->isStopping = false;
+
         // Bind queues / consumers ...
         foreach ($this->procedures as $procedureName => $procedure) {
             $this->bind($procedureName);
@@ -117,9 +125,14 @@ class AmqpRpcServer implements RpcServerInterface
             $this->logger->warning('rpc.server started without exposed procedures');
         }
 
-        // Wait for the server to be stopped ...
         while ($this->channel->callbacks) {
-            $this->channel->wait();
+            $this->channelDispatcher->wait($this->channel);
+
+            if ($this->isStopping) {
+                foreach ($this->procedures as $procedureName => $procedure) {
+                    $this->unbind($procedureName);
+                }
+            }
         }
 
         $this->logger->info('rpc.server shutdown gracefully');
@@ -130,12 +143,10 @@ class AmqpRpcServer implements RpcServerInterface
      */
     public function stop()
     {
-        if ($this->channel->callbacks) {
-            $this->logger->info('rpc.server stopping');
+        if (!$this->isStopping) {
+            $this->isStopping = true;
 
-            foreach (array_keys($this->consumerTags) as $procedureName) {
-                $this->unbind($procedureName);
-            }
+            $this->logger->info('rpc.server stopping');
         }
     }
 
@@ -287,6 +298,8 @@ class AmqpRpcServer implements RpcServerInterface
     private $declarationManager;
     private $serialization;
     private $invoker;
+    private $channelDispatcher;
+    private $isStopping;
     private $procedures;
     private $consumerTags;
 }
