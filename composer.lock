@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f57c28bf8538cced85ffa51b162dad47",
+    "hash": "d1e69d29398b13c7982cb9ffa0aec3c8",
     "packages": [
         {
             "name": "eloquent/enumeration",
@@ -57,16 +57,16 @@
         },
         {
             "name": "icecave/isolator",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/IcecaveStudios/isolator.git",
-                "reference": "7d975e5324cec69d2bcc2cda1e19c8f52923a48f"
+                "reference": "e137a63f5f5ce480d65faa73babbdf58f2d74e0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IcecaveStudios/isolator/zipball/7d975e5324cec69d2bcc2cda1e19c8f52923a48f",
-                "reference": "7d975e5324cec69d2bcc2cda1e19c8f52923a48f",
+                "url": "https://api.github.com/repos/IcecaveStudios/isolator/zipball/e137a63f5f5ce480d65faa73babbdf58f2d74e0b",
+                "reference": "e137a63f5f5ce480d65faa73babbdf58f2d74e0b",
                 "shasum": ""
             },
             "require": {
@@ -111,7 +111,7 @@
                 "test",
                 "unit"
             ],
-            "time": "2014-10-08 01:06:45"
+            "time": "2014-10-20 23:50:20"
         },
         {
             "name": "icecave/repr",
