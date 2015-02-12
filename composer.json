@@ -24,6 +24,7 @@
     ],
     "require": {
         "php": ">=5.5",
+        "ext-pcntl": "*",
         "eloquent/enumeration": "~5",
         "icecave/isolator": "~2|3",
         "icecave/repr": "~1",

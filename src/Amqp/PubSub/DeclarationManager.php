@@ -4,7 +4,7 @@ namespace Icecave\Overpass\Amqp\PubSub;
 use PhpAmqpLib\Channel\AMQPChannel;
 
 /**
- * @internal
+ * @access private
  */
 class DeclarationManager
 {

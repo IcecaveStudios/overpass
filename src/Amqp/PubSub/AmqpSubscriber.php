@@ -1,6 +1,7 @@
 <?php
 namespace Icecave\Overpass\Amqp\PubSub;
 
+use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\PubSub\SubscriberInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
@@ -16,15 +17,18 @@ class AmqpSubscriber implements SubscriberInterface
      * @param AMQPChannel                 $channel
      * @param DeclarationManager|null     $declarationManager
      * @param SerializationInterface|null $serialization
+     * @param ChannelDispatcher|null      $channelDispatcher
      */
     public function __construct(
         AMQPChannel $channel,
         DeclarationManager $declarationManager = null,
-        SerializationInterface $serialization = null
+        SerializationInterface $serialization = null,
+        ChannelDispatcher $channelDispatcher = null
     ) {
         $this->channel            = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
         $this->serialization      = $serialization ?: new JsonSerialization;
+        $this->channelDispatcher  = $channelDispatcher ?: new ChannelDispatcher;
     }
 
     /**
@@ -144,7 +148,7 @@ class AmqpSubscriber implements SubscriberInterface
             );
 
         while ($this->channel->callbacks) {
-            $this->channel->wait();
+            $this->channelDispatcher->wait($this->channel);
         }
     }
 
@@ -213,6 +217,7 @@ class AmqpSubscriber implements SubscriberInterface
     private $channel;
     private $declarationManager;
     private $serialization;
+    private $channelDispatcher;
     private $subscriptions;
     private $consumerCallback;
     private $consumerTag;

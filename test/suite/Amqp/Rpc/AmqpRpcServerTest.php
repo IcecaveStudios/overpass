@@ -2,6 +2,7 @@
 namespace Icecave\Overpass\Amqp\Rpc;
 
 use Exception;
+use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\Rpc\Exception\ExecutionException;
 use Icecave\Overpass\Rpc\Invoker;
 use Icecave\Overpass\Rpc\Message\Request;
@@ -19,13 +20,14 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->channel            = Phake::mock(AMQPChannel::class);
-        $this->declarationManager = Phake::mock(DeclarationManager::class);
-        $this->logger             = Phake::mock(LoggerInterface::class);
-        $this->invoker            = Phake::partialMock(Invoker::class);
-        $this->executionException = new ExecutionException('The procedure failed!');
-        $this->arbitraryException = new Exception('The procedure imploded spectacularly!');
-        $this->procedure1         = function () { return '<procedure-1: ' . implode(', ', func_get_args()) . '>'; };
+        $this->channel                  = Phake::mock(AMQPChannel::class);
+        $this->declarationManager       = Phake::mock(DeclarationManager::class);
+        $this->logger                   = Phake::mock(LoggerInterface::class);
+        $this->invoker                  = Phake::partialMock(Invoker::class);
+        $this->channelDispatcher        = Phake::mock(ChannelDispatcher::class);
+        $this->executionException       = new ExecutionException('The procedure failed!');
+        $this->arbitraryException       = new Exception('The procedure imploded spectacularly!');
+        $this->procedure1               = function () { return '<procedure-1: ' . implode(', ', func_get_args()) . '>'; };
         $this->procedure2         = function () { return '<procedure-2: ' . implode(', ', func_get_args()) . '>'; };
         $this->procedure3         = function () { throw $this->executionException; };
         $this->procedure4         = function () { throw $this->arbitraryException; };
@@ -54,8 +56,8 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 }
             );
 
-        Phake::when($this->channel)
-            ->wait()
+        Phake::when($this->channelDispatcher)
+            ->wait($this->channel)
             ->thenReturn(null)
             ->thenGetReturnByLambda(
                 function () {
@@ -78,14 +80,15 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
             $this->channel,
             $this->declarationManager,
             null,
-            $this->invoker
+            $this->invoker,
+            $this->channelDispatcher
         );
     }
 
     public function testExposeWhileRunning()
     {
-        Phake::when($this->channel)
-            ->wait()
+        Phake::when($this->channelDispatcher)
+            ->wait($this->channel)
             ->thenGetReturnByLambda(
                 function () {
                     $this->server->expose('procedure-2', $this->procedure2);
@@ -205,7 +208,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 ['procedure' => 'procedure-2']
             ),
             Phake::verify($this->logger)->info('rpc.server started successfully'),
-            Phake::verify($this->channel, Phake::times(2))->wait(),
+            Phake::verify($this->channelDispatcher, Phake::times(2))->wait($this->channel),
             Phake::verify($this->logger)->info('rpc.server shutdown gracefully')
         );
 
@@ -228,8 +231,8 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
     public function testStop()
     {
-        Phake::when($this->channel)
-            ->wait()
+        Phake::when($this->channelDispatcher)
+            ->wait($this->channel)
             ->thenGetReturnByLambda(
                 function () {
                     $this->server->stop();
