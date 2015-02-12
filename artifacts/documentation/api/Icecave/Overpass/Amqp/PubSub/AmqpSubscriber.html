@@ -36,7 +36,7 @@
                     
                 </td>
                 <td class="last">
-                    <a href="#method___construct">__construct</a>(<abbr title="PhpAmqpLib\Channel\AMQPChannel">AMQPChannel</abbr> $channel, <a href="../../../../Icecave/Overpass/Amqp/PubSub/DeclarationManager.html"><abbr title="Icecave\Overpass\Amqp\PubSub\DeclarationManager">DeclarationManager</abbr></a> $declarationManager = null, <a href="../../../../Icecave/Overpass/Serialization/SerializationInterface.html"><abbr title="Icecave\Overpass\Serialization\SerializationInterface">SerializationInterface</abbr></a> $serialization = null)
+                    <a href="#method___construct">__construct</a>(<abbr title="PhpAmqpLib\Channel\AMQPChannel">AMQPChannel</abbr> $channel, <a href="../../../../Icecave/Overpass/Amqp/PubSub/DeclarationManager.html"><abbr title="Icecave\Overpass\Amqp\PubSub\DeclarationManager">DeclarationManager</abbr></a> $declarationManager = null, <a href="../../../../Icecave/Overpass/Serialization/SerializationInterface.html"><abbr title="Icecave\Overpass\Serialization\SerializationInterface">SerializationInterface</abbr></a> $serialization = null, <a href="../../../../Icecave/Overpass/Amqp/ChannelDispatcher.html"><abbr title="Icecave\Overpass\Amqp\ChannelDispatcher">ChannelDispatcher</abbr></a> $channelDispatcher = null)
                     <p>
 </p>
                 </td>
@@ -78,9 +78,9 @@
         <h2>Details</h2>
 
                         <h3 id="method___construct">
-        <div class="location">at line 20</div>
+        <div class="location">at line 22</div>
         <code>            public            
-    <strong>__construct</strong>(<abbr title="PhpAmqpLib\Channel\AMQPChannel">AMQPChannel</abbr> $channel, <a href="../../../../Icecave/Overpass/Amqp/PubSub/DeclarationManager.html"><abbr title="Icecave\Overpass\Amqp\PubSub\DeclarationManager">DeclarationManager</abbr></a> $declarationManager = null, <a href="../../../../Icecave/Overpass/Serialization/SerializationInterface.html"><abbr title="Icecave\Overpass\Serialization\SerializationInterface">SerializationInterface</abbr></a> $serialization = null)</code>
+    <strong>__construct</strong>(<abbr title="PhpAmqpLib\Channel\AMQPChannel">AMQPChannel</abbr> $channel, <a href="../../../../Icecave/Overpass/Amqp/PubSub/DeclarationManager.html"><abbr title="Icecave\Overpass\Amqp\PubSub\DeclarationManager">DeclarationManager</abbr></a> $declarationManager = null, <a href="../../../../Icecave/Overpass/Serialization/SerializationInterface.html"><abbr title="Icecave\Overpass\Serialization\SerializationInterface">SerializationInterface</abbr></a> $serialization = null, <a href="../../../../Icecave/Overpass/Amqp/ChannelDispatcher.html"><abbr title="Icecave\Overpass\Amqp\ChannelDispatcher">ChannelDispatcher</abbr></a> $channelDispatcher = null)</code>
     </h3>
     <div class="details">
         <p>
@@ -109,6 +109,12 @@
                 <td>
 </td>
             </tr>
+                    <tr>
+                <td><a href="../../../../Icecave/Overpass/Amqp/ChannelDispatcher.html"><abbr title="Icecave\Overpass\Amqp\ChannelDispatcher">ChannelDispatcher</abbr></a></td>
+                <td>$channelDispatcher</td>
+                <td>
+</td>
+            </tr>
             </table>
 
             
@@ -118,7 +124,7 @@
     </div>
 
                 <h3 id="method_subscribe">
-        <div class="location">at line 35</div>
+        <div class="location">at line 39</div>
         <code>            public            
     <strong>subscribe</strong>(string $topic)</code>
     </h3>
@@ -144,7 +150,7 @@
     </div>
 
                 <h3 id="method_unsubscribe">
-        <div class="location">at line 76</div>
+        <div class="location">at line 80</div>
         <code>            public            
     <strong>unsubscribe</strong>(string $topic)</code>
     </h3>
@@ -170,7 +176,7 @@
     </div>
 
                 <h3 id="method_consume">
-        <div class="location">at line 124</div>
+        <div class="location">at line 128</div>
         <code>            public            
     <strong>consume</strong>(<abbr title="Icecave\Overpass\Amqp\PubSub\callable">callable</abbr> $callback)</code>
     </h3>
