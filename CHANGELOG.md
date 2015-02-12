@@ -1,5 +1,9 @@
 # Overpass Changelog
 
+### 0.3.4 (2015-02-12)
+
+* **[IMPROVED]** RPC server can now be shutdown gracefully by a signal handler
+
 ### 0.3.3 (2015-01-31)
 
 * **[IMPROVED]** Improved logging and removed some noisy log messages
