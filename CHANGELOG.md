@@ -1,5 +1,9 @@
 # Overpass Changelog
 
+### 0.3.5 (2015-02-12)
+
+* **[FIXED]** Fixed incorrect `icecave/isolator` version constraint
+
 ### 0.3.4 (2015-02-12)
 
 * **[IMPROVED]** RPC server can now be shutdown gracefully by a signal handler
