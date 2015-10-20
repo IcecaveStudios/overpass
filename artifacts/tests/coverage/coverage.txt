@@ -1,0 +1,44 @@
+
+
+Code Coverage Report:       
+  2015-10-20 23:40:54       
+                            
+ Summary:                   
+  Classes: 100.00% (20/20)  
+  Methods: 100.00% (73/73)  
+  Lines:   100.00% (642/642)
+
+\Icecave\Overpass\Amqp::ChannelDispatcher
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 13/ 13)
+\Icecave\Overpass\Amqp\PubSub::AmqpPublisher
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 22/ 22)
+\Icecave\Overpass\Amqp\PubSub::AmqpSubscriber
+  Methods: 100.00% ( 7/ 7)   Lines: 100.00% ( 83/ 83)
+\Icecave\Overpass\Amqp\PubSub::DeclarationManager
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 21/ 21)
+\Icecave\Overpass\Amqp\Rpc::AmqpRpcClient
+  Methods: 100.00% (11/11)   Lines: 100.00% (110/110)
+\Icecave\Overpass\Amqp\Rpc::AmqpRpcServer
+  Methods: 100.00% (10/10)   Lines: 100.00% (129/129)
+\Icecave\Overpass\Amqp\Rpc::DeclarationManager
+  Methods: 100.00% ( 4/ 4)   Lines: 100.00% ( 41/ 41)
+\Icecave\Overpass\Rpc::Invoker
+  Methods: 100.00% ( 4/ 4)   Lines: 100.00% ( 65/ 65)
+\Icecave\Overpass\Rpc\Exception::ExecutionException
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  6/  6)
+\Icecave\Overpass\Rpc\Exception::InvalidArgumentsException
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  6/  6)
+\Icecave\Overpass\Rpc\Exception::InvalidMessageException
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  6/  6)
+\Icecave\Overpass\Rpc\Exception::TimeoutException
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  5/  5)
+\Icecave\Overpass\Rpc\Exception::UnknownProcedureException
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  6/  6)
+\Icecave\Overpass\Rpc\Message::MessageSerialization
+  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 52/ 52)
+\Icecave\Overpass\Rpc\Message::Request
+  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 17/ 17)
+\Icecave\Overpass\Rpc\Message::Response
+  Methods: 100.00% ( 8/ 8)   Lines: 100.00% ( 36/ 36)
+\Icecave\Overpass\Serialization::JsonSerialization
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 15/ 15)

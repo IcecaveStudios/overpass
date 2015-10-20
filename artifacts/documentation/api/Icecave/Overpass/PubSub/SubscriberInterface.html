@@ -1,86 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="robots" content="index, follow, all" />
-        <title>Icecave\Overpass\PubSub\SubscriberInterface | icecave/overpass API</title>
-                    <link rel="stylesheet" type="text/css" href="../../../stylesheet.css">
-                            </head>
-        <body id="class">
-            <div class="header">
-        <ul>
-            <li><a href="../../../classes.html">Classes</a></li>
-                            <li><a href="../../../namespaces.html">Namespaces</a></li>
-                        <li><a href="../../../interfaces.html">Interfaces</a></li>
-            <li><a href="../../../doc-index.html">Index</a></li>
-            
-        </ul>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Icecave\Overpass\PubSub\SubscriberInterface | Overpass API</title>
 
-        <div id="title">icecave/overpass API</div>
+            <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/sami.css">
+        <script src="../../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../../js/bootstrap.min.js"></script>
+        <script src="../../../js/typeahead.min.js"></script>
+        <script src="../../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
 
-            <div class="type">Interface</div>
-    <h1><a href="../../../Icecave/Overpass/PubSub.html">Icecave\Overpass\PubSub</a>\SubscriberInterface</h1>
+    <body id="class" data-name="class:Icecave_Overpass_PubSub_SubscriberInterface" data-root-path="../../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                <form id="search-form" action="../../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
     </div>
-        <div class="content">
-                <p>interface    <strong>SubscriberInterface</strong>        implements
-        <abbr title="Psr\Log\LoggerAwareInterface">LoggerAwareInterface</abbr></p>
 
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../../index.html">Overpass API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../../classes.html">Classes</a></li>
+                                            <li><a href="../../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../../traits.html">Traits</a></li>
+                    <li><a href="../../../doc-index.html">Index</a></li>
+                    <li><a href="../../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">interface</span></li>
+                                                            <li><a href="../../../Icecave.html">Icecave</a></li>
+                                        <li><a href="../../../Icecave/Overpass.html">Overpass</a></li>
+                                        <li><a href="../../../Icecave/Overpass/PubSub.html">PubSub</a></li>
+    
+                <li>SubscriberInterface</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>SubscriberInterface</h1>
+    </div>
+
+    <p>    interface
+    <strong>SubscriberInterface</strong>        implements
+        <abbr title="Psr\Log\LoggerAwareInterface">LoggerAwareInterface</abbr>
+</p>
+
+    
     
     
     
             <h2>Methods</h2>
 
-            <table>
-                    <tr>
-                <td class="type">
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
                     
-                </td>
-                <td class="last">
-                    <a href="#method_subscribe">subscribe</a>(string $topic)
-                    <p>Subscribe to the given topic.</p>
-                </td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td class="type">
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_subscribe">subscribe</a>(
+    string $topic)
+                                            <p>Subscribe to the given topic.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
                     
-                </td>
-                <td class="last">
-                    <a href="#method_unsubscribe">unsubscribe</a>(string $topic)
-                    <p>Unsubscribe from the given topic.</p>
-                </td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td class="type">
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_unsubscribe">unsubscribe</a>(
+    string $topic)
+                                            <p>Unsubscribe from the given topic.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
                     
-                </td>
-                <td class="last">
-                    <a href="#method_consume">consume</a>(<abbr title="Icecave\Overpass\PubSub\callable">callable</abbr> $callback)
-                    <p>Consume messages from subscriptions.</p>
-                </td>
-                <td></td>
-            </tr>
-            </table>
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_consume">consume</a>(
+    callable $callback)
+                                            <p>Consume messages from subscriptions.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
 
 
         <h2>Details</h2>
 
-                        <h3 id="method_subscribe">
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_subscribe">
         <div class="location">at line 13</div>
-        <code>            public            
-    <strong>subscribe</strong>(string $topic)</code>
+        <code>                    
+    
+    <strong>subscribe</strong>(
+    string $topic)</code>
     </h3>
     <div class="details">
-        <p>Subscribe to the given topic.</p>
-        <p>
-</p>
-        <div class="tags">
+                    <div class="method-description">
+                                    <p>Subscribe to the given topic.</p>                                </div>
+                <div class="tags">
                             <h4>Parameters</h4>
 
-                    <table>
+                    <table class="table table-condensed">
                     <tr>
-                <td>string</td>
+                <td>
+    string</td>
                 <td>$topic</td>
                 <td>The topic or topic pattern to subscribe to.</td>
             </tr>
@@ -92,21 +156,25 @@
                     </div>
     </div>
 
-                <h3 id="method_unsubscribe">
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_unsubscribe">
         <div class="location">at line 20</div>
-        <code>            public            
-    <strong>unsubscribe</strong>(string $topic)</code>
+        <code>                    
+    
+    <strong>unsubscribe</strong>(
+    string $topic)</code>
     </h3>
     <div class="details">
-        <p>Unsubscribe from the given topic.</p>
-        <p>
-</p>
-        <div class="tags">
+                    <div class="method-description">
+                                    <p>Unsubscribe from the given topic.</p>                                </div>
+                <div class="tags">
                             <h4>Parameters</h4>
 
-                    <table>
+                    <table class="table table-condensed">
                     <tr>
-                <td>string</td>
+                <td>
+    string</td>
                 <td>$topic</td>
                 <td>The topic or topic pattern to unsubscribe from.</td>
             </tr>
@@ -118,25 +186,30 @@
                     </div>
     </div>
 
-                <h3 id="method_consume">
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_consume">
         <div class="location">at line 34</div>
-        <code>            public            
-    <strong>consume</strong>(<abbr title="Icecave\Overpass\PubSub\callable">callable</abbr> $callback)</code>
+        <code>                    
+    
+    <strong>consume</strong>(
+    callable $callback)</code>
     </h3>
     <div class="details">
-        <p>Consume messages from subscriptions.</p>
-        <p>When a message is received the callback is invoked with two parameters,
+                    <div class="method-description">
+                                    <p>Consume messages from subscriptions.</p>                    <p>When a message is received the callback is invoked with two parameters,
 the first is the topic to which the message was published, the second is
 the message payload.</p>
 
 <p>The callback must return true in order to keep consuming messages, or
-false to end consumption.</p>
-        <div class="tags">
+false to end consumption.</p>            </div>
+                <div class="tags">
                             <h4>Parameters</h4>
 
-                    <table>
+                    <table class="table table-condensed">
                     <tr>
-                <td><abbr title="Icecave\Overpass\PubSub\callable">callable</abbr></td>
+                <td>
+    callable</td>
                 <td>$callback</td>
                 <td>The callback to invoke when a message is received.</td>
             </tr>
@@ -148,10 +221,17 @@ false to end consumption.</p>
                     </div>
     </div>
 
+            </div>
+            </div>
+
     
             </div>
-            <div id="footer">
-        Generated by <a href="http://sami.sensiolabs.org/" target="_top">Sami, the API Documentation Generator</a>.
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
     </div>
     </body>
+
 </html>
