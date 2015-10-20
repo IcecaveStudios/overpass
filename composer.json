@@ -25,16 +25,17 @@
     "require": {
         "php": ">=5.5",
         "ext-pcntl": "*",
-        "eloquent/enumeration": "~5",
-        "icecave/isolator": "~2|~3",
-        "icecave/repr": "~1",
-        "psr/log": "~1",
-        "videlalvaro/php-amqplib": "~2.4"
+        "eloquent/enumeration": "^5",
+        "icecave/isolator": "^2|^3",
+        "psr/log": "^1",
+        "videlalvaro/php-amqplib": "^2.4"
     },
     "require-dev": {
-        "eloquent/asplode": "~2",
-        "icecave/archer": "~1",
-        "icecave/stump": "~0.3.0"
+        "eloquent/asplode": "^2",
+        "icecave/archer": "dev-develop",
+        "icecave/stump": "^0.3",
+        "phake/phake": "^1",
+        "sami/sami": "^3"
     },
     "autoload": {
         "psr-4": {
