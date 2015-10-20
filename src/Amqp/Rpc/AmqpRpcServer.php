@@ -14,7 +14,6 @@ use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
 use Icecave\Overpass\Rpc\RpcServerInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
-use Icecave\Repr\Repr;
 use LogicException;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -224,10 +223,7 @@ class AmqpRpcServer implements RpcServerInterface
             $logContext['procedure'] = $request->name();
             $logContext['arguments'] = implode(
                 ', ',
-                array_map(
-                    [Repr::class, 'repr'],
-                    $request->arguments()
-                )
+                array_map('json_encode', $request->arguments())
             );
 
             $response = $this
@@ -251,7 +247,7 @@ class AmqpRpcServer implements RpcServerInterface
         $this->send($message, $response);
 
         $logContext['code']  = $response->code();
-        $logContext['value'] = Repr::repr($response->value());
+        $logContext['value'] = json_encode($response->value());
 
         if (ResponseCode::SUCCESS() === $response->code()) {
             $logMessage = 'rpc.server {queue} #{id} {procedure}({arguments}) -> {value}';
