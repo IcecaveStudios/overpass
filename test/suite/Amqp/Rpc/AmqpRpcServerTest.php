@@ -181,6 +181,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $handler = null;
 
         Phake::inOrder(
+            Phake::verify($this->channel)->basic_qos(0, 1, true),
             Phake::verify($this->channel)->basic_consume(
                 '<request-queue-procedure-1>',
                 '',    // consumer tag

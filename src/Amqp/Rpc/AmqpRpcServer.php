@@ -108,17 +108,23 @@ class AmqpRpcServer implements RpcServerInterface
     {
         $this->isStopping = false;
 
-        // Bind queues / consumers ...
-        foreach ($this->procedures as $procedureName => $procedure) {
-            $this->bind($procedureName);
-
-            $this->logger->debug(
-                'rpc.server exposed procedure "{procedure}"',
-                ['procedure' => $procedureName]
-            );
-        }
-
         if ($this->procedures) {
+            $this->channel->basic_qos(
+                0,    // unlimited pre-fetch size
+                1,    // pre-fetch count of 1
+                true  // pre-fetch count shared across all consumers on channel (https://www.rabbitmq.com/consumer-prefetch.html)
+            );
+
+            // Bind queues / consumers ...
+            foreach ($this->procedures as $procedureName => $procedure) {
+                $this->bind($procedureName);
+
+                $this->logger->debug(
+                    'rpc.server exposed procedure "{procedure}"',
+                    ['procedure' => $procedureName]
+                );
+            }
+
             $this->logger->info('rpc.server started successfully');
         } else {
             $this->logger->warning('rpc.server started without exposed procedures');
@@ -273,7 +279,7 @@ class AmqpRpcServer implements RpcServerInterface
                 false, // no ack
                 false, // exclusive
                 false, // no wait
-                $handler = function ($message) {
+                function ($message) {
                     $this->recv($message);
                 }
             );

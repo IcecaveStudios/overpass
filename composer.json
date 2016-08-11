@@ -27,6 +27,7 @@
         "ext-pcntl": "*",
         "eloquent/enumeration": "^5",
         "icecave/isolator": "^2|^3",
+        "phpunit/phpunit": "^5.5",
         "psr/log": "^1",
         "php-amqplib/php-amqplib": "^2.6"
     },
