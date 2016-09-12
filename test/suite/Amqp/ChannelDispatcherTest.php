@@ -1,12 +1,13 @@
 <?php
+
 namespace Icecave\Overpass\Amqp;
 
 use ErrorException;
 use Icecave\Isolator\Isolator;
-use PHPUnit_Framework_TestCase;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
+use PHPUnit_Framework_TestCase;
 
 class ChannelDispatcherTest extends PHPUnit_Framework_TestCase
 {

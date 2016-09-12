@@ -1,8 +1,8 @@
 <?php
 
-namespace Icecave\Overpass\Amqp\Rpc;
+namespace Icecave\Overpass\Amqp\JobQueue;
 
-class ExposedObject
+class RegisteredObject
 {
     public function __construct()
     {

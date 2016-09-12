@@ -1,6 +1,6 @@
 {
     "name": "icecave/overpass",
-    "description": "A basic pub/sub and RPC system.",
+    "description": "A basic pub/sub, RPC and task queue system.",
     "keywords": [
         "pubsub",
         "publish",
@@ -10,6 +10,9 @@
         "remote",
         "procedure",
         "call",
+        "task",
+        "queue",
+        "job",
         "amqp",
         "rabbit"
     ],
