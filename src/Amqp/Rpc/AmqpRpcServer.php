@@ -140,6 +140,11 @@ class AmqpRpcServer implements RpcServerInterface
             }
         }
 
+        if ($this->uncaughtException !== null) {
+            $this->logger->critical('rpc.server shutdown due to uncaught exception');
+            throw $this->uncaughtException;
+        }
+
         $this->logger->info('rpc.server shutdown gracefully');
     }
 
@@ -248,6 +253,9 @@ class AmqpRpcServer implements RpcServerInterface
                 ResponseCode::EXCEPTION(),
                 'Internal server error.'
             );
+
+            $this->isStopping = true;
+            $this->uncaughtException = $e;
         }
 
         $this->send($message, $response);
@@ -302,6 +310,7 @@ class AmqpRpcServer implements RpcServerInterface
     private $invoker;
     private $channelDispatcher;
     private $isStopping;
+    private $uncaughtException;
     private $procedures;
     private $consumerTags;
 }

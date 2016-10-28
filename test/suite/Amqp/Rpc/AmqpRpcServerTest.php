@@ -395,6 +395,49 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testReceiveRequestWithArbitraryExceptionStopsServer()
+    {
+        Phake::when($this->channelDispatcher)
+            ->wait($this->channel)
+            ->thenGetReturnByLambda(
+                function () {
+                    $handler = null;
+
+                    Phake::verify($this->channel)->basic_consume(
+                        '<request-queue-procedure-name>',
+                        '',    // consumer tag
+                        false, // no local
+                        false, // no ack
+                        false, // exclusive
+                        false, // no wait
+                        Phake::capture($handler)
+                    );
+
+                    $requestMessage = new AMQPMessage(
+                        '["procedure-name",[1,2,3]]',
+                        [
+                            'reply_to' => '<response-queue>',
+                        ]
+                    );
+                    $requestMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
+
+                    $handler($requestMessage);
+                }
+            )
+            ->thenReturn(null);
+
+        $this->server->expose('procedure-name', $this->procedure4);
+
+        try {
+            $this->server->run();
+        } catch (Exception $e) {
+            Phake::verify($this->logger)->critical('rpc.server shutdown due to uncaught exception');
+            Phake::verify($this->channel)->basic_cancel('<consumer-tag-1>');
+
+            $this->assertSame($this->arbitraryException, $e);
+        }
+    }
+
     public function testReceiveRequestWithExecutionException()
     {
         $this->server->expose('procedure-name', $this->procedure3);
