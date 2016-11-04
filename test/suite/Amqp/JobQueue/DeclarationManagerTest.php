@@ -29,20 +29,20 @@ class DeclarationManagerTest extends PHPUnit_Framework_TestCase
 
     public function testRequestQueue()
     {
-        $this->declarationManager->jobQueue('task-1');
+        $this->declarationManager->jobQueue('job-1');
 
         Phake::verify($this->channel)->queue_declare(
-            'overpass/job/task-1',
+            'overpass/job/job-1',
             false, // passive
             false, // durable
             false, // exclusive
             false  // auto delete
         );
 
-        $this->declarationManager->jobQueue('task-2');
+        $this->declarationManager->jobQueue('job-2');
 
         Phake::verify($this->channel)->queue_declare(
-            'overpass/job/task-2',
+            'overpass/job/job-2',
             false, // passive
             false, // durable
             false, // exclusive
@@ -52,11 +52,11 @@ class DeclarationManagerTest extends PHPUnit_Framework_TestCase
 
     public function testRequestQueueDeclaresOnce()
     {
-        $this->declarationManager->jobQueue('task-name');
+        $this->declarationManager->jobQueue('job-name');
 
         $this->assertSame(
-            'overpass/job/task-name',
-            $this->declarationManager->jobQueue('task-name')
+            'overpass/job/job-name',
+            $this->declarationManager->jobQueue('job-name')
         );
 
         Phake::verify($this->channel, Phake::times(1))->queue_declare(

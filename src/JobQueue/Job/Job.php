@@ -1,33 +1,33 @@
 <?php
 
-namespace Icecave\Overpass\JobQueue\Task;
+namespace Icecave\Overpass\JobQueue\Job;
 
 /**
- * Represents a task request.
+ * Represents a job request.
  */
-class Task
+class Job
 {
     /**
-     * Create a task request.
+     * Create a job request.
      *
-     * @param string $jobName The jobName of the job to call
+     * @param string $type    The type of the job to call
      * @param mixed  $payload The payload to pass
      *
-     * @return Task
+     * @return Job
      */
-    public static function create($jobName, $payload)
+    public static function create($type, $payload)
     {
-        return new static($jobName, $payload);
+        return new static($type, $payload);
     }
 
     /**
-     * Get the name of the job to call to complete the task.
+     * Get the name of the job to call to complete the job.
      *
      * @return string The name of the job.
      */
-    public function jobName()
+    public function type()
     {
-        return $this->jobName;
+        return $this->type;
     }
 
     /**
@@ -44,21 +44,21 @@ class Task
     {
         return sprintf(
             '%s(%s)',
-            $this->jobName,
+            $this->type,
             json_encode($this->payload)
         );
     }
 
     /**
-     * @param string $jobName The jobName of the job to call
+     * @param string $type The type of the job to call
      * @param mixed  $payload The payload to pass
      */
-    private function __construct($jobName, $payload)
+    private function __construct($type, $payload)
     {
-        $this->jobName = $jobName;
+        $this->type = $type;
         $this->payload = $payload;
     }
 
-    private $jobName;
+    private $type;
     private $payload;
 }

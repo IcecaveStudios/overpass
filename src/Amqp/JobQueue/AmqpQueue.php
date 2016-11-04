@@ -3,9 +3,9 @@
 namespace Icecave\Overpass\Amqp\JobQueue;
 
 use Icecave\Overpass\JobQueue\QueueInterface;
-use Icecave\Overpass\JobQueue\Task\Task;
-use Icecave\Overpass\JobQueue\Task\TaskSerialization;
-use Icecave\Overpass\JobQueue\Task\TaskSerializationInterface;
+use Icecave\Overpass\JobQueue\Job\Job;
+use Icecave\Overpass\JobQueue\Job\JobSerialization;
+use Icecave\Overpass\JobQueue\Job\JobSerializationInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -16,52 +16,52 @@ class AmqpQueue implements QueueInterface
     use LoggerAwareTrait;
 
     /**
-     * @param AMQPChannel                     $channel
-     * @param DeclarationManager|null         $declarationManager
-     * @param TaskSerializationInterface|null $serialization
+     * @param AMQPChannel                    $channel
+     * @param DeclarationManager|null        $declarationManager
+     * @param JobSerializationInterface|null $serialization
      */
     public function __construct(
         AMQPChannel $channel,
         DeclarationManager $declarationManager = null,
-        TaskSerializationInterface $serialization = null
+        JobSerializationInterface $serialization = null
     ) {
         $this->channel = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization = $serialization ?: new TaskSerialization(new JsonSerialization());
+        $this->serialization = $serialization ?: new JobSerialization(new JsonSerialization());
     }
 
     /**
-     * Add a task to the job queue.
+     * Add a job to the job queue.
      *
-     * @param string $task    The name of the task to enqueue
-     * @param mixed  $payload The task payload to pass
+     * @param string $type    The type of job to enqueue
+     * @param mixed  $payload The job payload to pass
      */
-    public function enqueue($task, $payload = null)
+    public function enqueue($type, $payload = null)
     {
-        $task = Task::create($task, $payload);
+        $job = Job::create($type, $payload);
 
         if ($this->logger) {
             $this->logger->debug(
-                'jobqueue.queue enqueue successful: {task}',
+                'jobqueue.queue enqueue successful: {job}',
                 [
-                    'task' => $task,
+                    'job' => $job,
                 ]
             );
         }
 
-        $this->send($task);
+        $this->send($job);
     }
 
     /**
-     * Send a task request.
+     * Send a job request.
      *
-     * @param Task $task
+     * @param Job $job
      */
-    private function send(Task $task)
+    private function send(Job $job)
     {
         $request = $this
             ->serialization
-            ->serializeTask($task);
+            ->serializeJob($job);
 
         $exchange = $this
             ->declarationManager
@@ -69,14 +69,14 @@ class AmqpQueue implements QueueInterface
 
         $this
             ->declarationManager
-            ->jobQueue($task->jobName());
+            ->jobQueue($job->type());
 
         $this
             ->channel
             ->basic_publish(
                 new AMQPMessage($request),
                 $exchange,
-                $task->jobName()
+                $job->type()
             );
     }
 

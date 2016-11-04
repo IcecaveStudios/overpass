@@ -7,10 +7,10 @@ use Psr\Log\LoggerAwareInterface;
 interface QueueInterface extends LoggerAwareInterface
 {
     /**
-     * Add a task to the job queue.
+     * Add a job to the job queue.
      *
-     * @param string $task    The name of the task to enqueue
-     * @param mixed  $payload The task payload to pass
+     * @param string $type    The type of job to enqueue
+     * @param mixed  $payload The job payload to pass
      */
-    public function enqueue($task, $payload);
+    public function enqueue($type, $payload = null);
 }

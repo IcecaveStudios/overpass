@@ -2,7 +2,7 @@
 
 namespace Icecave\Overpass\Amqp\JobQueue;
 
-use Icecave\Overpass\JobQueue\Task\Task;
+use Icecave\Overpass\JobQueue\Job\Job;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -37,63 +37,63 @@ class AmqpQueueTest extends PHPUnit_Framework_TestCase
 
     public function testEnqueue()
     {
-        $this->subject->enqueue('task-name', 1);
+        $this->subject->enqueue('job-name', 1);
 
-        $task = null;
+        $job = null;
 
         Phake::verify($this->channel)->basic_publish(
-            Phake::capture($task),
+            Phake::capture($job),
             '<exchange>',
-            'task-name'
+            'job-name'
         );
 
         $this->assertEquals(
-            new AMQPMessage('["task-name",1]'),
-            $task
+            new AMQPMessage('["job-name",1]'),
+            $job
         );
     }
 
     public function testEnqueueExtraneousParameters()
     {
-        $this->subject->enqueue('task-name', 1, 2, 'bar'); // 2 and 'bar' should be ignored.
+        $this->subject->enqueue('job-name', 1, 2, 'bar'); // 2 and 'bar' should be ignored.
 
-        $task = null;
+        $job = null;
 
         Phake::verify($this->channel)->basic_publish(
-            Phake::capture($task),
+            Phake::capture($job),
             '<exchange>',
-            'task-name'
+            'job-name'
         );
 
         $this->assertEquals(
-            new AMQPMessage('["task-name",1]'),
-            $task
+            new AMQPMessage('["job-name",1]'),
+            $job
         );
     }
 
     public function testEnqueueWithLogging()
     {
         $this->subject->setLogger($this->logger);
-        $this->subject->enqueue('task-name', 1);
+        $this->subject->enqueue('job-name', 1);
 
-        $task = null;
+        $job = null;
 
         Phake::verify($this->channel)->basic_publish(
-            Phake::capture($task),
+            Phake::capture($job),
             '<exchange>',
-            'task-name'
+            'job-name'
         );
 
         Phake::verify($this->logger)->debug(
-            'jobqueue.queue enqueue successful: {task}',
+            'jobqueue.queue enqueue successful: {job}',
             [
-                'task' => Task::create('task-name', 1),
+                'job' => Job::create('job-name', 1),
             ]
         );
 
         $this->assertEquals(
-            new AMQPMessage('["task-name",1]'),
-            $task
+            new AMQPMessage('["job-name",1]'),
+            $job
         );
     }
 }

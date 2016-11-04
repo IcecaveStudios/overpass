@@ -6,7 +6,7 @@ use Eloquent\Asplode\Error\ErrorException;
 use Exception;
 use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\JobQueue\Exception\DiscardException;
-use Icecave\Overpass\JobQueue\Task\Task;
+use Icecave\Overpass\JobQueue\Job\Job;
 use LogicException;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -264,31 +264,31 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             Phake::capture($handler)
         );
 
-        $taskMessage = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
-        $taskMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
-        $taskMessage->delivery_info['redelivered'] = false;
+        $jobRequest = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
+        $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
+        $jobRequest->delivery_info['redelivered'] = false;
 
-        $handler($taskMessage);
+        $handler($jobRequest);
 
         Phake::verify($this->channel)->basic_ack('<delivery-tag>');
         $context = null;
 
         Phake::verify($this->logger)->log(
             LogLevel::DEBUG,
-            'jobqueue.worker completed task {task}({payload})',
+            'jobqueue.worker completed job {job}({payload})',
             Phake::capture($context)
         );
 
         $this->assertEquals(
             [
-                'task' => 'job-name',
+                'job' => 'job-name',
                 'payload' => '[1,{"a":2,"b":3}]',
             ],
             $context
         );
     }
 
-    public function testReceiveRequestWithInvalidMessage()
+    public function testReceiveRequestWithInvalidRequest()
     {
         $this->worker->register(
             'job-name',
@@ -309,26 +309,26 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             Phake::capture($handler)
         );
 
-        $taskMessage = new AMQPMessage('[null]', []);
-        $taskMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
-        $taskMessage->delivery_info['redelivered'] = false;
+        $jobRequest = new AMQPMessage('[null]', []);
+        $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
+        $jobRequest->delivery_info['redelivered'] = false;
 
-        $handler($taskMessage);
+        $handler($jobRequest);
 
         Phake::verify($this->channel)->basic_reject('<delivery-tag>', false);
         $context = null;
 
         Phake::verify($this->logger)->log(
             LogLevel::WARNING,
-            'jobqueue.worker discarding failed task {task}({payload}) -> {code} {reason}',
+            'jobqueue.worker discarding failed job {job}({payload}) -> {code} {reason}',
             Phake::capture($context)
         );
 
         $this->assertEquals(
             [
                 'code' => 0,
-                'reason' => '"Task request must be a 2-tuple."',
-                'task' => '<unknown>',
+                'reason' => '"Job request must be a 2-tuple."',
+                'job' => '<unknown>',
                 'payload' => '<unknown>',
             ],
             $context
@@ -340,7 +340,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         $this->worker->register(
             'job-name',
             function () {
-                throw new DiscardException('Task no longer needed. please discard.');
+                throw new DiscardException('Job no longer needed. please discard.');
             }
         );
 
@@ -358,26 +358,26 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             Phake::capture($handler)
         );
 
-        $taskMessage = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
-        $taskMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
-        $taskMessage->delivery_info['redelivered'] = false;
+        $jobRequest = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
+        $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
+        $jobRequest->delivery_info['redelivered'] = false;
 
-        $handler($taskMessage);
+        $handler($jobRequest);
 
         Phake::verify($this->channel)->basic_reject('<delivery-tag>', false);
         $context = null;
 
         Phake::verify($this->logger)->log(
             LogLevel::ERROR,
-            'jobqueue.worker discarding failed task {task}({payload}) -> {code} {reason}',
+            'jobqueue.worker discarding failed job {job}({payload}) -> {code} {reason}',
             Phake::capture($context)
         );
 
         $this->assertEquals(
             [
                 'code' => 0,
-                'reason' => '"Task no longer needed. please discard."',
-                'task' => 'job-name',
+                'reason' => '"Job no longer needed. please discard."',
+                'job' => 'job-name',
                 'payload' => '[1,{"a":2,"b":3}]',
             ],
             $context
@@ -412,18 +412,18 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             Phake::capture($handler)
         );
 
-        $taskMessage = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
-        $taskMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
-        $taskMessage->delivery_info['redelivered'] = true;
+        $jobRequest = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
+        $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
+        $jobRequest->delivery_info['redelivered'] = true;
 
-        $handler($taskMessage);
+        $handler($jobRequest);
 
         Phake::verify($this->channel)->basic_reject('<delivery-tag>', true);
         $context = null;
 
         Phake::verify($this->logger)->log(
             LogLevel::ERROR,
-            'jobqueue.worker requeuing failed task {task}({payload}) -> {code} {reason}',
+            'jobqueue.worker requeuing failed job {job}({payload}) -> {code} {reason}',
             Phake::capture($context)
         );
 
@@ -431,7 +431,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             [
                 'code' => 0,
                 'reason' => '"Things gone done broked."',
-                'task' => 'job-name',
+                'job' => 'job-name',
                 'payload' => '[1,{"a":2,"b":3}]',
             ],
             $context
@@ -462,18 +462,18 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             Phake::capture($handler)
         );
 
-        $taskMessage = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
-        $taskMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
-        $taskMessage->delivery_info['redelivered'] = true;
+        $jobRequest = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
+        $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
+        $jobRequest->delivery_info['redelivered'] = true;
 
-        $handler($taskMessage);
+        $handler($jobRequest);
 
         Phake::verify($this->channel)->basic_reject('<delivery-tag>', true);
         $context = null;
 
         Phake::verify($this->logger)->log(
             LogLevel::ERROR,
-            'jobqueue.worker requeuing failed task {task}({payload}) -> {code} {reason}',
+            'jobqueue.worker requeuing failed job {job}({payload}) -> {code} {reason}',
             Phake::capture($context)
         );
 
@@ -481,7 +481,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             [
                 'code' => 123,
                 'reason' => '"Internal server error."',
-                'task' => 'job-name',
+                'job' => 'job-name',
                 'payload' => '[1,{"a":2,"b":3}]',
                 'exception' => $exception,
             ],
@@ -516,25 +516,25 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             Phake::capture($handler)
         );
 
-        $taskMessage = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
-        $taskMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
-        $taskMessage->delivery_info['redelivered'] = true;
+        $jobRequest = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
+        $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
+        $jobRequest->delivery_info['redelivered'] = true;
 
-        $handler($taskMessage);
+        $handler($jobRequest);
 
         Phake::verify($this->channel)->basic_reject('<delivery-tag>', true);
         $context = null;
 
         Phake::verify($this->logger)->log(
             LogLevel::ERROR,
-            'jobqueue.worker requeuing failed task {task}({payload}) -> {code} {reason}',
+            'jobqueue.worker requeuing failed job {job}({payload}) -> {code} {reason}',
             Phake::capture($context)
         );
 
         $this->assertEquals(
             [
                 'code' => 0,
-                'task' => 'job-name',
+                'job' => 'job-name',
                 'payload' => '[1,{"a":2,"b":3}]',
                 'reason' => '"Internal server error."',
                 'exception' => $exception,

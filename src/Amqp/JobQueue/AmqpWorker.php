@@ -7,10 +7,10 @@ use Error;
 use Exception;
 use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\JobQueue\Exception\DiscardException;
-use Icecave\Overpass\JobQueue\Exception\InvalidTaskException;
+use Icecave\Overpass\JobQueue\Exception\InvalidJobException;
 use Icecave\Overpass\JobQueue\Request;
-use Icecave\Overpass\JobQueue\Task\TaskSerialization;
-use Icecave\Overpass\JobQueue\Task\TaskSerializationInterface;
+use Icecave\Overpass\JobQueue\Job\JobSerialization;
+use Icecave\Overpass\JobQueue\Job\JobSerializationInterface;
 use Icecave\Overpass\JobQueue\WorkerInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
@@ -37,12 +37,12 @@ class AmqpWorker implements WorkerInterface
         LoggerInterface $logger,
         AMQPChannel $channel,
         DeclarationManager $declarationManager = null,
-        TaskSerializationInterface $serialization = null,
+        JobSerializationInterface $serialization = null,
         ChannelDispatcher $channelDispatcher = null
     ) {
         $this->channel = $channel;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
-        $this->serialization = $serialization ?: new TaskSerialization(new JsonSerialization());
+        $this->serialization = $serialization ?: new JobSerialization(new JsonSerialization());
         $this->channelDispatcher = $channelDispatcher ?: new ChannelDispatcher();
         $this->jobs = [];
         $this->consumerTags = [];
@@ -53,12 +53,12 @@ class AmqpWorker implements WorkerInterface
     /**
      * Register a job.
      *
-     * @param string   $jobName The public name of the job.
+     * @param string   $type    The public name of the job.
      * @param callable $handler The handler to be registered against the job.
      *
      * @throws LogicException if the worker is already running.
      */
-    public function register($jobName, callable $handler)
+    public function register($type, callable $handler)
     {
         if ($this->channel->callbacks) {
             throw new LogicException(
@@ -66,7 +66,7 @@ class AmqpWorker implements WorkerInterface
             );
         }
 
-        $this->jobs[$jobName] = $handler;
+        $this->jobs[$type] = $handler;
     }
 
     /**
@@ -88,10 +88,10 @@ class AmqpWorker implements WorkerInterface
                 continue;
             }
 
-            $jobName = $prefix . $method->getName();
+            $type = $prefix . $method->getName();
 
             $this->register(
-                $jobName,
+                $type,
                 [$object, $method->getName()]
             );
         }
@@ -105,12 +105,12 @@ class AmqpWorker implements WorkerInterface
         $this->isStopping = false;
 
         // Bind queues / consumers ...
-        foreach ($this->jobs as $jobName => $job) {
-            $this->bind($jobName);
+        foreach ($this->jobs as $type => $handler) {
+            $this->bind($type);
 
             $this->logger->debug(
                 'jobqueue.worker registered job "{job}"',
-                ['job' => $jobName]
+                ['job' => $type]
             );
         }
 
@@ -124,8 +124,8 @@ class AmqpWorker implements WorkerInterface
             $this->channelDispatcher->wait($this->channel);
 
             if ($this->isStopping) {
-                foreach ($this->jobs as $jobName => $job) {
-                    $this->unbind($jobName);
+                foreach ($this->jobs as $type => $handler) {
+                    $this->unbind($type);
                 }
             }
         }
@@ -146,7 +146,7 @@ class AmqpWorker implements WorkerInterface
     }
 
     /**
-     * Receive a task request message.
+     * Receive a job request message.
      *
      * @param AMQPMessage $message
      */
@@ -154,7 +154,7 @@ class AmqpWorker implements WorkerInterface
     {
         $logLevel = LogLevel::DEBUG;
         $logContext = [
-            'task' => '<unknown>',
+            'job' => '<unknown>',
             'payload' => '<unknown>',
         ];
 
@@ -162,19 +162,19 @@ class AmqpWorker implements WorkerInterface
         $logCode = 0;
 
         try {
-            $task = $this->serialization->unserializeTask($message->body);
+            $job = $this->serialization->unserializeJob($message->body);
 
-            $logContext['task'] = $task->jobName();
-            $logContext['payload'] = json_encode($task->payload());
+            $logContext['job'] = $job->type();
+            $logContext['payload'] = json_encode($job->payload());
 
             call_user_func(
-                $this->jobs[$task->jobName()],
-                $task->payload()
+                $this->jobs[$job->type()],
+                $job->payload()
             );
 
-            $logMessage = 'jobqueue.worker completed task {task}({payload})';
+            $logMessage = 'jobqueue.worker completed job {job}({payload})';
             $this->channel->basic_ack($message->get('delivery_tag'));
-        } catch (InvalidTaskException $e) {
+        } catch (InvalidJobException $e) {
             $logLevel = LogLevel::WARNING;
             $logMessage = $this->handleFailure($message, $e, $logContext, true);    // discard
         } catch (DiscardException $e) {
@@ -216,7 +216,7 @@ class AmqpWorker implements WorkerInterface
         if ($discard) {
             $this->channel->basic_reject($message->get('delivery_tag'), false);
 
-            return 'jobqueue.worker discarding failed task {task}({payload}) -> {code} {reason}';
+            return 'jobqueue.worker discarding failed job {job}({payload}) -> {code} {reason}';
         }
 
         // message failed even after being redelivered so sleep before redelivering
@@ -226,16 +226,16 @@ class AmqpWorker implements WorkerInterface
 
         $this->channel->basic_reject($message->get('delivery_tag'), true);
 
-        return 'jobqueue.worker requeuing failed task {task}({payload}) -> {code} {reason}';
+        return 'jobqueue.worker requeuing failed job {job}({payload}) -> {code} {reason}';
     }
 
-    private function bind($jobName)
+    private function bind($type)
     {
         $queue = $this
             ->declarationManager
-            ->jobQueue($jobName);
+            ->jobQueue($type);
 
-        $this->consumerTags[$jobName] = $this
+        $this->consumerTags[$type] = $this
             ->channel
             ->basic_consume(
                 $queue,
@@ -250,15 +250,15 @@ class AmqpWorker implements WorkerInterface
             );
     }
 
-    private function unbind($jobName)
+    private function unbind($type)
     {
         $this
             ->channel
             ->basic_cancel(
-                $this->consumerTags[$jobName]
+                $this->consumerTags[$type]
             );
 
-        unset($this->consumerTags[$jobName]);
+        unset($this->consumerTags[$type]);
     }
 
     private $channel;
