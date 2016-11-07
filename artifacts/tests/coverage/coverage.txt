@@ -1,15 +1,21 @@
 
 
-Code Coverage Report:       
-  2016-10-28 00:12:14       
-                            
- Summary:                   
-  Classes: 100.00% (20/20)  
-  Methods: 100.00% (73/73)  
-  Lines:   100.00% (646/646)
+Code Coverage Report:      
+  2016-11-07 05:37:24      
+                           
+ Summary:                  
+  Classes: 96.30% (26/27)  
+  Methods: 98.97% (96/97)  
+  Lines:   99.53% (851/855)
 
 \Icecave\Overpass\Amqp::ChannelDispatcher
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 13/ 13)
+\Icecave\Overpass\Amqp\JobQueue::AmqpQueue
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 25/ 25)
+\Icecave\Overpass\Amqp\JobQueue::AmqpWorker
+  Methods:  90.00% ( 9/10)   Lines:  96.61% (114/118)
+\Icecave\Overpass\Amqp\JobQueue::DeclarationManager
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 31/ 31)
 \Icecave\Overpass\Amqp\PubSub::AmqpPublisher
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 22/ 22)
 \Icecave\Overpass\Amqp\PubSub::AmqpSubscriber
@@ -22,6 +28,10 @@ Code Coverage Report:
   Methods: 100.00% (10/10)   Lines: 100.00% (133/133)
 \Icecave\Overpass\Amqp\Rpc::DeclarationManager
   Methods: 100.00% ( 4/ 4)   Lines: 100.00% ( 41/ 41)
+\Icecave\Overpass\JobQueue\Job::Job
+  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 11/ 11)
+\Icecave\Overpass\JobQueue\Job::JobSerialization
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 23/ 23)
 \Icecave\Overpass\Rpc::Invoker
   Methods: 100.00% ( 4/ 4)   Lines: 100.00% ( 65/ 65)
 \Icecave\Overpass\Rpc\Exception::ExecutionException
@@ -35,7 +45,7 @@ Code Coverage Report:
 \Icecave\Overpass\Rpc\Exception::UnknownProcedureException
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  6/  6)
 \Icecave\Overpass\Rpc\Message::MessageSerialization
-  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 52/ 52)
+  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 51/ 51)
 \Icecave\Overpass\Rpc\Message::Request
   Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 17/ 17)
 \Icecave\Overpass\Rpc\Message::Response
