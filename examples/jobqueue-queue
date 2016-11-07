@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Initialize the logger and AMQP connection.
+ */
+require __DIR__ . '/common.php';
+
+/**
+ * Parse the command line parameters.
+ *
+ * sleep: Number of seconds to wait between making task requests.
+ */
+list(, $sleep) = $_SERVER['argv'] + [
+    null,
+    1, // sleep
+];
+
+/**
+ * Create an Overpass amqp queue.
+ */
+$queue = new Icecave\Overpass\Amqp\JobQueue\AmqpQueue($amqpChannel);
+
+$queue->setLogger($logger);
+
+/**
+ * Make job calls forever!
+ */
+while (true) {
+    $queue->double(rand(0, 100000));
+    usleep($sleep * 1000000);
+}
