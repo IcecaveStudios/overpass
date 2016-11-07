@@ -44,7 +44,7 @@ class AmqpWorker implements WorkerInterface
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
         $this->serialization = $serialization ?: new JobSerialization(new JsonSerialization());
         $this->channelDispatcher = $channelDispatcher ?: new ChannelDispatcher();
-        $this->jobs = [];
+        $this->handlers = [];
         $this->consumerTags = [];
 
         $this->setLogger($logger);
@@ -62,11 +62,11 @@ class AmqpWorker implements WorkerInterface
     {
         if ($this->channel->callbacks) {
             throw new LogicException(
-                'Jobs can not be registered while the worker is running.'
+                'Handlers can not be registered while the worker is running.'
             );
         }
 
-        $this->jobs[$type] = $handler;
+        $this->handlers[$type] = $handler;
     }
 
     /**
@@ -105,26 +105,26 @@ class AmqpWorker implements WorkerInterface
         $this->isStopping = false;
 
         // Bind queues / consumers ...
-        foreach ($this->jobs as $type => $handler) {
+        foreach ($this->handlers as $type => $handler) {
             $this->bind($type);
 
             $this->logger->debug(
-                'jobqueue.worker registered job "{job}"',
-                ['job' => $type]
+                'jobqueue.worker registered handler for type "{type}"',
+                ['type' => $type]
             );
         }
 
-        if ($this->jobs) {
+        if ($this->handlers) {
             $this->logger->info('jobqueue.worker started successfully');
         } else {
-            $this->logger->warning('jobqueue.worker started without registered jobs');
+            $this->logger->warning('jobqueue.worker started without registered handlers');
         }
 
         while ($this->channel->callbacks) {
             $this->channelDispatcher->wait($this->channel);
 
             if ($this->isStopping) {
-                foreach ($this->jobs as $type => $handler) {
+                foreach ($this->handlers as $type => $handler) {
                     $this->unbind($type);
                 }
             }
@@ -154,7 +154,7 @@ class AmqpWorker implements WorkerInterface
     {
         $logLevel = LogLevel::DEBUG;
         $logContext = [
-            'job' => '<unknown>',
+            'type' => '<unknown>',
             'payload' => '<unknown>',
         ];
 
@@ -164,11 +164,11 @@ class AmqpWorker implements WorkerInterface
         try {
             $job = $this->serialization->unserializeJob($message->body);
 
-            $logContext['job'] = $job->type();
+            $logContext['type'] = $job->type();
             $logContext['payload'] = json_encode($job->payload());
 
             call_user_func(
-                $this->jobs[$job->type()],
+                $this->handlers[$job->type()],
                 $job->payload()
             );
 
@@ -202,7 +202,7 @@ class AmqpWorker implements WorkerInterface
     }
 
     /**
-     * @param Exception $exception The error or exception being handled.
+     * @param Exception $exception The exception that represents the failure.
      */
     private function handleFailure(
         AMQPMessage $message,
@@ -266,6 +266,6 @@ class AmqpWorker implements WorkerInterface
     private $serialization;
     private $channelDispatcher;
     private $isStopping;
-    private $jobs;
+    private $handlers;
     private $consumerTags;
 }

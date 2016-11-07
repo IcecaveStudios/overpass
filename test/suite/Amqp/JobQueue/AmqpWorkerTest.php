@@ -101,7 +101,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
 
         $this->setExpectedException(
             LogicException::class,
-            'Jobs can not be registered while the worker is running.'
+            'Handlers can not be registered while the worker is running.'
         );
 
         $this->worker->run();
@@ -188,8 +188,8 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
                 Phake::capture($handler)
             ),
             Phake::verify($this->logger)->debug(
-                'jobqueue.worker registered job "{job}"',
-                ['job' => 'job-1']
+                'jobqueue.worker registered handler for type "{type}"',
+                ['type' => 'job-1']
             ),
             Phake::verify($this->channel)->basic_consume(
                 '<job-queue-job-2>',
@@ -201,8 +201,8 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
                 $handler
             ),
             Phake::verify($this->logger)->debug(
-                'jobqueue.worker registered job "{job}"',
-                ['job' => 'job-2']
+                'jobqueue.worker registered handler for type "{type}"',
+                ['type' => 'job-2']
             ),
             Phake::verify($this->logger)->info('jobqueue.worker started successfully'),
             Phake::verify($this->channelDispatcher, Phake::times(2))->wait($this->channel),
@@ -219,7 +219,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         $this->worker->run();
 
         Phake::inOrder(
-            Phake::verify($this->logger)->warning('jobqueue.worker started without registered jobs'),
+            Phake::verify($this->logger)->warning('jobqueue.worker started without registered handlers'),
             Phake::verify($this->logger)->info('jobqueue.worker shutdown gracefully')
         );
 
@@ -248,14 +248,14 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
 
     public function testReceiveRequest()
     {
-        $this->worker->register('job-name', $this->job1);
+        $this->worker->register('job-type', $this->job1);
 
         $this->worker->run();
 
         $handler = null;
 
         Phake::verify($this->channel)->basic_consume(
-            '<job-queue-job-name>',
+            '<job-queue-job-type>',
             '',    // consumer tag
             false, // no local
             false, // no ack
@@ -264,7 +264,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             Phake::capture($handler)
         );
 
-        $jobRequest = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
+        $jobRequest = new AMQPMessage('["job-type",[1,{"a":2,"b":3}]]', []);
         $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
         $jobRequest->delivery_info['redelivered'] = false;
 
@@ -281,7 +281,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [
-                'job' => 'job-name',
+                'type' => 'job-type',
                 'payload' => '[1,{"a":2,"b":3}]',
             ],
             $context
@@ -291,7 +291,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
     public function testReceiveRequestWithInvalidRequest()
     {
         $this->worker->register(
-            'job-name',
+            'job-type',
             $this->job1
         );
 
@@ -300,7 +300,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         $handler = null;
 
         Phake::verify($this->channel)->basic_consume(
-            '<job-queue-job-name>',
+            '<job-queue-job-type>',
             '',    // consumer tag
             false, // no local
             false, // no ack
@@ -328,7 +328,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             [
                 'code' => 0,
                 'reason' => '"Job request must be a 2-tuple."',
-                'job' => '<unknown>',
+                'type' => '<unknown>',
                 'payload' => '<unknown>',
             ],
             $context
@@ -338,7 +338,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
     public function testReceiveRequestWithDiscardException()
     {
         $this->worker->register(
-            'job-name',
+            'job-type',
             function () {
                 throw new DiscardException('Job no longer needed. please discard.');
             }
@@ -349,7 +349,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         $handler = null;
 
         Phake::verify($this->channel)->basic_consume(
-            '<job-queue-job-name>',
+            '<job-queue-job-type>',
             '',    // consumer tag
             false, // no local
             false, // no ack
@@ -358,7 +358,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             Phake::capture($handler)
         );
 
-        $jobRequest = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
+        $jobRequest = new AMQPMessage('["job-type",[1,{"a":2,"b":3}]]', []);
         $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
         $jobRequest->delivery_info['redelivered'] = false;
 
@@ -377,7 +377,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             [
                 'code' => 0,
                 'reason' => '"Job no longer needed. please discard."',
-                'job' => 'job-name',
+                'type' => 'job-type',
                 'payload' => '[1,{"a":2,"b":3}]',
             ],
             $context
@@ -387,7 +387,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
     public function testReceiveRequestWithErrorException()
     {
         $this->worker->register(
-            'job-name',
+            'job-type',
             function () {
                 throw new ErrorException(
                     'Things gone done broked.', // message
@@ -403,7 +403,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         $handler = null;
 
         Phake::verify($this->channel)->basic_consume(
-            '<job-queue-job-name>',
+            '<job-queue-job-type>',
             '',    // consumer tag
             false, // no local
             false, // no ack
@@ -412,7 +412,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             Phake::capture($handler)
         );
 
-        $jobRequest = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
+        $jobRequest = new AMQPMessage('["job-type",[1,{"a":2,"b":3}]]', []);
         $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
         $jobRequest->delivery_info['redelivered'] = true;
 
@@ -431,7 +431,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             [
                 'code' => 0,
                 'reason' => '"Things gone done broked."',
-                'job' => 'job-name',
+                'type' => 'job-type',
                 'payload' => '[1,{"a":2,"b":3}]',
             ],
             $context
@@ -442,7 +442,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
     {
         $exception = new Exception('Things gone done broked.', 123);
         $this->worker->register(
-            'job-name',
+            'job-type',
             function () use ($exception) {
                 throw $exception;
             }
@@ -453,7 +453,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         $handler = null;
 
         Phake::verify($this->channel)->basic_consume(
-            '<job-queue-job-name>',
+            '<job-queue-job-type>',
             '',    // consumer tag
             false, // no local
             false, // no ack
@@ -462,7 +462,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             Phake::capture($handler)
         );
 
-        $jobRequest = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
+        $jobRequest = new AMQPMessage('["job-type",[1,{"a":2,"b":3}]]', []);
         $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
         $jobRequest->delivery_info['redelivered'] = true;
 
@@ -481,7 +481,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             [
                 'code' => 123,
                 'reason' => '"Internal server error."',
-                'job' => 'job-name',
+                'type' => 'job-type',
                 'payload' => '[1,{"a":2,"b":3}]',
                 'exception' => $exception,
             ],
@@ -496,7 +496,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
     {
         $exception = new Exception('Internal server error.', 0);
         $this->worker->register(
-            'job-name',
+            'job-type',
             function (int $foo) { // will cause TypeError in php7 and asplode ErrorException in php5 when we invoke with an object
                 return $foo;
             }
@@ -507,7 +507,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         $handler = null;
 
         Phake::verify($this->channel)->basic_consume(
-            '<job-queue-job-name>',
+            '<job-queue-job-type>',
             '',    // consumer tag
             false, // no local
             false, // no ack
@@ -516,7 +516,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             Phake::capture($handler)
         );
 
-        $jobRequest = new AMQPMessage('["job-name",[1,{"a":2,"b":3}]]', []);
+        $jobRequest = new AMQPMessage('["job-type",[1,{"a":2,"b":3}]]', []);
         $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
         $jobRequest->delivery_info['redelivered'] = true;
 
@@ -534,7 +534,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'code' => 0,
-                'job' => 'job-name',
+                'type' => 'job-type',
                 'payload' => '[1,{"a":2,"b":3}]',
                 'reason' => '"Internal server error."',
                 'exception' => $exception,
