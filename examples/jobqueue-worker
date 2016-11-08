@@ -1,0 +1,34 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Initialize the logger and AMQP connection.
+ */
+require __DIR__ . '/common.php';
+
+/**
+ * Create an Overpass JobQueue worker that exposes a single procedure named 'double'
+ * which takes a single number as input and doubles it.
+ */
+$worker = new Icecave\Overpass\Amqp\JobQueue\AmqpWorker(
+    $logger,
+    $amqpChannel
+);
+
+$worker->expose(
+    'double',
+    function ($value) {
+        return $value * 2;
+    }
+);
+
+pcntl_signal(
+    SIGINT,
+    function() use ($worker) {
+        $worker->stop();
+    }
+);
+
+/**
+ * Service job requests forever!
+ */
+$worker->run();

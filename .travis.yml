@@ -1,18 +1,20 @@
 language: php
-
-php: ["5.5", "5.6", "hhvm", "hhvm-nightly"]
-
+php:
+- '5.5'
+- '5.6'
+- '7.0'
+- hhvm
+- hhvm-nightly
 matrix:
-    allow_failures: [{"php": "hhvm"}, {"php": "hhvm-nightly"}]
-    fast_finish: true
-
+  allow_failures:
+  - php: hhvm
+  - php: hhvm-nightly
+  fast_finish: true
 env:
   global:
-    - ARCHER_PUBLISH_VERSION=5.6
-    - secure: "EMMkPnJdspdHeHgt0Ea6YpNwfXMWz8VYRLQlB+ky5orLjXmNOuBXEvUSxwve2RFb+uoxSOOj35I1g8kD6rCTDmaZH8ePyPctSfIeAM7bymmfwtYv23WxEF7EmTDgZPlki/4W97udoxxTjpXsuOD9BS8hhhjv6eOa7R2txvKtloo="
-
+  - ARCHER_PUBLISH_VERSION=5.6
+  - secure: FIF+gp2tG2b1exzUIhYOtyNJFPl6yCa4PQQf9DQ8QNZmwm9D9lZzupB2Eha1KfTIZFnL1/Xy/Yv18QhnOeAKExEf/d68UBG6Fvu1Mq6Ov3zh59J1LdW7gsep8+XSlbf/7kOiTHjDztSgFBN7wQ1KT08ku04sX8XWm3NAK0/mVM0=
 install:
-  - ./.travis.install
-
+- ./.travis.install
 script:
-  - ./vendor/bin/archer travis:build
+- ./vendor/bin/archer travis:build

@@ -20,15 +20,15 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->channel                  = Phake::mock(AMQPChannel::class);
-        $this->declarationManager       = Phake::mock(DeclarationManager::class);
-        $this->logger                   = Phake::mock(LoggerInterface::class);
-        $this->invoker                  = Phake::partialMock(Invoker::class);
-        $this->channelDispatcher        = Phake::mock(ChannelDispatcher::class);
-        $this->executionException       = new ExecutionException('The procedure failed!');
-        $this->arbitraryException       = new Exception('The procedure imploded spectacularly!');
-        $this->procedure1               = function () { return '<procedure-1: ' . implode(', ', func_get_args()) . '>'; };
-        $this->procedure2         = function () { return '<procedure-2: ' . implode(', ', func_get_args()) . '>'; };
+        $this->channel            = Phake::mock(AMQPChannel::class);
+        $this->declarationManager = Phake::mock(DeclarationManager::class);
+        $this->logger             = Phake::mock(LoggerInterface::class);
+        $this->invoker            = Phake::partialMock(Invoker::class);
+        $this->channelDispatcher  = Phake::mock(ChannelDispatcher::class);
+        $this->executionException = new ExecutionException('The procedure failed!');
+        $this->arbitraryException = new Exception('The procedure imploded spectacularly!');
+        $this->procedure1         = function () { return '<procedure-1: ' . implode(', ', array_map('json_encode', func_get_args())) . '>'; };
+        $this->procedure2         = function () { return '<procedure-2: ' . implode(', ', array_map('json_encode', func_get_args())) . '>'; };
         $this->procedure3         = function () { throw $this->executionException; };
         $this->procedure4         = function () { throw $this->arbitraryException; };
         $this->consumerTagCounter = 0;
@@ -36,7 +36,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         Phake::when($this->channel)
             ->basic_consume(Phake::anyParameters())
             ->thenGetReturnByLambda(
-                function ($_, $tag, $_, $_, $_, $_, $callback) {
+                function ($a, $tag, $b, $c, $d, $e, $callback) {
                     if ($tag === '') {
                         $tag = '<consumer-tag-' . ++$this->consumerTagCounter . '>';
                     }
@@ -181,6 +181,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $handler = null;
 
         Phake::inOrder(
+            Phake::verify($this->channel)->basic_qos(0, 1, true),
             Phake::verify($this->channel)->basic_consume(
                 '<request-queue-procedure-1>',
                 '',    // consumer tag
@@ -268,7 +269,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
 
         $requestMessage = new AMQPMessage(
-            '["procedure-name",[1,2,3]]',
+            '["procedure-name",[1,{"a":2,"b":3}]]',
             [
                 'reply_to'       => '<response-queue>',
                 'correlation_id' => 456,
@@ -281,8 +282,8 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         $responseMessage = null;
 
-        $expectedRequest  = Request::create('procedure-name', [1, 2, 3]);
-        $expectedResponse = Response::createFromValue('<procedure-1: 1, 2, 3>');
+        $expectedRequest  = Request::create('procedure-name', [1, (object) ['a' => 2, 'b' => 3]]);
+        $expectedResponse = Response::createFromValue('<procedure-1: 1, {"a":2,"b":3}>');
 
         Phake::inOrder(
             Phake::verify($this->channel)->basic_ack('<delivery-tag>'),
@@ -307,16 +308,16 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 'id'        => 456,
                 'queue'     => '<response-queue>',
                 'procedure' => 'procedure-name',
-                'arguments' => '1, 2, 3',
+                'arguments' => '1, {"a":2,"b":3}',
                 'code'      => ResponseCode::SUCCESS(),
-                'value'     => '"<procedure-1: 1, 2, 3>"',
+                'value'     => '"<procedure-1: 1, {\"a\":2,\"b\":3}>"',
             ],
             $context
         );
 
         $this->assertEquals(
             new AMQPMessage(
-                '[' . ResponseCode::SUCCESS . ',"<procedure-1: 1, 2, 3>"]',
+                '[' . ResponseCode::SUCCESS . ',"<procedure-1: 1, {\"a\":2,\"b\":3}>"]',
                 [
                     'correlation_id' => 456,
                 ]
@@ -392,6 +393,49 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
             ],
             $context
         );
+    }
+
+    public function testReceiveRequestWithArbitraryExceptionStopsServer()
+    {
+        Phake::when($this->channelDispatcher)
+            ->wait($this->channel)
+            ->thenGetReturnByLambda(
+                function () {
+                    $handler = null;
+
+                    Phake::verify($this->channel)->basic_consume(
+                        '<request-queue-procedure-name>',
+                        '',    // consumer tag
+                        false, // no local
+                        false, // no ack
+                        false, // exclusive
+                        false, // no wait
+                        Phake::capture($handler)
+                    );
+
+                    $requestMessage = new AMQPMessage(
+                        '["procedure-name",[1,2,3]]',
+                        [
+                            'reply_to' => '<response-queue>',
+                        ]
+                    );
+                    $requestMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
+
+                    $handler($requestMessage);
+                }
+            )
+            ->thenReturn(null);
+
+        $this->server->expose('procedure-name', $this->procedure4);
+
+        try {
+            $this->server->run();
+        } catch (Exception $e) {
+            Phake::verify($this->logger)->critical('rpc.server shutdown due to uncaught exception');
+            Phake::verify($this->channel)->basic_cancel('<consumer-tag-1>');
+
+            $this->assertSame($this->arbitraryException, $e);
+        }
     }
 
     public function testReceiveRequestWithExecutionException()

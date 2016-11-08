@@ -26,7 +26,7 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
         Phake::when($this->channel)
             ->basic_consume(Phake::anyParameters())
             ->thenGetReturnByLambda(
-                function ($_, $tag, $_, $_, $_, $_, $callback) {
+                function ($a, $tag, $b, $c, $d, $e, $callback) {
 
                     if ($tag === '') {
                         $tag = '<consumer-tag>';

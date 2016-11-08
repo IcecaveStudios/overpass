@@ -14,7 +14,6 @@ use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
 use Icecave\Overpass\Rpc\RpcServerInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
-use Icecave\Repr\Repr;
 use LogicException;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -109,17 +108,23 @@ class AmqpRpcServer implements RpcServerInterface
     {
         $this->isStopping = false;
 
-        // Bind queues / consumers ...
-        foreach ($this->procedures as $procedureName => $procedure) {
-            $this->bind($procedureName);
-
-            $this->logger->debug(
-                'rpc.server exposed procedure "{procedure}"',
-                ['procedure' => $procedureName]
-            );
-        }
-
         if ($this->procedures) {
+            $this->channel->basic_qos(
+                0,    // unlimited pre-fetch size
+                1,    // pre-fetch count of 1
+                true  // pre-fetch count shared across all consumers on channel (https://www.rabbitmq.com/consumer-prefetch.html)
+            );
+
+            // Bind queues / consumers ...
+            foreach ($this->procedures as $procedureName => $procedure) {
+                $this->bind($procedureName);
+
+                $this->logger->debug(
+                    'rpc.server exposed procedure "{procedure}"',
+                    ['procedure' => $procedureName]
+                );
+            }
+
             $this->logger->info('rpc.server started successfully');
         } else {
             $this->logger->warning('rpc.server started without exposed procedures');
@@ -133,6 +138,11 @@ class AmqpRpcServer implements RpcServerInterface
                     $this->unbind($procedureName);
                 }
             }
+        }
+
+        if ($this->uncaughtException !== null) {
+            $this->logger->critical('rpc.server shutdown due to uncaught exception');
+            throw $this->uncaughtException;
         }
 
         $this->logger->info('rpc.server shutdown gracefully');
@@ -224,10 +234,7 @@ class AmqpRpcServer implements RpcServerInterface
             $logContext['procedure'] = $request->name();
             $logContext['arguments'] = implode(
                 ', ',
-                array_map(
-                    [Repr::class, 'repr'],
-                    $request->arguments()
-                )
+                array_map('json_encode', $request->arguments())
             );
 
             $response = $this
@@ -246,12 +253,15 @@ class AmqpRpcServer implements RpcServerInterface
                 ResponseCode::EXCEPTION(),
                 'Internal server error.'
             );
+
+            $this->isStopping = true;
+            $this->uncaughtException = $e;
         }
 
         $this->send($message, $response);
 
         $logContext['code']  = $response->code();
-        $logContext['value'] = Repr::repr($response->value());
+        $logContext['value'] = json_encode($response->value());
 
         if (ResponseCode::SUCCESS() === $response->code()) {
             $logMessage = 'rpc.server {queue} #{id} {procedure}({arguments}) -> {value}';
@@ -277,7 +287,7 @@ class AmqpRpcServer implements RpcServerInterface
                 false, // no ack
                 false, // exclusive
                 false, // no wait
-                $handler = function ($message) {
+                function ($message) {
                     $this->recv($message);
                 }
             );
@@ -300,6 +310,7 @@ class AmqpRpcServer implements RpcServerInterface
     private $invoker;
     private $channelDispatcher;
     private $isStopping;
+    private $uncaughtException;
     private $procedures;
     private $consumerTags;
 }
