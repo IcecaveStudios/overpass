@@ -1,5 +1,12 @@
 # Overpass Changelog
 
+### 1.0.0 (2016-11-08)
+
+* **[NEW]** Added job queing subsystem (thanks @darianbr)
+* **[IMPROVED]** Use a channel-wide pre-fetch limit in the AMQP RPC server
+* **[IMPROVED]** Log complete messages in JSON format, rather than a partial representation
+* **[FIXED]** Allow the RPC server to crash when an internal server error (unexpected exception) occurs, this prevents applications in unrecoverable state from appearing OK while unresponsive
+
 ### 0.3.5 (2015-02-12)
 
 * **[FIXED]** Fixed incorrect `icecave/isolator` version constraint
