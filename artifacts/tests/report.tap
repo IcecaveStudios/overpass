@@ -59,84 +59,85 @@ ok 57 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testRunNoProcedures
 ok 58 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testStop
 ok 59 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testReceiveRequest
 ok 60 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testReceiveRequestWithArbitraryException
-ok 61 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testReceiveRequestWithExecutionException
-ok 62 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testReceiveRequestWithInvalidMessage
-ok 63 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testReceiveRequestWithoutReplyQueue
-ok 64 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testReceiveRequestWithoutCorrelationId
-ok 65 - Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest::testRequestQueue
-ok 66 - Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest::testRequestQueueDeclaresOnce
-ok 67 - Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest::testResponseQueue
-ok 68 - Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest::testResponseQueueDeclaresOnce
-ok 69 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testSerializeJob
-ok 70 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJob
-ok 71 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJobFailure with data set #0 ('Job request is invalid.', '[')
-ok 72 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJobFailure with data set #1 ('Job request must be a 2-tuple.', '{}')
-ok 73 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJobFailure with data set #2 ('Job request must be a 2-tuple.', '[1]')
-ok 74 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJobFailure with data set #3 ('Job request must be a 2-tuple.', '[1, 2, 3]')
-ok 75 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJobFailure with data set #4 ('Job type must be a string.', '[null, []]')
-ok 76 - Icecave\Overpass\JobQueue\Job\JobTest::testCreate
-ok 77 - Icecave\Overpass\JobQueue\Job\JobTest::testToString
-ok 78 - Icecave\Overpass\Rpc\Exception\ExecutionExceptionTest::testException
-ok 79 - Icecave\Overpass\Rpc\Exception\InvalidMessageExceptionTest::testException
-ok 80 - Icecave\Overpass\Rpc\Exception\UnknownProcedureExceptionTest::testException
-ok 81 - Icecave\Overpass\Rpc\InvokerTest::testInvokeWithClosure
-ok 82 - Icecave\Overpass\Rpc\InvokerTest::testInvokeWithFunction
-ok 83 - Icecave\Overpass\Rpc\InvokerTest::testInvokeWithMethodAsArray
-ok 84 - Icecave\Overpass\Rpc\InvokerTest::testInvokeWithMethodAsString
-ok 85 - Icecave\Overpass\Rpc\InvokerTest::testInvokeWithProcedureThatThrowsArbitraryException
-ok 86 - Icecave\Overpass\Rpc\InvokerTest::testInvokeWithProcedureThatThrowsExecutionException
-ok 87 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "arity" (Closure Object (...), array(1, 2, 3))
-ok 88 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "arity (var args)" (Closure Object (...), array(1, 2, 3, 4, 5))
-ok 89 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "array type hint" (Closure Object (...), array(array()))
-ok 90 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "array type hint (nullable)" (Closure Object (...), array(array()))
-ok 91 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "array type hint (nullable + with null)" (Closure Object (...), array(null))
-ok 92 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "callable type hint" (Closure Object (...), array(Closure Object (...)))
-ok 93 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "callable type hint (nullable)" (Closure Object (...), array(Closure Object (...)))
-ok 94 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "callable type hint (nullable + with null)" (Closure Object (...), array(null))
-ok 95 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "class type hint" (Closure Object (...), array(stdClass Object ()))
-ok 96 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "class type hint (nullable)" (Closure Object (...), array(stdClass Object ()))
-ok 97 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "class type hint (nullable + with null)" (Closure Object (...), array(null))
-ok 98 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "arity" (Closure Object (...), array(), 'Not enough arguments - 3 argu...uired.')
-ok 99 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "array type hint" (Closure Object (...), array(1), 'Argument "a" must be an array.')
-ok 100 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "array type hint (nullable)" (Closure Object (...), array(1), 'Argument "a" must be an array or null.')
-ok 101 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "callable type hint" (Closure Object (...), array(1), 'Argument "a" must be callable.')
-ok 102 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "callable type hint (nullable)" (Closure Object (...), array(1), 'Argument "a" must be callable or null.')
-ok 103 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "class type hint" (Closure Object (...), array(1), 'Argument "a" must be an insta...lass".')
-ok 104 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "class type hint (nullable)" (Closure Object (...), array(1), 'Argument "a" must be an insta... null.')
-ok 105 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "class type hint (other class)" (Closure Object (...), array(Icecave\Overpass\Rpc\InvokerTest Object (...)), 'Argument "a" must be an insta...lass".')
-ok 106 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "class type hint (nullable + other class)" (Closure Object (...), array(Icecave\Overpass\Rpc\InvokerTest Object (...)), 'Argument "a" must be an insta... null.')
-ok 107 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testSerializeRequest
-ok 108 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testSerializeResponse
-ok 109 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequest
-ok 110 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure with data set #0 ('Request payload is invalid.', '[')
-ok 111 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure with data set #1 ('Request payload must be a 2-tuple.', '{}')
-ok 112 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure with data set #2 ('Request payload must be a 2-tuple.', '[1]')
-ok 113 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure with data set #3 ('Request payload must be a 2-tuple.', '[1, 2, 3]')
-ok 114 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure with data set #4 ('Request payload procedure nam...tring.', '[null, []]')
-ok 115 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure with data set #5 ('Request payload arguments mus...array.', '["", null]')
-ok 116 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponse
-ok 117 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure with data set #0 ('Response payload is invalid.', '[')
-ok 118 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure with data set #1 ('Response payload must be a 2-tuple.', '{}')
-ok 119 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure with data set #2 ('Response payload must be a 2-tuple.', '[1]')
-ok 120 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure with data set #3 ('Response payload must be a 2-tuple.', '[1, 2, 3]')
-ok 121 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure with data set #4 ('Response payload response cod...nised.', '[-1, []]')
-ok 122 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure with data set #5 ('Response payload error messag...tring.', '[10, null]')
-ok 123 - Icecave\Overpass\Rpc\Message\RequestTest::testCreate
-ok 124 - Icecave\Overpass\Rpc\Message\RequestTest::testToString
-ok 125 - Icecave\Overpass\Rpc\Message\ResponseTest::testCreate
-ok 126 - Icecave\Overpass\Rpc\Message\ResponseTest::testCreateFromValue
-ok 127 - Icecave\Overpass\Rpc\Message\ResponseTest::testCreateFromException
-ok 128 - Icecave\Overpass\Rpc\Message\ResponseTest::testCreateFromExceptionWithUnknownException
-ok 129 - Icecave\Overpass\Rpc\Message\ResponseTest::testExtract
-ok 130 - Icecave\Overpass\Rpc\Message\ResponseTest::testExtractWithException with data set #0 (LogicException Object (...), 'Icecave\Overpass\Rpc\Exceptio...eption')
-ok 131 - Icecave\Overpass\Rpc\Message\ResponseTest::testExtractWithException with data set #1 (Icecave\Overpass\Rpc\Exception\InvalidMessageException Object (...))
-ok 132 - Icecave\Overpass\Rpc\Message\ResponseTest::testExtractWithException with data set #2 (Icecave\Overpass\Rpc\Exception\UnknownProcedureException Object (...))
-ok 133 - Icecave\Overpass\Rpc\Message\ResponseTest::testToString
-ok 134 - Icecave\Overpass\Rpc\Message\ResponseTest::testToStringWithException
-ok 135 - Icecave\Overpass\Serialization\JsonSerializationTest::testSerialize
-ok 136 - Icecave\Overpass\Serialization\JsonSerializationTest::testSerializeWithInvalidPayload
-ok 137 - Icecave\Overpass\Serialization\JsonSerializationTest::testSerializeFailure
-ok 138 - Icecave\Overpass\Serialization\JsonSerializationTest::testUnserialize
-ok 139 - Icecave\Overpass\Serialization\JsonSerializationTest::testUnserializeNull
-ok 140 - Icecave\Overpass\Serialization\JsonSerializationTest::testUnserializeFailure
-1..140
+ok 61 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testReceiveRequestWithArbitraryExceptionStopsServer
+ok 62 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testReceiveRequestWithExecutionException
+ok 63 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testReceiveRequestWithInvalidMessage
+ok 64 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testReceiveRequestWithoutReplyQueue
+ok 65 - Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest::testReceiveRequestWithoutCorrelationId
+ok 66 - Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest::testRequestQueue
+ok 67 - Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest::testRequestQueueDeclaresOnce
+ok 68 - Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest::testResponseQueue
+ok 69 - Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest::testResponseQueueDeclaresOnce
+ok 70 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testSerializeJob
+ok 71 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJob
+ok 72 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJobFailure with data set #0 ('Job request is invalid.', '[')
+ok 73 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJobFailure with data set #1 ('Job request must be a 2-tuple.', '{}')
+ok 74 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJobFailure with data set #2 ('Job request must be a 2-tuple.', '[1]')
+ok 75 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJobFailure with data set #3 ('Job request must be a 2-tuple.', '[1, 2, 3]')
+ok 76 - Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJobFailure with data set #4 ('Job type must be a string.', '[null, []]')
+ok 77 - Icecave\Overpass\JobQueue\Job\JobTest::testCreate
+ok 78 - Icecave\Overpass\JobQueue\Job\JobTest::testToString
+ok 79 - Icecave\Overpass\Rpc\Exception\ExecutionExceptionTest::testException
+ok 80 - Icecave\Overpass\Rpc\Exception\InvalidMessageExceptionTest::testException
+ok 81 - Icecave\Overpass\Rpc\Exception\UnknownProcedureExceptionTest::testException
+ok 82 - Icecave\Overpass\Rpc\InvokerTest::testInvokeWithClosure
+ok 83 - Icecave\Overpass\Rpc\InvokerTest::testInvokeWithFunction
+ok 84 - Icecave\Overpass\Rpc\InvokerTest::testInvokeWithMethodAsArray
+ok 85 - Icecave\Overpass\Rpc\InvokerTest::testInvokeWithMethodAsString
+ok 86 - Icecave\Overpass\Rpc\InvokerTest::testInvokeWithProcedureThatThrowsArbitraryException
+ok 87 - Icecave\Overpass\Rpc\InvokerTest::testInvokeWithProcedureThatThrowsExecutionException
+ok 88 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "arity" (Closure Object (...), array(1, 2, 3))
+ok 89 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "arity (var args)" (Closure Object (...), array(1, 2, 3, 4, 5))
+ok 90 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "array type hint" (Closure Object (...), array(array()))
+ok 91 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "array type hint (nullable)" (Closure Object (...), array(array()))
+ok 92 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "array type hint (nullable + with null)" (Closure Object (...), array(null))
+ok 93 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "callable type hint" (Closure Object (...), array(Closure Object (...)))
+ok 94 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "callable type hint (nullable)" (Closure Object (...), array(Closure Object (...)))
+ok 95 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "callable type hint (nullable + with null)" (Closure Object (...), array(null))
+ok 96 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "class type hint" (Closure Object (...), array(stdClass Object ()))
+ok 97 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "class type hint (nullable)" (Closure Object (...), array(stdClass Object ()))
+ok 98 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking with data set "class type hint (nullable + with null)" (Closure Object (...), array(null))
+ok 99 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "arity" (Closure Object (...), array(), 'Not enough arguments - 3 argu...uired.')
+ok 100 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "array type hint" (Closure Object (...), array(1), 'Argument "a" must be an array.')
+ok 101 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "array type hint (nullable)" (Closure Object (...), array(1), 'Argument "a" must be an array or null.')
+ok 102 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "callable type hint" (Closure Object (...), array(1), 'Argument "a" must be callable.')
+ok 103 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "callable type hint (nullable)" (Closure Object (...), array(1), 'Argument "a" must be callable or null.')
+ok 104 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "class type hint" (Closure Object (...), array(1), 'Argument "a" must be an insta...lass".')
+ok 105 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "class type hint (nullable)" (Closure Object (...), array(1), 'Argument "a" must be an insta... null.')
+ok 106 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "class type hint (other class)" (Closure Object (...), array(Icecave\Overpass\Rpc\InvokerTest Object (...)), 'Argument "a" must be an insta...lass".')
+ok 107 - Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure with data set "class type hint (nullable + other class)" (Closure Object (...), array(Icecave\Overpass\Rpc\InvokerTest Object (...)), 'Argument "a" must be an insta... null.')
+ok 108 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testSerializeRequest
+ok 109 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testSerializeResponse
+ok 110 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequest
+ok 111 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure with data set #0 ('Request payload is invalid.', '[')
+ok 112 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure with data set #1 ('Request payload must be a 2-tuple.', '{}')
+ok 113 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure with data set #2 ('Request payload must be a 2-tuple.', '[1]')
+ok 114 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure with data set #3 ('Request payload must be a 2-tuple.', '[1, 2, 3]')
+ok 115 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure with data set #4 ('Request payload procedure nam...tring.', '[null, []]')
+ok 116 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure with data set #5 ('Request payload arguments mus...array.', '["", null]')
+ok 117 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponse
+ok 118 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure with data set #0 ('Response payload is invalid.', '[')
+ok 119 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure with data set #1 ('Response payload must be a 2-tuple.', '{}')
+ok 120 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure with data set #2 ('Response payload must be a 2-tuple.', '[1]')
+ok 121 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure with data set #3 ('Response payload must be a 2-tuple.', '[1, 2, 3]')
+ok 122 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure with data set #4 ('Response payload response cod...nised.', '[-1, []]')
+ok 123 - Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure with data set #5 ('Response payload error messag...tring.', '[10, null]')
+ok 124 - Icecave\Overpass\Rpc\Message\RequestTest::testCreate
+ok 125 - Icecave\Overpass\Rpc\Message\RequestTest::testToString
+ok 126 - Icecave\Overpass\Rpc\Message\ResponseTest::testCreate
+ok 127 - Icecave\Overpass\Rpc\Message\ResponseTest::testCreateFromValue
+ok 128 - Icecave\Overpass\Rpc\Message\ResponseTest::testCreateFromException
+ok 129 - Icecave\Overpass\Rpc\Message\ResponseTest::testCreateFromExceptionWithUnknownException
+ok 130 - Icecave\Overpass\Rpc\Message\ResponseTest::testExtract
+ok 131 - Icecave\Overpass\Rpc\Message\ResponseTest::testExtractWithException with data set #0 (LogicException Object (...), 'Icecave\Overpass\Rpc\Exceptio...eption')
+ok 132 - Icecave\Overpass\Rpc\Message\ResponseTest::testExtractWithException with data set #1 (Icecave\Overpass\Rpc\Exception\InvalidMessageException Object (...))
+ok 133 - Icecave\Overpass\Rpc\Message\ResponseTest::testExtractWithException with data set #2 (Icecave\Overpass\Rpc\Exception\UnknownProcedureException Object (...))
+ok 134 - Icecave\Overpass\Rpc\Message\ResponseTest::testToString
+ok 135 - Icecave\Overpass\Rpc\Message\ResponseTest::testToStringWithException
+ok 136 - Icecave\Overpass\Serialization\JsonSerializationTest::testSerialize
+ok 137 - Icecave\Overpass\Serialization\JsonSerializationTest::testSerializeWithInvalidPayload
+ok 138 - Icecave\Overpass\Serialization\JsonSerializationTest::testSerializeFailure
+ok 139 - Icecave\Overpass\Serialization\JsonSerializationTest::testUnserialize
+ok 140 - Icecave\Overpass\Serialization\JsonSerializationTest::testUnserializeNull
+ok 141 - Icecave\Overpass\Serialization\JsonSerializationTest::testUnserializeFailure
+1..141
