@@ -2,6 +2,7 @@
 namespace Icecave\Overpass\Amqp\Rpc;
 
 use Exception;
+use Icecave\Repr\Repr;
 use Icecave\Isolator\IsolatorTrait;
 use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
@@ -234,7 +235,10 @@ class AmqpRpcServer implements RpcServerInterface
             $logContext['procedure'] = $request->name();
             $logContext['arguments'] = implode(
                 ', ',
-                array_map('json_encode', $request->arguments())
+                array_map(
+                    [Repr::class, 'repr'],
+                    $request->arguments()
+                )
             );
 
             $response = $this
@@ -261,7 +265,7 @@ class AmqpRpcServer implements RpcServerInterface
         $this->send($message, $response);
 
         $logContext['code']  = $response->code();
-        $logContext['value'] = json_encode($response->value());
+        $logContext['value'] = Repr::repr($response->value());
 
         if (ResponseCode::SUCCESS() === $response->code()) {
             $logMessage = 'rpc.server {queue} #{id} {procedure}({arguments}) -> {value}';
