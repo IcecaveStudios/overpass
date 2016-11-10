@@ -73,13 +73,19 @@
                 <div id="page-content">
                 
     <div class="page-header">
-        <h1>SubscriberInterface</h1>
+        <h1>
+            SubscriberInterface
+                
+        </h1>
     </div>
 
     <p>    interface
     <strong>SubscriberInterface</strong>        implements
         <abbr title="Psr\Log\LoggerAwareInterface">LoggerAwareInterface</abbr>
 </p>
+
+        
+    
 
     
     
@@ -91,33 +97,30 @@
                     <div class="row">
                 <div class="col-md-2 type">
                     
-    
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_subscribe">subscribe</a>(
-    string $topic)
+                    <a href="#method_subscribe">subscribe</a>(string $topic)
+        
                                             <p>Subscribe to the given topic.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
                     
-    
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_unsubscribe">unsubscribe</a>(
-    string $topic)
+                    <a href="#method_unsubscribe">unsubscribe</a>(string $topic)
+        
                                             <p>Unsubscribe from the given topic.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
                     
-    
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_consume">consume</a>(
-    callable $callback)
+                    <a href="#method_consume">consume</a>(callable $callback)
+        
                                             <p>Consume messages from subscriptions.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
@@ -131,11 +134,13 @@
                     <h3 id="method_subscribe">
         <div class="location">at line         line 13</div>
         <code>                    
-    
-    <strong>subscribe</strong>(
-    string $topic)</code>
+    <strong>subscribe</strong>(string $topic)
+        </code>
     </h3>
     <div class="details">
+            
+    
+
                     <div class="method-description">
                                     <p>Subscribe to the given topic.</p>                                </div>
                 <div class="tags">
@@ -143,8 +148,7 @@
 
                     <table class="table table-condensed">
                     <tr>
-                <td>
-    string</td>
+                <td>string</td>
                 <td>$topic</td>
                 <td>The topic or topic pattern to subscribe to.</td>
             </tr>
@@ -161,11 +165,13 @@
                     <h3 id="method_unsubscribe">
         <div class="location">at line         line 20</div>
         <code>                    
-    
-    <strong>unsubscribe</strong>(
-    string $topic)</code>
+    <strong>unsubscribe</strong>(string $topic)
+        </code>
     </h3>
     <div class="details">
+            
+    
+
                     <div class="method-description">
                                     <p>Unsubscribe from the given topic.</p>                                </div>
                 <div class="tags">
@@ -173,8 +179,7 @@
 
                     <table class="table table-condensed">
                     <tr>
-                <td>
-    string</td>
+                <td>string</td>
                 <td>$topic</td>
                 <td>The topic or topic pattern to unsubscribe from.</td>
             </tr>
@@ -191,11 +196,13 @@
                     <h3 id="method_consume">
         <div class="location">at line         line 34</div>
         <code>                    
-    
-    <strong>consume</strong>(
-    callable $callback)</code>
+    <strong>consume</strong>(callable $callback)
+        </code>
     </h3>
     <div class="details">
+            
+    
+
                     <div class="method-description">
                                     <p>Consume messages from subscriptions.</p>                    <p>When a message is received the callback is invoked with two parameters,
 the first is the topic to which the message was published, the second is
@@ -208,8 +215,7 @@ false to end consumption.</p>            </div>
 
                     <table class="table table-condensed">
                     <tr>
-                <td>
-    callable</td>
+                <td>callable</td>
                 <td>$callback</td>
                 <td>The callback to invoke when a message is received.</td>
             </tr>

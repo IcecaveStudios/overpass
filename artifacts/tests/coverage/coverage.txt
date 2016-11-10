@@ -1,12 +1,12 @@
 
 
 Code Coverage Report:      
-  2016-11-08 06:03:51      
+  2016-11-10 00:50:38      
                            
  Summary:                  
   Classes: 96.30% (26/27)  
   Methods: 98.97% (96/97)  
-  Lines:   99.53% (856/860)
+  Lines:   99.54% (859/863)
 
 \Icecave\Overpass\Amqp::ChannelDispatcher
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 13/ 13)
@@ -25,7 +25,7 @@ Code Coverage Report:
 \Icecave\Overpass\Amqp\Rpc::AmqpRpcClient
   Methods: 100.00% (11/11)   Lines: 100.00% (110/110)
 \Icecave\Overpass\Amqp\Rpc::AmqpRpcServer
-  Methods: 100.00% (10/10)   Lines: 100.00% (138/138)
+  Methods: 100.00% (10/10)   Lines: 100.00% (141/141)
 \Icecave\Overpass\Amqp\Rpc::DeclarationManager
   Methods: 100.00% ( 4/ 4)   Lines: 100.00% ( 41/ 41)
 \Icecave\Overpass\JobQueue\Job::Job

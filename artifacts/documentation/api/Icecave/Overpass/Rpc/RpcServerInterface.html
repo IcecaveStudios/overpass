@@ -73,13 +73,19 @@
                 <div id="page-content">
                 
     <div class="page-header">
-        <h1>RpcServerInterface</h1>
+        <h1>
+            RpcServerInterface
+                
+        </h1>
     </div>
 
     <p>    interface
     <strong>RpcServerInterface</strong>        implements
         <abbr title="Psr\Log\LoggerAwareInterface">LoggerAwareInterface</abbr>
 </p>
+
+        
+    
 
     
     
@@ -91,44 +97,40 @@
                     <div class="row">
                 <div class="col-md-2 type">
                     
-    
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_expose">expose</a>(
-    string $name, 
-    callable $procedure)
+                    <a href="#method_expose">expose</a>(string $name, callable $procedure)
+        
                                             <p>Expose a procedure.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
                     
-    
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_exposeObject">exposeObject</a>(
-    object $object, 
-    string $prefix = &#039;&#039;)
+                    <a href="#method_exposeObject">exposeObject</a>(object $object, string $prefix = &#039;&#039;)
+        
                                             <p>Expose all public methods on an object.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
                     
-    
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_run">run</a>()
+        
                                             <p>Run the RPC server.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
                     
-    
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_stop">stop</a>()
+        
                                             <p>Stop the RPC server.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
@@ -142,12 +144,13 @@
                     <h3 id="method_expose">
         <div class="location">at line         line 16</div>
         <code>                    
-    
-    <strong>expose</strong>(
-    string $name, 
-    callable $procedure)</code>
+    <strong>expose</strong>(string $name, callable $procedure)
+        </code>
     </h3>
     <div class="details">
+            
+    
+
                     <div class="method-description">
                                     <p>Expose a procedure.</p>                                </div>
                 <div class="tags">
@@ -155,14 +158,12 @@
 
                     <table class="table table-condensed">
                     <tr>
-                <td>
-    string</td>
+                <td>string</td>
                 <td>$name</td>
                 <td>The public name of the procedure.</td>
             </tr>
                     <tr>
-                <td>
-    callable</td>
+                <td>callable</td>
                 <td>$procedure</td>
                 <td>The procedure implementation.</td>
             </tr>
@@ -188,12 +189,13 @@
                     <h3 id="method_exposeObject">
         <div class="location">at line         line 24</div>
         <code>                    
-    
-    <strong>exposeObject</strong>(
-    object $object, 
-    string $prefix = &#039;&#039;)</code>
+    <strong>exposeObject</strong>(object $object, string $prefix = &#039;&#039;)
+        </code>
     </h3>
     <div class="details">
+            
+    
+
                     <div class="method-description">
                                     <p>Expose all public methods on an object.</p>                                </div>
                 <div class="tags">
@@ -201,14 +203,12 @@
 
                     <table class="table table-condensed">
                     <tr>
-                <td>
-    object</td>
+                <td>object</td>
                 <td>$object</td>
                 <td>The object with the methods to expose.</td>
             </tr>
                     <tr>
-                <td>
-    string</td>
+                <td>string</td>
                 <td>$prefix</td>
                 <td>A string to prefix to all method names.</td>
             </tr>
@@ -225,10 +225,13 @@
                     <h3 id="method_run">
         <div class="location">at line         line 29</div>
         <code>                    
-    
-    <strong>run</strong>()</code>
+    <strong>run</strong>()
+        </code>
     </h3>
     <div class="details">
+            
+    
+
                     <div class="method-description">
                                     <p>Run the RPC server.</p>                                </div>
                 <div class="tags">
@@ -243,10 +246,13 @@
                     <h3 id="method_stop">
         <div class="location">at line         line 34</div>
         <code>                    
-    
-    <strong>stop</strong>()</code>
+    <strong>stop</strong>()
+        </code>
     </h3>
     <div class="details">
+            
+    
+
                     <div class="method-description">
                                     <p>Stop the RPC server.</p>                                </div>
                 <div class="tags">
