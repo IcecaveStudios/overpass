@@ -1,5 +1,9 @@
 # Overpass Changelog
 
+### 1.0.1 (2016-11-10)
+
+* **[FIXED]** Reverted JSON logging
+
 ### 1.0.0 (2016-11-08)
 
 * **[NEW]** Added job queing subsystem (thanks @darianbr)
