@@ -46,10 +46,5 @@
         "psr-4": {
             "Icecave\\Overpass\\": "src"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-develop": "0.3.x-dev"
-        }
     }
 }
