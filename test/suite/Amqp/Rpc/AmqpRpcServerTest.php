@@ -269,7 +269,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
 
         $requestMessage = new AMQPMessage(
-            '["procedure-name",[1,{"a":2,"b":3}]]',
+            '["procedure-name",[1,2,3]]',
             [
                 'reply_to'       => '<response-queue>',
                 'correlation_id' => 456,
@@ -282,8 +282,8 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         $responseMessage = null;
 
-        $expectedRequest  = Request::create('procedure-name', [1, (object) ['a' => 2, 'b' => 3]]);
-        $expectedResponse = Response::createFromValue('<procedure-1: 1, {"a":2,"b":3}>');
+        $expectedRequest  = Request::create('procedure-name', [1, 2, 3]);
+        $expectedResponse = Response::createFromValue('<procedure-1: 1, 2, 3>');
 
         Phake::inOrder(
             Phake::verify($this->channel)->basic_ack('<delivery-tag>'),
@@ -308,16 +308,16 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 'id'        => 456,
                 'queue'     => '<response-queue>',
                 'procedure' => 'procedure-name',
-                'arguments' => '1, {"a":2,"b":3}',
+                'arguments' => '1, 2, 3',
                 'code'      => ResponseCode::SUCCESS(),
-                'value'     => '"<procedure-1: 1, {\"a\":2,\"b\":3}>"',
+                'value'     => '"<procedure-1: 1, 2, 3>"',
             ],
             $context
         );
 
         $this->assertEquals(
             new AMQPMessage(
-                '[' . ResponseCode::SUCCESS . ',"<procedure-1: 1, {\"a\":2,\"b\":3}>"]',
+                '[' . ResponseCode::SUCCESS . ',"<procedure-1: 1, 2, 3>"]',
                 [
                     'correlation_id' => 456,
                 ]

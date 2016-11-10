@@ -30,9 +30,9 @@
         "ext-pcntl": "*",
         "eloquent/enumeration": "^5",
         "icecave/isolator": "^2|^3",
-        "phpunit/phpunit": "^5.5",
-        "psr/log": "^1",
-        "php-amqplib/php-amqplib": "^2.6"
+        "icecave/repr": "^1",
+        "php-amqplib/php-amqplib": "^2.6",
+        "psr/log": "^1"
     },
     "require-dev": {
         "eloquent/asplode": "^2",
@@ -45,11 +45,6 @@
     "autoload": {
         "psr-4": {
             "Icecave\\Overpass\\": "src"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-develop": "0.3.x-dev"
         }
     }
 }
