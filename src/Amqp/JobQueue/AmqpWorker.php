@@ -152,7 +152,7 @@ class AmqpWorker implements WorkerInterface
      */
     private function recv(AMQPMessage $message)
     {
-        $logLevel = LogLevel::DEBUG;
+        $logLevel = LogLevel::INFO;
         $logContext = [
             'type' => '<unknown>',
             'payload' => '<unknown>',
@@ -167,14 +167,26 @@ class AmqpWorker implements WorkerInterface
             $logContext['type'] = $job->type();
             $logContext['payload'] = json_encode($job->payload());
 
+            $this->logger->debug(
+                'jobqueue.worker started job {type}({payload})',
+                $logContext
+            );
+
             call_user_func(
                 $this->handlers[$job->type()],
                 $job->payload()
             );
 
-            $logMessage = 'jobqueue.worker completed job {job}({payload})';
+            $logMessage = 'jobqueue.worker completed job {type}';
             $this->channel->basic_ack($message->get('delivery_tag'));
         } catch (InvalidJobException $e) {
+            $debugLogContext = $logContext;
+            $debugLogContext['exception'] = $e;
+            $this->logger->debug(
+                'jobqueue.worker started job {type}({payload})',
+                $debugLogContext
+            );
+
             $logLevel = LogLevel::WARNING;
             $logMessage = $this->handleFailure($message, $e, $logContext, true);    // discard
         } catch (DiscardException $e) {
@@ -198,6 +210,11 @@ class AmqpWorker implements WorkerInterface
             $logMessage = $this->handleFailure($message, $e, $logContext);
         }
 
+        $this->logger->debug(
+            'jobqueue.worker finished job {type}({payload})',
+            $logContext
+        );
+
         $this->logger->log($logLevel, $logMessage, $logContext);
     }
 
@@ -216,7 +233,7 @@ class AmqpWorker implements WorkerInterface
         if ($discard) {
             $this->channel->basic_reject($message->get('delivery_tag'), false);
 
-            return 'jobqueue.worker discarding failed job {job}({payload}) -> {code} {reason}';
+            return 'jobqueue.worker discarding failed job {type} -> {code} {reason}';
         }
 
         // message failed even after being redelivered so sleep before redelivering
@@ -226,7 +243,7 @@ class AmqpWorker implements WorkerInterface
 
         $this->channel->basic_reject($message->get('delivery_tag'), true);
 
-        return 'jobqueue.worker requeuing failed job {job}({payload}) -> {code} {reason}';
+        return 'jobqueue.worker requeuing failed job {type} -> {code} {reason}';
     }
 
     private function bind($type)

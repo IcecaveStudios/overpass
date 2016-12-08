@@ -273,9 +273,19 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         Phake::verify($this->channel)->basic_ack('<delivery-tag>');
         $context = null;
 
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker started job {type}({payload})',
+            Phake::capture($context)
+        );
+
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker finished job {type}({payload})',
+            Phake::capture($context)
+        );
+
         Phake::verify($this->logger)->log(
-            LogLevel::DEBUG,
-            'jobqueue.worker completed job {job}({payload})',
+            LogLevel::INFO,
+            'jobqueue.worker completed job {type}',
             Phake::capture($context)
         );
 
@@ -318,9 +328,19 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         Phake::verify($this->channel)->basic_reject('<delivery-tag>', false);
         $context = null;
 
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker started job {type}({payload})',
+            Phake::capture($context)
+        );
+
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker finished job {type}({payload})',
+            Phake::capture($context)
+        );
+
         Phake::verify($this->logger)->log(
             LogLevel::WARNING,
-            'jobqueue.worker discarding failed job {job}({payload}) -> {code} {reason}',
+            'jobqueue.worker discarding failed job {type} -> {code} {reason}',
             Phake::capture($context)
         );
 
@@ -367,9 +387,19 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         Phake::verify($this->channel)->basic_reject('<delivery-tag>', false);
         $context = null;
 
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker started job {type}({payload})',
+            Phake::capture($context)
+        );
+
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker finished job {type}({payload})',
+            Phake::capture($context)
+        );
+
         Phake::verify($this->logger)->log(
             LogLevel::ERROR,
-            'jobqueue.worker discarding failed job {job}({payload}) -> {code} {reason}',
+            'jobqueue.worker discarding failed job {type} -> {code} {reason}',
             Phake::capture($context)
         );
 
@@ -421,9 +451,19 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         Phake::verify($this->channel)->basic_reject('<delivery-tag>', true);
         $context = null;
 
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker started job {type}({payload})',
+            Phake::capture($context)
+        );
+
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker finished job {type}({payload})',
+            Phake::capture($context)
+        );
+
         Phake::verify($this->logger)->log(
             LogLevel::ERROR,
-            'jobqueue.worker requeuing failed job {job}({payload}) -> {code} {reason}',
+            'jobqueue.worker requeuing failed job {type} -> {code} {reason}',
             Phake::capture($context)
         );
 
@@ -471,9 +511,19 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         Phake::verify($this->channel)->basic_reject('<delivery-tag>', true);
         $context = null;
 
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker started job {type}({payload})',
+            Phake::capture($context)
+        );
+
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker finished job {type}({payload})',
+            Phake::capture($context)
+        );
+
         Phake::verify($this->logger)->log(
             LogLevel::ERROR,
-            'jobqueue.worker requeuing failed job {job}({payload}) -> {code} {reason}',
+            'jobqueue.worker requeuing failed job {type} -> {code} {reason}',
             Phake::capture($context)
         );
 
@@ -525,9 +575,19 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         Phake::verify($this->channel)->basic_reject('<delivery-tag>', true);
         $context = null;
 
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker started job {type}({payload})',
+            Phake::capture($context)
+        );
+
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker finished job {type}({payload})',
+            Phake::capture($context)
+        );
+
         Phake::verify($this->logger)->log(
             LogLevel::ERROR,
-            'jobqueue.worker requeuing failed job {job}({payload}) -> {code} {reason}',
+            'jobqueue.worker requeuing failed job {type} -> {code} {reason}',
             Phake::capture($context)
         );
 
