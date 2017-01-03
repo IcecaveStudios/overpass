@@ -298,7 +298,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $context = null;
 
         Phake::verify($this->logger)->debug(
-            'rpc.server {queue} #{id} request {procedure}({arguments}) -> {value}',
+            'rpc.server {queue} #{id} request {procedure}({arguments})',
             Phake::capture($context)
         );
 
@@ -386,7 +386,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $context = null;
 
         Phake::verify($this->logger)->debug(
-            'rpc.server {queue} #{id} request {procedure}({arguments}) -> {value}',
+            'rpc.server {queue} #{id} request {procedure}({arguments})',
             Phake::capture($context)
         );
 
@@ -501,7 +501,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $context = null;
 
         Phake::verify($this->logger)->debug(
-            'rpc.server {queue} #{id} request {procedure}({arguments}) -> {value}',
+            'rpc.server {queue} #{id} request {procedure}({arguments})',
             Phake::capture($context)
         );
 
@@ -647,7 +647,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $context = null;
 
         Phake::verify($this->logger)->debug(
-            'rpc.server {queue} #{id} request {procedure}({arguments}) -> {value}',
+            'rpc.server {queue} #{id} request {procedure}({arguments})',
             Phake::capture($context)
         );
 

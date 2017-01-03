@@ -242,7 +242,7 @@ class AmqpRpcServer implements RpcServerInterface
             );
 
             $this->logger->debug(
-                'rpc.server {queue} #{id} request {procedure}({arguments}) -> {value}',
+                'rpc.server {queue} #{id} request {procedure}({arguments})',
                 $logContext
             );
 
