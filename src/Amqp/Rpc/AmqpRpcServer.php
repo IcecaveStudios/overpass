@@ -245,7 +245,7 @@ class AmqpRpcServer implements RpcServerInterface
             );
 
             $this->logger->debug(
-                'rpc.server {queue} #{id} request {procedure}({arguments})',
+                'rpc.server {queue} #{id} REQUEST {procedure}({arguments})',
                 $logContext
             );
 
@@ -261,7 +261,7 @@ class AmqpRpcServer implements RpcServerInterface
             $debugLogContext = $logContext;
             $debugLogContext['exception'] = $e;
             $this->logger->debug(
-                'rpc.server {queue} #{id} request {procedure}({arguments})',
+                'rpc.server {queue} #{id} EXCEPTION {procedure}({arguments})',
                 $debugLogContext
             );
 
@@ -286,13 +286,13 @@ class AmqpRpcServer implements RpcServerInterface
         $logContext['time'] = sprintf('%f ms', ($iso->microtime(true) - $timeStart) * 1000);
 
         $this->logger->debug(
-            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {time} {value}',
+            'rpc.server {queue} #{id} RESPONSE {procedure}({arguments}) -> {code} {time} {value}',
             $logContext
         );
 
         $this->logger->log(
             $logLevel,
-            'rpc.server {queue} #{id} {procedure} -> {code} {time}',
+            'rpc.server {queue} #{id} {code} {procedure} {time}',
             $logContext
         );
     }
