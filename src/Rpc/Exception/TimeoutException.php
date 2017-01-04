@@ -9,10 +9,10 @@ use RuntimeException;
  */
 class TimeoutException extends RuntimeException
 {
-    public function __construct($timeout, Exception $previous = null)
+    public function __construct($name, $timeout, Exception $previous = null)
     {
         parent::__construct(
-            'RPC call timed out after ' . $timeout . ' seconds.',
+            'RPC call ' . $name . ' timed out after ' . $timeout . ' seconds.',
             0,
             $previous
         );
