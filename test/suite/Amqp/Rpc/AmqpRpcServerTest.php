@@ -2,6 +2,7 @@
 namespace Icecave\Overpass\Amqp\Rpc;
 
 use Exception;
+use Icecave\Isolator\Isolator;
 use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\Rpc\Exception\ExecutionException;
 use Icecave\Overpass\Rpc\Invoker;
@@ -25,6 +26,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         $this->logger             = Phake::mock(LoggerInterface::class);
         $this->invoker            = Phake::partialMock(Invoker::class);
         $this->channelDispatcher  = Phake::mock(ChannelDispatcher::class);
+        $this->isolator           = Phake::mock(Isolator::class);
         $this->executionException = new ExecutionException('The procedure failed!');
         $this->arbitraryException = new Exception('The procedure imploded spectacularly!');
         $this->procedure1         = function () { return '<procedure-1: ' . implode(', ', array_map('json_encode', func_get_args())) . '>'; };
@@ -74,6 +76,11 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 }
             );
 
+        Phake::when($this->isolator)
+            ->microtime(true)
+            ->thenReturn(0.00100)
+            ->thenReturn(0.00223);
+
         $this->server = Phake::partialMock(
             AmqpRpcServer::class,
             $this->logger,
@@ -83,6 +90,8 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
             $this->invoker,
             $this->channelDispatcher
         );
+
+        $this->server->setIsolator($this->isolator);
     }
 
     public function testExposeWhileRunning()
@@ -303,13 +312,13 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
 
         Phake::verify($this->logger)->debug(
-            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {value}',
+            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {time} {value}',
             Phake::capture($context)
         );
 
         Phake::verify($this->logger)->log(
             LogLevel::INFO,
-            'rpc.server {queue} #{id} {procedure} -> {code}',
+            'rpc.server {queue} #{id} {procedure} -> {code} {time}',
             Phake::capture($context)
         );
 
@@ -321,6 +330,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 'arguments' => '1, 2, 3',
                 'code'      => ResponseCode::SUCCESS(),
                 'value'     => '"<procedure-1: 1, 2, 3>"',
+                'time'      => '1.230000 ms',
             ],
             $context
         );
@@ -391,13 +401,13 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
 
         Phake::verify($this->logger)->debug(
-            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {value}',
+            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {time} {value}',
             Phake::capture($context)
         );
 
         Phake::verify($this->logger)->log(
             LogLevel::ERROR,
-            'rpc.server {queue} #{id} {procedure} -> {code}',
+            'rpc.server {queue} #{id} {procedure} -> {code} {time}',
             Phake::capture($context)
         );
 
@@ -410,6 +420,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 'exception' => $this->arbitraryException,
                 'code'      => ResponseCode::EXCEPTION(),
                 'value'     => '"Internal server error."',
+                'time'      => '1.230000 ms',
             ],
             $context
         );
@@ -506,13 +517,13 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
 
         Phake::verify($this->logger)->debug(
-            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {value}',
+            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {time} {value}',
             Phake::capture($context)
         );
 
         Phake::verify($this->logger)->log(
             LogLevel::INFO,
-            'rpc.server {queue} #{id} {procedure} -> {code}',
+            'rpc.server {queue} #{id} {procedure} -> {code} {time}',
             Phake::capture($context)
         );
 
@@ -524,6 +535,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 'arguments' => '1, 2, 3',
                 'code'      => ResponseCode::EXCEPTION(),
                 'value'     => '"The procedure failed!"',
+                'time'      => '1.230000 ms',
             ],
             $context
         );
@@ -584,13 +596,13 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
 
         Phake::verify($this->logger)->debug(
-            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {value}',
+            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {time} {value}',
             Phake::capture($context)
         );
 
         Phake::verify($this->logger)->log(
             LogLevel::WARNING,
-            'rpc.server {queue} #{id} {procedure} -> {code}',
+            'rpc.server {queue} #{id} {procedure} -> {code} {time}',
             Phake::capture($context)
         );
 
@@ -602,6 +614,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 'arguments' => '<unknown>',
                 'code'      => ResponseCode::INVALID_MESSAGE(),
                 'value'     => '"Request payload must be a 2-tuple."',
+                'time'      => '1.000000 ms',
             ],
             $context
         );
@@ -652,13 +665,13 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
 
         Phake::verify($this->logger)->debug(
-            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {value}',
+            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {time} {value}',
             Phake::capture($context)
         );
 
         Phake::verify($this->logger)->log(
             LogLevel::INFO,
-            'rpc.server {queue} #{id} {procedure} -> {code}',
+            'rpc.server {queue} #{id} {procedure} -> {code} {time}',
             Phake::capture($context)
         );
 
@@ -670,6 +683,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
                 'arguments' => '',
                 'code'      => ResponseCode::SUCCESS(),
                 'value'     => '"<procedure-1: >"',
+                'time'      => '1.230000 ms',
             ],
             $context
         );

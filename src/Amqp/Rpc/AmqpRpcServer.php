@@ -203,6 +203,9 @@ class AmqpRpcServer implements RpcServerInterface
      */
     private function recv(AMQPMessage $message)
     {
+        $iso = $this->isolator();
+        $timeStart = 0;
+
         $logLevel   = LogLevel::INFO;
         $logContext = [
             'id'        => '?',
@@ -246,6 +249,8 @@ class AmqpRpcServer implements RpcServerInterface
                 $logContext
             );
 
+            $timeStart = $iso->microtime(true);
+
             $response = $this
                 ->invoker
                 ->invoke(
@@ -278,15 +283,16 @@ class AmqpRpcServer implements RpcServerInterface
 
         $logContext['code']  = $response->code();
         $logContext['value'] = Repr::repr($response->value());
+        $logContext['time'] = sprintf('%f ms', ($iso->microtime(true) - $timeStart) * 1000);
 
         $this->logger->debug(
-            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {value}',
+            'rpc.server {queue} #{id} response {procedure}({arguments}) -> {code} {time} {value}',
             $logContext
         );
 
         $this->logger->log(
             $logLevel,
-            'rpc.server {queue} #{id} {procedure} -> {code}',
+            'rpc.server {queue} #{id} {procedure} -> {code} {time}',
             $logContext
         );
     }
