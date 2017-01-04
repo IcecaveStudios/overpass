@@ -101,7 +101,7 @@ class AmqpRpcClient implements RpcClientInterface
                 );
             }
 
-            throw new TimeoutException($this->timeout);
+            throw new TimeoutException($name, $this->timeout);
         }
 
         if ($this->logger) {
