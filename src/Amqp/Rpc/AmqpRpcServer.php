@@ -203,7 +203,7 @@ class AmqpRpcServer implements RpcServerInterface
      */
     private function recv(AMQPMessage $message)
     {
-        $logLevel   = LogLevel::DEBUG;
+        $logLevel   = LogLevel::INFO;
         $logContext = [
             'id'        => '?',
             'queue'     => '-',
@@ -241,6 +241,11 @@ class AmqpRpcServer implements RpcServerInterface
                 )
             );
 
+            $this->logger->debug(
+                'rpc.server {queue} #{id} REQUEST {procedure}({arguments})',
+                $logContext
+            );
+
             $response = $this
                 ->invoker
                 ->invoke(
@@ -248,6 +253,13 @@ class AmqpRpcServer implements RpcServerInterface
                     $this->procedures[$request->name()]
                 );
         } catch (InvalidMessageException $e) {
+            $debugLogContext = $logContext;
+            $debugLogContext['exception'] = $e;
+            $this->logger->debug(
+                'rpc.server {queue} #{id} EXCEPTION {procedure}({arguments})',
+                $debugLogContext
+            );
+
             $logLevel = LogLevel::WARNING;
             $response = Response::createFromException($e);
         } catch (Exception $e) {
@@ -267,13 +279,16 @@ class AmqpRpcServer implements RpcServerInterface
         $logContext['code']  = $response->code();
         $logContext['value'] = Repr::repr($response->value());
 
-        if (ResponseCode::SUCCESS() === $response->code()) {
-            $logMessage = 'rpc.server {queue} #{id} {procedure}({arguments}) -> {value}';
-        } else {
-            $logMessage = 'rpc.server {queue} #{id} {procedure}({arguments}) -> {code} {value}';
-        }
+        $this->logger->debug(
+            'rpc.server {queue} #{id} RESPONSE {procedure}({arguments}) -> {code} {value}',
+            $logContext
+        );
 
-        $this->logger->log($logLevel, $logMessage, $logContext);
+        $this->logger->log(
+            $logLevel,
+            'rpc.server {queue} #{id} {code} {procedure}',
+            $logContext
+        );
     }
 
     private function bind($procedureName)
