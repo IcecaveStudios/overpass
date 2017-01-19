@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1484788670">
-  <project timestamp="1484788670">
+<coverage generated="1484788775">
+  <project timestamp="1484788775">
     <package name="Icecave\Overpass\Amqp">
       <file name="/home/travis/build/IcecaveStudios/overpass/src/Amqp/ChannelDispatcher.php">
         <class name="ChannelDispatcher" namespace="Icecave\Overpass\Amqp">
@@ -542,7 +542,7 @@
       </file>
       <file name="/home/travis/build/IcecaveStudios/overpass/src/Amqp/Rpc/AmqpRpcServer.php">
         <class name="AmqpRpcServer" namespace="Icecave\Overpass\Amqp\Rpc">
-          <metrics methods="10" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="151" coveredstatements="151" elements="161" coveredelements="161"/>
+          <metrics methods="10" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="155" coveredstatements="155" elements="165" coveredelements="165"/>
         </class>
         <line num="39" type="method" name="__construct" crap="5" count="13"/>
         <line num="47" type="stmt" count="13"/>
@@ -627,87 +627,91 @@
         <line num="197" type="stmt" count="6"/>
         <line num="204" type="method" name="recv" crap="5" count="7"/>
         <line num="206" type="stmt" count="7"/>
-        <line num="208" type="stmt" count="7"/>
+        <line num="207" type="stmt" count="7"/>
         <line num="209" type="stmt" count="7"/>
-        <line num="210" type="stmt" count="7"/>
         <line num="211" type="stmt" count="7"/>
         <line num="212" type="stmt" count="7"/>
+        <line num="213" type="stmt" count="7"/>
         <line num="214" type="stmt" count="7"/>
-        <line num="215" type="stmt" count="1"/>
-        <line num="218" type="stmt" count="7"/>
-        <line num="219" type="stmt" count="6"/>
-        <line num="226" type="stmt" count="7"/>
-        <line num="227" type="stmt" count="7"/>
-        <line num="228" type="stmt" count="7"/>
+        <line num="215" type="stmt" count="7"/>
+        <line num="217" type="stmt" count="7"/>
+        <line num="218" type="stmt" count="1"/>
+        <line num="221" type="stmt" count="7"/>
+        <line num="222" type="stmt" count="6"/>
+        <line num="229" type="stmt" count="7"/>
+        <line num="230" type="stmt" count="7"/>
         <line num="231" type="stmt" count="7"/>
-        <line num="233" type="stmt" count="7"/>
-        <line num="235" type="stmt" count="6"/>
-        <line num="236" type="stmt" count="6"/>
-        <line num="237" type="stmt" count="6"/>
+        <line num="234" type="stmt" count="7"/>
+        <line num="236" type="stmt" count="7"/>
         <line num="238" type="stmt" count="6"/>
         <line num="239" type="stmt" count="6"/>
         <line num="240" type="stmt" count="6"/>
         <line num="241" type="stmt" count="6"/>
         <line num="242" type="stmt" count="6"/>
+        <line num="243" type="stmt" count="6"/>
         <line num="244" type="stmt" count="6"/>
         <line num="245" type="stmt" count="6"/>
         <line num="247" type="stmt" count="6"/>
-        <line num="249" type="stmt" count="6"/>
-        <line num="251" type="stmt" count="6"/>
+        <line num="248" type="stmt" count="6"/>
+        <line num="250" type="stmt" count="6"/>
         <line num="252" type="stmt" count="6"/>
-        <line num="253" type="stmt" count="6"/>
         <line num="254" type="stmt" count="6"/>
-        <line num="255" type="stmt" count="7"/>
-        <line num="256" type="stmt" count="1"/>
-        <line num="257" type="stmt" count="1"/>
-        <line num="258" type="stmt" count="1"/>
-        <line num="259" type="stmt" count="1"/>
+        <line num="256" type="stmt" count="6"/>
+        <line num="257" type="stmt" count="6"/>
+        <line num="258" type="stmt" count="6"/>
+        <line num="259" type="stmt" count="6"/>
+        <line num="260" type="stmt" count="7"/>
         <line num="261" type="stmt" count="1"/>
+        <line num="262" type="stmt" count="1"/>
         <line num="263" type="stmt" count="1"/>
         <line num="264" type="stmt" count="1"/>
-        <line num="265" type="stmt" count="3"/>
-        <line num="266" type="stmt" count="2"/>
-        <line num="267" type="stmt" count="2"/>
-        <line num="268" type="stmt" count="2"/>
-        <line num="269" type="stmt" count="2"/>
+        <line num="266" type="stmt" count="1"/>
+        <line num="268" type="stmt" count="1"/>
+        <line num="269" type="stmt" count="1"/>
+        <line num="270" type="stmt" count="3"/>
         <line num="271" type="stmt" count="2"/>
+        <line num="272" type="stmt" count="2"/>
         <line num="273" type="stmt" count="2"/>
         <line num="274" type="stmt" count="2"/>
-        <line num="277" type="stmt" count="7"/>
-        <line num="279" type="stmt" count="7"/>
-        <line num="280" type="stmt" count="7"/>
+        <line num="276" type="stmt" count="2"/>
+        <line num="278" type="stmt" count="2"/>
+        <line num="279" type="stmt" count="2"/>
         <line num="282" type="stmt" count="7"/>
-        <line num="283" type="stmt" count="7"/>
+        <line num="284" type="stmt" count="7"/>
         <line num="285" type="stmt" count="7"/>
-        <line num="287" type="stmt" count="7"/>
+        <line num="286" type="stmt" count="7"/>
         <line num="288" type="stmt" count="7"/>
         <line num="289" type="stmt" count="7"/>
         <line num="291" type="stmt" count="7"/>
-        <line num="292" type="stmt" count="7"/>
-        <line num="294" type="method" name="bind" crap="1" count="10"/>
-        <line num="296" type="stmt" count="10"/>
-        <line num="298" type="stmt" count="10"/>
-        <line num="300" type="stmt" count="10"/>
+        <line num="293" type="stmt" count="7"/>
+        <line num="294" type="stmt" count="7"/>
+        <line num="295" type="stmt" count="7"/>
+        <line num="297" type="stmt" count="7"/>
+        <line num="298" type="stmt" count="7"/>
+        <line num="300" type="method" name="bind" crap="1" count="10"/>
         <line num="302" type="stmt" count="10"/>
-        <line num="303" type="stmt" count="10"/>
         <line num="304" type="stmt" count="10"/>
-        <line num="305" type="stmt" count="10"/>
         <line num="306" type="stmt" count="10"/>
-        <line num="307" type="stmt" count="10"/>
         <line num="308" type="stmt" count="10"/>
-        <line num="309" type="method" name="anonymous function" crap="1" count="7"/>
-        <line num="310" type="stmt" count="7"/>
-        <line num="311" type="stmt" count="7"/>
+        <line num="309" type="stmt" count="10"/>
+        <line num="310" type="stmt" count="10"/>
+        <line num="311" type="stmt" count="10"/>
         <line num="312" type="stmt" count="10"/>
         <line num="313" type="stmt" count="10"/>
-        <line num="315" type="method" name="unbind" crap="1" count="2"/>
-        <line num="317" type="stmt" count="2"/>
-        <line num="319" type="stmt" count="2"/>
-        <line num="320" type="stmt" count="2"/>
-        <line num="321" type="stmt" count="2"/>
+        <line num="314" type="stmt" count="10"/>
+        <line num="315" type="method" name="anonymous function" crap="1" count="7"/>
+        <line num="316" type="stmt" count="7"/>
+        <line num="317" type="stmt" count="7"/>
+        <line num="318" type="stmt" count="10"/>
+        <line num="319" type="stmt" count="10"/>
+        <line num="321" type="method" name="unbind" crap="1" count="2"/>
         <line num="323" type="stmt" count="2"/>
-        <line num="324" type="stmt" count="2"/>
-        <metrics loc="335" ncloc="258" classes="1" methods="10" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="153" coveredstatements="153" elements="163" coveredelements="163"/>
+        <line num="325" type="stmt" count="2"/>
+        <line num="326" type="stmt" count="2"/>
+        <line num="327" type="stmt" count="2"/>
+        <line num="329" type="stmt" count="2"/>
+        <line num="330" type="stmt" count="2"/>
+        <metrics loc="341" ncloc="264" classes="1" methods="10" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="157" coveredstatements="157" elements="167" coveredelements="167"/>
       </file>
       <file name="/home/travis/build/IcecaveStudios/overpass/src/Amqp/Rpc/DeclarationManager.php">
         <class name="DeclarationManager" namespace="Icecave\Overpass\Amqp\Rpc">
@@ -1168,6 +1172,6 @@
         <metrics loc="61" ncloc="44" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="15" elements="18" coveredelements="18"/>
       </file>
     </package>
-    <metrics files="27" loc="2477" ncloc="1880" classes="27" methods="97" coveredmethods="96" conditionals="0" coveredconditionals="0" statements="884" coveredstatements="880" elements="981" coveredelements="976"/>
+    <metrics files="27" loc="2483" ncloc="1886" classes="27" methods="97" coveredmethods="96" conditionals="0" coveredconditionals="0" statements="888" coveredstatements="884" elements="985" coveredelements="980"/>
   </project>
 </coverage>
