@@ -2,7 +2,6 @@
 namespace Icecave\Overpass\Amqp\Rpc;
 
 use Exception;
-use Icecave\Repr\Repr;
 use Icecave\Isolator\IsolatorTrait;
 use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\Rpc\Exception\InvalidMessageException;
@@ -15,12 +14,13 @@ use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
 use Icecave\Overpass\Rpc\RpcServerInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
+use Icecave\Repr\Repr;
 use LogicException;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
-use Psr\Log\LogLevel;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use ReflectionClass;
 
 class AmqpRpcServer implements RpcServerInterface
@@ -31,6 +31,7 @@ class AmqpRpcServer implements RpcServerInterface
     /**
      * @param LoggerInterface                    $logger
      * @param AMQPChannel                        $channel
+     * @param callable|nul                       $errorHandler
      * @param DeclarationManager|null            $declarationManager
      * @param MessageSerializationInterface|null $serialization
      * @param InvokerInterface|null              $invoker
@@ -39,12 +40,14 @@ class AmqpRpcServer implements RpcServerInterface
     public function __construct(
         LoggerInterface $logger,
         AMQPChannel $channel,
+        callable $errorHandler = null,
         DeclarationManager $declarationManager = null,
         MessageSerializationInterface $serialization = null,
         InvokerInterface $invoker = null,
         ChannelDispatcher $channelDispatcher = null
     ) {
         $this->channel            = $channel;
+        $this->errorHandler       = $errorHandler;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
         $this->serialization      = $serialization ?: new MessageSerialization(new JsonSerialization);
         $this->invoker            = $invoker ?: new Invoker;
@@ -275,8 +278,18 @@ class AmqpRpcServer implements RpcServerInterface
                 'Internal server error.'
             );
 
-            $this->isStopping = true;
-            $this->uncaughtException = $e;
+            if (null !== $this->errorHandler) {
+                try {
+                    $fn = $this->errorHandler;
+                    $fn($e);
+                } catch (Exception $e) {
+                    $this->isStopping = true;
+                    $this->uncaughtException = $e;
+                }
+            } else {
+                $this->isStopping = true;
+                $this->uncaughtException = $e;
+            }
         }
 
         $this->send($message, $response);
@@ -334,6 +347,7 @@ class AmqpRpcServer implements RpcServerInterface
     private $serialization;
     private $invoker;
     private $channelDispatcher;
+    private $errorHandler;
     private $isStopping;
     private $uncaughtException;
     private $procedures;
