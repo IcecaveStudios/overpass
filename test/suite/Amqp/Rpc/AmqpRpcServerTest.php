@@ -2,6 +2,7 @@
 namespace Icecave\Overpass\Amqp\Rpc;
 
 use Exception;
+use Error;
 use Icecave\Isolator\Isolator;
 use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\Rpc\Exception\ExecutionException;
@@ -471,7 +472,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function testReceiveRequestWithCustomErrorHandler()
+    public function testReceiveRequestWithCustomErrorHandlerThatCompletes()
     {
         $this->server = Phake::partialMock(
             AmqpRpcServer::class,
@@ -573,7 +574,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testReceiveRequestWithCustomErrorHandlerThatThrows()
+    public function testReceiveRequestWithCustomErrorHandlerThatThrowsError()
     {
         Phake::when($this->channelDispatcher)
             ->wait($this->channel)
@@ -604,14 +605,14 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
             )
             ->thenReturn(null);
 
-        $someException = new Exception('Error handler throws.');
+        $errorException = new Error('Error handler throws an error exception.');
         $exceptioned = false;
 
         $this->server = Phake::partialMock(
             AmqpRpcServer::class,
             $this->logger,
             $this->channel,
-            function (Throwable $e) { throw new Exception('Error handler throws.'); },
+            function (Throwable $e) use ($errorException) { throw $errorException; },
             $this->declarationManager,
             null,
             $this->invoker,
@@ -622,11 +623,11 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         try {
             $this->server->run();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             Phake::verify($this->logger)->critical('rpc.server shutdown due to uncaught exception');
             Phake::verify($this->channel)->basic_cancel('<consumer-tag-1>');
 
-            $this->assertEquals($someException, $e);
+            $this->assertEquals($errorException, $e);
 
             $exceptioned = true;
         }

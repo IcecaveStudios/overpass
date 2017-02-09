@@ -22,6 +22,7 @@ use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use ReflectionClass;
+use Throwable;
 
 class AmqpRpcServer implements RpcServerInterface
 {
@@ -31,7 +32,7 @@ class AmqpRpcServer implements RpcServerInterface
     /**
      * @param LoggerInterface                    $logger
      * @param AMQPChannel                        $channel
-     * @param callable|nul                       $errorHandler
+     * @param callable|null                      $errorHandler
      * @param DeclarationManager|null            $declarationManager
      * @param MessageSerializationInterface|null $serialization
      * @param InvokerInterface|null              $invoker
@@ -144,9 +145,9 @@ class AmqpRpcServer implements RpcServerInterface
             }
         }
 
-        if ($this->uncaughtException !== null) {
+        if ($this->uncaughtThrowable !== null) {
             $this->logger->critical('rpc.server shutdown due to uncaught exception');
-            throw $this->uncaughtException;
+            throw $this->uncaughtThrowable;
         }
 
         $this->logger->info('rpc.server shutdown gracefully');
@@ -282,13 +283,13 @@ class AmqpRpcServer implements RpcServerInterface
                 try {
                     $fn = $this->errorHandler;
                     $fn($e);
-                } catch (Exception $e) {
+                } catch (Throwable $e) {
                     $this->isStopping = true;
-                    $this->uncaughtException = $e;
+                    $this->uncaughtThrowable = $e;
                 }
             } else {
                 $this->isStopping = true;
-                $this->uncaughtException = $e;
+                $this->uncaughtThrowable = $e;
             }
         }
 
@@ -343,13 +344,13 @@ class AmqpRpcServer implements RpcServerInterface
     }
 
     private $channel;
+    private $errorHandler;
     private $declarationManager;
     private $serialization;
     private $invoker;
     private $channelDispatcher;
-    private $errorHandler;
     private $isStopping;
-    private $uncaughtException;
+    private $uncaughtThrowable;
     private $procedures;
     private $consumerTags;
 }
