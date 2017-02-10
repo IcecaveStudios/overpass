@@ -516,51 +516,10 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
         $responseMessage = null;
 
-        $expectedRequest  = Request::create('procedure-name', [1, 2, 3]);
-        $expectedResponse = Response::createFromValue('<procedure-1: 1, 2, 3>');
-
-        Phake::inOrder(
-            Phake::verify($this->channel)->basic_ack('<delivery-tag>'),
-            Phake::verify($this->invoker)->invoke($expectedRequest, $this->procedure1),
-            Phake::verify($this->channel)->basic_publish(
-                Phake::capture($responseMessage),
-                '', // default direct exchange
-                '<response-queue>'
-            )
-        );
-
-        $context = null;
-
-        Phake::verify($this->logger)->debug(
-            'rpc.server {queue} #{id} REQUEST {procedure}({arguments})',
-            Phake::capture($context)
-        );
-
-        Phake::verify($this->logger)->debug(
-            'rpc.server {queue} #{id} RESPONSE {procedure}({arguments}) -> {code} {time} {value}',
-            Phake::capture($context)
-        );
-
-        Phake::verify($this->logger)->log(
-            LogLevel::ERROR,
-            'rpc.server {queue} #{id} {code} {procedure} {time}',
-            Phake::capture($context)
-        );
-
-        $this->assertEquals(
-            [
-                'id'        => 456,
-                'queue'     => '<response-queue>',
-                'procedure' => 'procedure-name',
-                'arguments' => '1, 2, 3',
-                'code'      => ResponseCode::EXCEPTION(),
-                'value'     => '"Internal server error."',
-                'time'      => '1.230000 ms',
-                'exception' => new Exception(
-                    'The procedure imploded spectacularly!'
-                )
-            ],
-            $context
+        Phake::verify($this->channel)->basic_publish(
+            Phake::capture($responseMessage),
+            '', // default direct exchange
+            '<response-queue>'
         );
 
         $this->assertEquals(
