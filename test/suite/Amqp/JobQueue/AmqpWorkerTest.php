@@ -76,6 +76,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             AmqpWorker::class,
             $this->logger,
             $this->channel,
+            null,
             $this->declarationManager,
             null,
             $this->channelDispatcher
