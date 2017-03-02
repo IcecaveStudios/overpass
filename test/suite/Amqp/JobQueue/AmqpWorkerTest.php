@@ -3,6 +3,7 @@
 namespace Icecave\Overpass\Amqp\JobQueue;
 
 use Eloquent\Asplode\Error\ErrorException;
+use Error;
 use Exception;
 use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\JobQueue\Exception\DiscardException;
@@ -14,6 +15,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit_Framework_TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Throwable;
 
 class AmqpWorkerTest extends PHPUnit_Framework_TestCase
 {
@@ -76,6 +78,7 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
             AmqpWorker::class,
             $this->logger,
             $this->channel,
+            null,
             $this->declarationManager,
             null,
             $this->channelDispatcher
@@ -544,12 +547,10 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
      */
     public function testReceiveRequestWithError()
     {
-        $exception = new Exception('Internal server error.', 0);
+        $exception = new Error('A bad server error has happened.', 0);
         $this->worker->register(
             'job-type',
-            function (int $foo) { // will cause TypeError in php7 and asplode ErrorException in php5 when we invoke with an object
-                return $foo;
-            }
+            function ($foo) use ($exception) { throw $exception; }
         );
 
         $this->worker->run();
@@ -594,12 +595,146 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'code' => 0,
+                'reason' => '"Internal server error."',
                 'type' => 'job-type',
                 'payload' => '[1,{"a":2,"b":3}]',
-                'reason' => '"Internal server error."',
                 'exception' => $exception,
             ],
             $context
         );
     }
+
+    public function testReceiveRequestWithCustomErrorHandlerThatCompletes()
+    {
+        $exception = new Error('The procedure imploded spectacularly!');
+        $worker = Phake::partialMock(
+            AmqpWorker::class,
+            $this->logger,
+            $this->channel,
+            function (Throwable $e) { /* no exception being thrown. */ },
+            $this->declarationManager,
+            null,
+            $this->channelDispatcher
+        );
+        $worker->register(
+            'job-type',
+            function() use ($exception) { throw $exception; }
+        );
+
+        $worker->run();
+
+        $handler = null;
+
+        Phake::verify($this->channel)->basic_consume(
+            '<job-queue-job-type>',
+            '',    // consumer tag
+            false, // no local
+            false, // no ack
+            false, // exclusive
+            false, // no wait
+            Phake::capture($handler)
+        );
+
+        $jobRequest = new AMQPMessage('["job-type",[1,{"a":2,"b":3}]]', []);
+        $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
+        $jobRequest->delivery_info['redelivered'] = false;
+
+        $handler($jobRequest);
+
+        $context = null;
+
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker started job {type}({payload})',
+            Phake::capture($context)
+        );
+
+        Phake::verify($this->logger)->debug(
+            'jobqueue.worker finished job {type}({payload})',
+            Phake::capture($context)
+        );
+
+        Phake::verify($this->logger)->log(
+            LogLevel::ERROR,
+            'jobqueue.worker requeuing failed job {type} -> {code} {reason}',
+            Phake::capture($context)
+        );
+
+        $this->assertEquals(
+            [
+                'code' => 0,
+                'reason' => '"Internal server error."',
+                'type' => 'job-type',
+                'payload' => '[1,{"a":2,"b":3}]',
+                'exception' => $exception,
+            ],
+            $context
+        );
+    }
+
+    public function testReceiveRequestWithCustomErrorHandlerThatThrows()
+    {
+        Phake::when($this->channelDispatcher)
+            ->wait($this->channel)
+            ->thenGetReturnByLambda(
+                function () {
+                    $handler = null;
+
+                    Phake::verify($this->channel)->basic_consume(
+                        '<job-queue-job-type>',
+                        '',    // consumer tag
+                        false, // no local
+                        false, // no ack
+                        false, // exclusive
+                        false, // no wait
+                        Phake::capture($handler)
+                    );
+
+                    $jobRequest = new AMQPMessage(
+                        '["job-type",[1,2,3]]',
+                        [
+                            'reply_to' => '<response-queue>',
+                        ]
+                    );
+                    $jobRequest->delivery_info['delivery_tag'] = '<delivery-tag>';
+                    $jobRequest->delivery_info['redelivered'] = false;
+
+                    $handler($jobRequest);
+                }
+            )
+            ->thenReturn(null);
+
+        $errorException = new Error('Error handler throws an error exception.');
+        $exceptioned = false;
+
+        $worker = Phake::partialMock(
+            AmqpWorker::class,
+            $this->logger,
+            $this->channel,
+            function (Throwable $e) use ($errorException) { throw $errorException; },
+            $this->declarationManager,
+            null,
+            $this->channelDispatcher
+        );
+        $worker->register(
+            'job-type',
+            function() {
+                throw new Error('The procedure imploded spectacularly!');
+            }
+        );
+
+        try {
+            $worker->run();
+        } catch (Throwable $e) {
+            Phake::verify($this->logger)->critical('jobqueue.worker shutdown due to uncaught exception');
+            Phake::verify($this->channel)->basic_cancel('<consumer-tag-1>');
+
+            $this->assertSame($errorException->getMessage(), $e->getMessage());
+
+            $exceptioned = true;
+        }
+
+        $this->assertTrue($exceptioned);
+    }
+
+
 }

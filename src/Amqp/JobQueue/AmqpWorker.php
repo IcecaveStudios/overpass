@@ -3,14 +3,13 @@
 namespace Icecave\Overpass\Amqp\JobQueue;
 
 use Eloquent\Asplode\Error\ErrorException;
-use Error;
 use Exception;
 use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\JobQueue\Exception\DiscardException;
 use Icecave\Overpass\JobQueue\Exception\InvalidJobException;
-use Icecave\Overpass\JobQueue\Request;
 use Icecave\Overpass\JobQueue\Job\JobSerialization;
 use Icecave\Overpass\JobQueue\Job\JobSerializationInterface;
+use Icecave\Overpass\JobQueue\Request;
 use Icecave\Overpass\JobQueue\WorkerInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
@@ -21,6 +20,7 @@ use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use ReflectionClass;
+use Throwable;
 
 class AmqpWorker implements WorkerInterface
 {
@@ -29,6 +29,7 @@ class AmqpWorker implements WorkerInterface
     /**
      * @param LoggerInterface             $logger
      * @param AMQPChannel                 $channel
+     * @param callable|null               $errorHandler
      * @param DeclarationManager|null     $declarationManager
      * @param SerializationInterface|null $serialization
      * @param ChannelDispatcher           $channelDispatcher
@@ -36,11 +37,13 @@ class AmqpWorker implements WorkerInterface
     public function __construct(
         LoggerInterface $logger,
         AMQPChannel $channel,
+        callable $errorHandler = null,
         DeclarationManager $declarationManager = null,
         JobSerializationInterface $serialization = null,
         ChannelDispatcher $channelDispatcher = null
     ) {
         $this->channel = $channel;
+        $this->errorHandler       = $errorHandler;
         $this->declarationManager = $declarationManager ?: new DeclarationManager($channel);
         $this->serialization = $serialization ?: new JobSerialization(new JsonSerialization());
         $this->channelDispatcher = $channelDispatcher ?: new ChannelDispatcher();
@@ -130,6 +133,11 @@ class AmqpWorker implements WorkerInterface
             }
         }
 
+        if ($this->uncaughtThrowable !== null) {
+            $this->logger->critical('jobqueue.worker shutdown due to uncaught exception');
+            throw $this->uncaughtThrowable;
+        }
+
         $this->logger->info('jobqueue.worker shutdown gracefully');
     }
 
@@ -195,7 +203,17 @@ class AmqpWorker implements WorkerInterface
         } catch (ErrorException $e) {
             $logLevel = LogLevel::ERROR;
             $logMessage = $this->handleFailure($message, $e, $logContext);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            if (null !== $this->errorHandler) {
+                try {
+                    $fn = $this->errorHandler;
+                    $fn($e);
+                } catch (Throwable $e) {
+                    $this->isStopping = true;
+                    $this->uncaughtThrowable = $e;
+                }
+            }
+
             $logLevel = LogLevel::ERROR;
             $logContext['exception'] = $e;
             $logMessage = $this->handleFailure(
@@ -203,11 +221,6 @@ class AmqpWorker implements WorkerInterface
                 new Exception('Internal server error.', $e->getCode()),
                 $logContext
             );
-        } catch (Error $e) {
-            $logLevel = LogLevel::ERROR;
-            $e = new Exception('Internal server error.', $e->getCode());
-            $logContext['exception'] = $e;
-            $logMessage = $this->handleFailure($message, $e, $logContext);
         }
 
         $this->logger->debug(
@@ -223,12 +236,12 @@ class AmqpWorker implements WorkerInterface
      */
     private function handleFailure(
         AMQPMessage $message,
-        Exception $exception,
+        Throwable $e,
         &$logContext,
         $discard = false
     ) {
-        $logContext['code'] = $exception->getCode();
-        $logContext['reason'] = json_encode($exception->getMessage());
+        $logContext['code'] = $e->getCode();
+        $logContext['reason'] = json_encode($e->getMessage());
 
         if ($discard) {
             $this->channel->basic_reject($message->get('delivery_tag'), false);
@@ -279,10 +292,12 @@ class AmqpWorker implements WorkerInterface
     }
 
     private $channel;
+    private $errorHandler;
     private $declarationManager;
     private $serialization;
     private $channelDispatcher;
     private $isStopping;
+    private $uncaughtThrowable;
     private $handlers;
     private $consumerTags;
 }

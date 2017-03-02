@@ -2,6 +2,7 @@
 namespace Icecave\Overpass\Amqp\Rpc;
 
 use Exception;
+use Error;
 use Icecave\Isolator\Isolator;
 use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\Rpc\Exception\ExecutionException;
@@ -10,20 +11,21 @@ use Icecave\Overpass\Rpc\Message\Request;
 use Icecave\Overpass\Rpc\Message\Response;
 use Icecave\Overpass\Rpc\Message\ResponseCode;
 use LogicException;
-use PHPUnit_Framework_TestCase;
 use Phake;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
-use Psr\Log\LogLevel;
+use PHPUnit_Framework_TestCase;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Throwable;
 
 class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
+        $this->logger             = Phake::mock(LoggerInterface::class);
         $this->channel            = Phake::mock(AMQPChannel::class);
         $this->declarationManager = Phake::mock(DeclarationManager::class);
-        $this->logger             = Phake::mock(LoggerInterface::class);
         $this->invoker            = Phake::partialMock(Invoker::class);
         $this->channelDispatcher  = Phake::mock(ChannelDispatcher::class);
         $this->isolator           = Phake::mock(Isolator::class);
@@ -85,6 +87,7 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
             AmqpRpcServer::class,
             $this->logger,
             $this->channel,
+            null,
             $this->declarationManager,
             null,
             $this->invoker,
@@ -467,6 +470,128 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
 
             $this->assertSame($this->arbitraryException, $e);
         }
+    }
+
+    public function testReceiveRequestWithCustomErrorHandlerThatCompletes()
+    {
+        $this->server = Phake::partialMock(
+            AmqpRpcServer::class,
+            $this->logger,
+            $this->channel,
+            function (Throwable $e) { /* no exception to throw. */ },
+            $this->declarationManager,
+            null,
+            $this->invoker,
+            $this->channelDispatcher
+        );
+
+        $this->server->expose('procedure-name', $this->procedure4);
+        $this->server->setIsolator($this->isolator);
+
+        $this->server->run();
+
+        $handler = null;
+
+        Phake::verify($this->channel)->basic_consume(
+            '<request-queue-procedure-name>',
+            '',    // consumer tag
+            false, // no local
+            false, // no ack
+            false, // exclusive
+            false, // no wait
+            Phake::capture($handler)
+        );
+
+        $requestMessage = new AMQPMessage(
+            '["procedure-name",[1,2,3]]',
+            [
+                'reply_to'       => '<response-queue>',
+                'correlation_id' => 456,
+            ]
+        );
+
+        $requestMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
+
+        $handler($requestMessage);
+
+        $responseMessage = null;
+
+        Phake::verify($this->channel)->basic_publish(
+            Phake::capture($responseMessage),
+            '', // default direct exchange
+            '<response-queue>'
+        );
+
+        $this->assertEquals(
+            new AMQPMessage(
+                '[' . ResponseCode::EXCEPTION . ',"Internal server error."]',
+                [
+                    'correlation_id' => 456,
+                ]
+            ),
+            $responseMessage
+        );
+    }
+
+    public function testReceiveRequestWithCustomErrorHandlerThatThrowsError()
+    {
+        Phake::when($this->channelDispatcher)
+            ->wait($this->channel)
+            ->thenGetReturnByLambda(
+                function () {
+                    $handler = null;
+
+                    Phake::verify($this->channel)->basic_consume(
+                        '<request-queue-procedure-name>',
+                        '',    // consumer tag
+                        false, // no local
+                        false, // no ack
+                        false, // exclusive
+                        false, // no wait
+                        Phake::capture($handler)
+                    );
+
+                    $requestMessage = new AMQPMessage(
+                        '["procedure-name",[1,2,3]]',
+                        [
+                            'reply_to' => '<response-queue>',
+                        ]
+                    );
+                    $requestMessage->delivery_info['delivery_tag'] = '<delivery-tag>';
+
+                    $handler($requestMessage);
+                }
+            )
+            ->thenReturn(null);
+
+        $errorException = new Error('Error handler throws an error exception.');
+        $exceptioned = false;
+
+        $this->server = Phake::partialMock(
+            AmqpRpcServer::class,
+            $this->logger,
+            $this->channel,
+            function (Throwable $e) use ($errorException) { throw $errorException; },
+            $this->declarationManager,
+            null,
+            $this->invoker,
+            $this->channelDispatcher
+        );
+
+        $this->server->expose('procedure-name', $this->procedure4);
+
+        try {
+            $this->server->run();
+        } catch (Throwable $e) {
+            Phake::verify($this->logger)->critical('rpc.server shutdown due to uncaught exception');
+            Phake::verify($this->channel)->basic_cancel('<consumer-tag-1>');
+
+            $this->assertEquals($errorException, $e);
+
+            $exceptioned = true;
+        }
+
+        $this->assertTrue($exceptioned);
     }
 
     public function testReceiveRequestWithExecutionException()
