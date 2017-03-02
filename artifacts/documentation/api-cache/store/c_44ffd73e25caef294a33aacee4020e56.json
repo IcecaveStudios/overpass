@@ -1,0 +1,87 @@
+{
+    "name": "Icecave\\Overpass\\Rpc\\Invoker",
+    "line": 13,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Rpc",
+    "file": ".\/src\/Rpc\/Invoker.php",
+    "relative_file": null,
+    "hash": "42e10220f4e48cee73d3c0b52d59810f9a21f597",
+    "parent": null,
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "Exception": "Exception",
+        "ExecutionException": "ICecave\\Overpass\\Rpc\\Exception\\ExecutionException",
+        "Request": "Icecave\\Overpass\\Rpc\\Message\\Request",
+        "Response": "Icecave\\Overpass\\Rpc\\Message\\Response",
+        "ResponseCode": "Icecave\\Overpass\\Rpc\\Message\\ResponseCode",
+        "ReflectionFunction": "ReflectionFunction",
+        "ReflectionMethod": "ReflectionMethod",
+        "ReflectionParameter": "ReflectionParameter"
+    },
+    "errors": [],
+    "interfaces": {
+        "Icecave\\Overpass\\Rpc\\InvokerInterface": "Icecave\\Overpass\\Rpc\\InvokerInterface"
+    },
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "invoke": {
+            "name": "invoke",
+            "line": 23,
+            "short_desc": "Invoke a procedure based on a request.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Message\\Response",
+                    false
+                ]
+            ],
+            "hint_desc": "The RPC response.",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "request": {
+                    "name": "request",
+                    "line": 23,
+                    "short_desc": "The RPC request.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Rpc\\Message\\Request",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Rpc\\Message\\Request",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "procedure": {
+                    "name": "procedure",
+                    "line": 23,
+                    "short_desc": "The procedure to invoke.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "callable",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "callable",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

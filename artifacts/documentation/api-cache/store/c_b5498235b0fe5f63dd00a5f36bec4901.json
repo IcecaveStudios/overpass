@@ -1,0 +1,80 @@
+{
+    "name": "Icecave\\Overpass\\Rpc\\Exception\\TimeoutException",
+    "line": 10,
+    "short_desc": "Indicates that a timeout has occurred.",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Rpc\\Exception",
+    "file": ".\/src\/Rpc\/Exception\/TimeoutException.php",
+    "relative_file": null,
+    "hash": "8ccf7dd8b1ac66cd1f702e4b216977cc7275bd6d",
+    "parent": "RuntimeException",
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "Exception": "Exception",
+        "RuntimeException": "RuntimeException"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 12,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "name": {
+                    "name": "name",
+                    "line": 12,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": null,
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "timeout": {
+                    "name": "timeout",
+                    "line": 12,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": null,
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "previous": {
+                    "name": "previous",
+                    "line": 12,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Exception",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Exception",
+                    "default": "null",
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

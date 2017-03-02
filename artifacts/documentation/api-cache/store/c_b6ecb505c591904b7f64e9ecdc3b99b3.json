@@ -1,0 +1,64 @@
+{
+    "name": "Icecave\\Overpass\\Rpc\\Exception\\RemoteExceptionInterface",
+    "line": 9,
+    "short_desc": "Interface for all RPC exceptions that can occur on the server-side.",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Rpc\\Exception",
+    "file": ".\/src\/Rpc\/Exception\/RemoteExceptionInterface.php",
+    "relative_file": null,
+    "hash": "acbfe3e0b524f7a1b00884cd5e6392f2b947b5bd",
+    "parent": null,
+    "modifiers": "Stmt_Interface",
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": {
+        "ResponseCode": "Icecave\\Overpass\\Rpc\\Message\\ResponseCode"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "getMessage": {
+            "name": "getMessage",
+            "line": 16,
+            "short_desc": "Get the exception message.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "responseCode": {
+            "name": "responseCode",
+            "line": 23,
+            "short_desc": "Get the response code.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Message\\ResponseCode",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

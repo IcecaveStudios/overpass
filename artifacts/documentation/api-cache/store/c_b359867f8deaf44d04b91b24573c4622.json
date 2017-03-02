@@ -1,0 +1,75 @@
+{
+    "name": "Icecave\\Overpass\\JobQueue\\QueueInterface",
+    "line": 7,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\JobQueue",
+    "file": ".\/src\/JobQueue\/QueueInterface.php",
+    "relative_file": null,
+    "hash": "31b3f8d32190bc7d6296a10ad15eeeda5f974481",
+    "parent": null,
+    "modifiers": "Stmt_Interface",
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": {
+        "LoggerAwareInterface": "Psr\\Log\\LoggerAwareInterface"
+    },
+    "errors": [],
+    "interfaces": {
+        "Psr\\Log\\LoggerAwareInterface": "Psr\\Log\\LoggerAwareInterface"
+    },
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "enqueue": {
+            "name": "enqueue",
+            "line": 15,
+            "short_desc": "Add a job to the job queue.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "type": {
+                    "name": "type",
+                    "line": 15,
+                    "short_desc": "The type of job to enqueue",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "payload": {
+                    "name": "payload",
+                    "line": 15,
+                    "short_desc": "The job payload to pass",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "mixed",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": "null",
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

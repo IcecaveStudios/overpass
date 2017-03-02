@@ -1,0 +1,103 @@
+{
+    "name": "Icecave\\Overpass\\JobQueue\\Job\\JobSerializationInterface",
+    "line": 7,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\JobQueue\\Job",
+    "file": ".\/src\/JobQueue\/Job\/JobSerializationInterface.php",
+    "relative_file": null,
+    "hash": "035e0fabd6bf9c443bbec21c02b1aab4da1ec748",
+    "parent": null,
+    "modifiers": "Stmt_Interface",
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": {
+        "InvalidJobException": "Icecave\\Overpass\\JobQueue\\Exception\\InvalidJobException"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "serializeJob": {
+            "name": "serializeJob",
+            "line": 16,
+            "short_desc": "Serialize a job request.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "job": {
+                    "name": "job",
+                    "line": 16,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\JobQueue\\Job\\Job",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\JobQueue\\Job\\Job",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "unserializeJob": {
+            "name": "unserializeJob",
+            "line": 27,
+            "short_desc": "Unserialize a job request.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Icecave\\Overpass\\JobQueue\\Job\\Job",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [
+                [
+                    "\\Icecave\\Overpass\\JobQueue\\Exception\\InvalidJobException",
+                    ""
+                ]
+            ],
+            "errors": [],
+            "parameters": {
+                "buffer": {
+                    "name": "buffer",
+                    "line": 27,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

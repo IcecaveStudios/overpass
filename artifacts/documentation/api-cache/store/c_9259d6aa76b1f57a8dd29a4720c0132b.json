@@ -1,0 +1,25 @@
+{
+    "name": "Icecave\\Overpass\\JobQueue\\Exception\\DiscardException",
+    "line": 11,
+    "short_desc": "Indicates a situation in which a job failed to be processed and MUST be\ndiscarded instead being attempted again.",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\JobQueue\\Exception",
+    "file": ".\/src\/JobQueue\/Exception\/DiscardException.php",
+    "relative_file": null,
+    "hash": "16b903c2235821a20694d88956038e25ff6f36d9",
+    "parent": "RuntimeException",
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "RuntimeException": "RuntimeException"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": [],
+    "constants": []
+}

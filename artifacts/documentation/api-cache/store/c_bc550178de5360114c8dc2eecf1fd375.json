@@ -1,0 +1,36 @@
+{
+    "name": "Icecave\\Overpass\\PackageInfo",
+    "line": 4,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass",
+    "file": ".\/src\/PackageInfo.php",
+    "relative_file": null,
+    "hash": "cf4e71b8b45490f385271849f7eb9fa580412c46",
+    "parent": null,
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": [],
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": [],
+    "constants": {
+        "NAME": {
+            "name": "NAME",
+            "line": 6,
+            "short_desc": "",
+            "long_desc": ""
+        },
+        "VERSION": {
+            "name": "VERSION",
+            "line": 7,
+            "short_desc": "",
+            "long_desc": ""
+        }
+    }
+}

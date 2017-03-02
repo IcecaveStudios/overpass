@@ -1,0 +1,79 @@
+{
+    "name": "Icecave\\Overpass\\Rpc\\Exception\\UnknownProcedureException",
+    "line": 7,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Rpc\\Exception",
+    "file": ".\/src\/Rpc\/Exception\/UnknownProcedureException.php",
+    "relative_file": null,
+    "hash": "f993123933a884aefc1cb3b6f82073be322c41b2",
+    "parent": "LogicException",
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "ResponseCode": "Icecave\\Overpass\\Rpc\\Message\\ResponseCode",
+        "LogicException": "LogicException"
+    },
+    "errors": [],
+    "interfaces": {
+        "Icecave\\Overpass\\Rpc\\Exception\\RemoteExceptionInterface": "Icecave\\Overpass\\Rpc\\Exception\\RemoteExceptionInterface"
+    },
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 13,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "name": {
+                    "name": "name",
+                    "line": 13,
+                    "short_desc": "The procedure name.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "responseCode": {
+            "name": "responseCode",
+            "line": 26,
+            "short_desc": "Get the response code.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Message\\ResponseCode",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

@@ -1,0 +1,155 @@
+{
+    "name": "Icecave\\Overpass\\JobQueue\\WorkerInterface",
+    "line": 7,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\JobQueue",
+    "file": ".\/src\/JobQueue\/WorkerInterface.php",
+    "relative_file": null,
+    "hash": "ff7a76badb74ddabe9f10353834fbec531069ede",
+    "parent": null,
+    "modifiers": "Stmt_Interface",
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": {
+        "LoggerAwareInterface": "Psr\\Log\\LoggerAwareInterface"
+    },
+    "errors": [],
+    "interfaces": {
+        "Psr\\Log\\LoggerAwareInterface": "Psr\\Log\\LoggerAwareInterface"
+    },
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "register": {
+            "name": "register",
+            "line": 17,
+            "short_desc": "Register a job.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [
+                [
+                    "\\Icecave\\Overpass\\JobQueue\\LogicException",
+                    "if the worker is already running."
+                ]
+            ],
+            "errors": [],
+            "parameters": {
+                "name": {
+                    "name": "name",
+                    "line": 17,
+                    "short_desc": "The public name of the job.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "handler": {
+                    "name": "handler",
+                    "line": 17,
+                    "short_desc": "The handler to be registered against the job.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "callable",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "callable",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "registerObject": {
+            "name": "registerObject",
+            "line": 25,
+            "short_desc": "Register all public methods on an object against jobs of the same name.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "object": {
+                    "name": "object",
+                    "line": 25,
+                    "short_desc": "The object with the methods to register.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "object",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "prefix": {
+                    "name": "prefix",
+                    "line": 25,
+                    "short_desc": "A string to prefix all the method names with.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": "''",
+                    "is_by_ref": false
+                }
+            }
+        },
+        "run": {
+            "name": "run",
+            "line": 30,
+            "short_desc": "Run the worker.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "stop": {
+            "name": "stop",
+            "line": 35,
+            "short_desc": "Stop the worker.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

@@ -1,0 +1,106 @@
+{
+    "name": "Icecave\\Overpass\\Serialization\\SerializationInterface",
+    "line": 9,
+    "short_desc": "Defines a serialization protocol.",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Serialization",
+    "file": ".\/src\/Serialization\/SerializationInterface.php",
+    "relative_file": null,
+    "hash": "3b1fa79127705ff5772bac727d0f065705420289",
+    "parent": null,
+    "modifiers": "Stmt_Interface",
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": {
+        "stdClass": "stdClass"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "serialize": {
+            "name": "serialize",
+            "line": 18,
+            "short_desc": "Serialize the given payload.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "payload": {
+                    "name": "payload",
+                    "line": 18,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\stdClass",
+                            false
+                        ],
+                        [
+                            "array",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "unserialize": {
+            "name": "unserialize",
+            "line": 27,
+            "short_desc": "Unserialize the given buffer.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\stdClass",
+                    false
+                ],
+                [
+                    "array",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "buffer": {
+                    "name": "buffer",
+                    "line": 27,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

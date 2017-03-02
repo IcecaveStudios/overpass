@@ -1,0 +1,138 @@
+{
+    "name": "Icecave\\Overpass\\JobQueue\\Job\\JobSerialization",
+    "line": 9,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\JobQueue\\Job",
+    "file": ".\/src\/JobQueue\/Job\/JobSerialization.php",
+    "relative_file": null,
+    "hash": "926e191fdcee92919b6323cb497d756638c1579d",
+    "parent": null,
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "InvalidJobException": "Icecave\\Overpass\\JobQueue\\Exception\\InvalidJobException",
+        "SerializationException": "Icecave\\Overpass\\Serialization\\Exception\\SerializationException",
+        "SerializationInterface": "Icecave\\Overpass\\Serialization\\SerializationInterface"
+    },
+    "errors": [],
+    "interfaces": {
+        "Icecave\\Overpass\\JobQueue\\Job\\JobSerializationInterface": "Icecave\\Overpass\\JobQueue\\Job\\JobSerializationInterface"
+    },
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 11,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "serialization": {
+                    "name": "serialization",
+                    "line": 11,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Serialization\\SerializationInterface",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Serialization\\SerializationInterface",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "serializeJob": {
+            "name": "serializeJob",
+            "line": 23,
+            "short_desc": "Serialize a job request.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "job": {
+                    "name": "job",
+                    "line": 23,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\JobQueue\\Job\\Job",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\JobQueue\\Job\\Job",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "unserializeJob": {
+            "name": "unserializeJob",
+            "line": 44,
+            "short_desc": "Unserialize a job request.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Icecave\\Overpass\\JobQueue\\Job\\Job",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [
+                [
+                    "\\Icecave\\Overpass\\JobQueue\\Exception\\InvalidJobException",
+                    ""
+                ]
+            ],
+            "errors": [],
+            "parameters": {
+                "buffer": {
+                    "name": "buffer",
+                    "line": 44,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

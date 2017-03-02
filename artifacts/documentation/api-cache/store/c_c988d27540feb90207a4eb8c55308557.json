@@ -1,0 +1,75 @@
+{
+    "name": "Icecave\\Overpass\\PubSub\\PublisherInterface",
+    "line": 6,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\PubSub",
+    "file": ".\/src\/PubSub\/PublisherInterface.php",
+    "relative_file": null,
+    "hash": "fb35ae224ae8d159f0a7d93d83513ba399a69457",
+    "parent": null,
+    "modifiers": "Stmt_Interface",
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": {
+        "LoggerAwareInterface": "Psr\\Log\\LoggerAwareInterface"
+    },
+    "errors": [],
+    "interfaces": {
+        "Psr\\Log\\LoggerAwareInterface": "Psr\\Log\\LoggerAwareInterface"
+    },
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "publish": {
+            "name": "publish",
+            "line": 14,
+            "short_desc": "Publish a message.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "topic": {
+                    "name": "topic",
+                    "line": 14,
+                    "short_desc": "The topic that the payload is published to.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "payload": {
+                    "name": "payload",
+                    "line": 14,
+                    "short_desc": "The payload to publish.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "mixed",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

@@ -1,0 +1,230 @@
+{
+    "name": "Icecave\\Overpass\\Rpc\\Message\\Response",
+    "line": 13,
+    "short_desc": "Represents an RPC response.",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Rpc\\Message",
+    "file": ".\/src\/Rpc\/Message\/Response.php",
+    "relative_file": null,
+    "hash": "5c4529d147695632d1a36ac30d6ff37262ce77d6",
+    "parent": null,
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "Exception": "Exception",
+        "ExecutionException": "Icecave\\Overpass\\Rpc\\Exception\\ExecutionException",
+        "InvalidMessageException": "Icecave\\Overpass\\Rpc\\Exception\\InvalidMessageException",
+        "RemoteExceptionInterface": "Icecave\\Overpass\\Rpc\\Exception\\RemoteExceptionInterface",
+        "UnknownProcedureException": "Icecave\\Overpass\\Rpc\\Exception\\UnknownProcedureException"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "create": {
+            "name": "create",
+            "line": 33,
+            "short_desc": "Create a response.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Message\\Response",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "9",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "code": {
+                    "name": "code",
+                    "line": 33,
+                    "short_desc": "The response code.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Rpc\\Message\\ResponseCode",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Rpc\\Message\\ResponseCode",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "value": {
+                    "name": "value",
+                    "line": 33,
+                    "short_desc": "The return value or exception message.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "mixed",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "createFromValue": {
+            "name": "createFromValue",
+            "line": 48,
+            "short_desc": "Create a success response.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Message\\Response",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "9",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "value": {
+                    "name": "value",
+                    "line": 48,
+                    "short_desc": "The return value.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "mixed",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "createFromException": {
+            "name": "createFromException",
+            "line": 63,
+            "short_desc": "Create a failure response.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Message\\Response",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "9",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "exception": {
+                    "name": "exception",
+                    "line": 63,
+                    "short_desc": "The exception that occurred.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Exception",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Exception",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "code": {
+            "name": "code",
+            "line": 82,
+            "short_desc": "Get the response code.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Message\\ResponseCode",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "value": {
+            "name": "value",
+            "line": 95,
+            "short_desc": "Get the response value.",
+            "long_desc": "For a successful response this is the return value of the procedure,\notherwise this is the exception message.",
+            "hint": [
+                [
+                    "mixed",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "extract": {
+            "name": "extract",
+            "line": 106,
+            "short_desc": "Extract the return value or exception.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "mixed",
+                    false
+                ]
+            ],
+            "hint_desc": "The return value (if the response was successful).",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Exception\\RemoteExceptionInterface",
+                    "if the response was not successful."
+                ]
+            ],
+            "errors": [],
+            "parameters": []
+        },
+        "__toString": {
+            "name": "__toString",
+            "line": 121,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

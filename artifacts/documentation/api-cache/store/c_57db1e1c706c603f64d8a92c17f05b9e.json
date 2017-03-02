@@ -1,0 +1,101 @@
+{
+    "name": "Icecave\\Overpass\\Amqp\\PubSub\\DeclarationManager",
+    "line": 9,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": {
+        "access": [
+            [
+                "private"
+            ]
+        ]
+    },
+    "namespace": "Icecave\\Overpass\\Amqp\\PubSub",
+    "file": ".\/src\/Amqp\/PubSub\/DeclarationManager.php",
+    "relative_file": null,
+    "hash": "57c8c5d30cf7252369b09a6977c815b8792e2ee8",
+    "parent": null,
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "AMQPChannel": "PhpAmqpLib\\Channel\\AMQPChannel"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 11,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "channel": {
+                    "name": "channel",
+                    "line": 11,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\PhpAmqpLib\\Channel\\AMQPChannel",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "PhpAmqpLib\\Channel\\AMQPChannel",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "exchange": {
+            "name": "exchange",
+            "line": 19,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "queue": {
+            "name": "queue",
+            "line": 43,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

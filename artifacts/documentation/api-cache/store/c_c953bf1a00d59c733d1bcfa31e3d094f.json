@@ -1,0 +1,109 @@
+{
+    "name": "Icecave\\Overpass\\Serialization\\JsonSerialization",
+    "line": 10,
+    "short_desc": "JSON serialization protocol.",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Serialization",
+    "file": ".\/src\/Serialization\/JsonSerialization.php",
+    "relative_file": null,
+    "hash": "8cbcd5e6854c34bb37a3b24b20e3c9faf81056fd",
+    "parent": null,
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "SerializationException": "Icecave\\Overpass\\Serialization\\Exception\\SerializationException",
+        "stdClass": "stdClass"
+    },
+    "errors": [],
+    "interfaces": {
+        "Icecave\\Overpass\\Serialization\\SerializationInterface": "Icecave\\Overpass\\Serialization\\SerializationInterface"
+    },
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "serialize": {
+            "name": "serialize",
+            "line": 19,
+            "short_desc": "Serialize the given payload.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "payload": {
+                    "name": "payload",
+                    "line": 19,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\stdClass",
+                            false
+                        ],
+                        [
+                            "array",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "unserialize": {
+            "name": "unserialize",
+            "line": 39,
+            "short_desc": "Unserialize the given buffer.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\stdClass",
+                    false
+                ],
+                [
+                    "array",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "buffer": {
+                    "name": "buffer",
+                    "line": 39,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

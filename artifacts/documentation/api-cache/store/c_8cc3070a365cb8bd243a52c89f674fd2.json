@@ -1,0 +1,25 @@
+{
+    "name": "Icecave\\Overpass\\Serialization\\Exception\\SerializationException",
+    "line": 6,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Serialization\\Exception",
+    "file": ".\/src\/Serialization\/Exception\/SerializationException.php",
+    "relative_file": null,
+    "hash": "8356b5cb23231c2694b4fa12f1bd8a658e93a62b",
+    "parent": "InvalidArgumentException",
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "InvalidArgumentException": "InvalidArgumentException"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": [],
+    "constants": []
+}

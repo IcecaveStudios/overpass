@@ -1,0 +1,147 @@
+{
+    "name": "Icecave\\Overpass\\Amqp\\JobQueue\\AmqpQueue",
+    "line": 14,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Amqp\\JobQueue",
+    "file": ".\/src\/Amqp\/JobQueue\/AmqpQueue.php",
+    "relative_file": null,
+    "hash": "f41e6334d892ad1c38f032de4f7b616acc7cbe26",
+    "parent": null,
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "QueueInterface": "Icecave\\Overpass\\JobQueue\\QueueInterface",
+        "Job": "Icecave\\Overpass\\JobQueue\\Job\\Job",
+        "JobSerialization": "Icecave\\Overpass\\JobQueue\\Job\\JobSerialization",
+        "JobSerializationInterface": "Icecave\\Overpass\\JobQueue\\Job\\JobSerializationInterface",
+        "JsonSerialization": "Icecave\\Overpass\\Serialization\\JsonSerialization",
+        "AMQPChannel": "PhpAmqpLib\\Channel\\AMQPChannel",
+        "AMQPMessage": "PhpAmqpLib\\Message\\AMQPMessage",
+        "LoggerAwareTrait": "Psr\\Log\\LoggerAwareTrait"
+    },
+    "errors": [],
+    "interfaces": {
+        "Icecave\\Overpass\\JobQueue\\QueueInterface": "Icecave\\Overpass\\JobQueue\\QueueInterface"
+    },
+    "traits": {
+        "Psr\\Log\\LoggerAwareTrait": "Psr\\Log\\LoggerAwareTrait"
+    },
+    "properties": [],
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 23,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "channel": {
+                    "name": "channel",
+                    "line": 24,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\PhpAmqpLib\\Channel\\AMQPChannel",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "PhpAmqpLib\\Channel\\AMQPChannel",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "declarationManager": {
+                    "name": "declarationManager",
+                    "line": 25,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Amqp\\JobQueue\\DeclarationManager",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Amqp\\JobQueue\\DeclarationManager",
+                    "default": "null",
+                    "is_by_ref": false
+                },
+                "serialization": {
+                    "name": "serialization",
+                    "line": 26,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\JobQueue\\Job\\JobSerializationInterface",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\JobQueue\\Job\\JobSerializationInterface",
+                    "default": "null",
+                    "is_by_ref": false
+                }
+            }
+        },
+        "enqueue": {
+            "name": "enqueue",
+            "line": 39,
+            "short_desc": "Add a job to the job queue.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "type": {
+                    "name": "type",
+                    "line": 39,
+                    "short_desc": "The type of job to enqueue",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "payload": {
+                    "name": "payload",
+                    "line": 39,
+                    "short_desc": "The job payload to pass",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "mixed",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": "null",
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

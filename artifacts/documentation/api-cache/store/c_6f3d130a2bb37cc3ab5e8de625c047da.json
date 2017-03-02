@@ -1,0 +1,182 @@
+{
+    "name": "Icecave\\Overpass\\Rpc\\Message\\MessageSerializationInterface",
+    "line": 6,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Rpc\\Message",
+    "file": ".\/src\/Rpc\/Message\/MessageSerializationInterface.php",
+    "relative_file": null,
+    "hash": "b786f4e6bf0f246075aa5357253ea10cc6ba1797",
+    "parent": null,
+    "modifiers": "Stmt_Interface",
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": {
+        "InvalidMessageException": "Icecave\\Overpass\\Rpc\\Exception\\InvalidMessageException"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "serializeRequest": {
+            "name": "serializeRequest",
+            "line": 15,
+            "short_desc": "Serialize a request message.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "request": {
+                    "name": "request",
+                    "line": 15,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Rpc\\Message\\Request",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Rpc\\Message\\Request",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "serializeResponse": {
+            "name": "serializeResponse",
+            "line": 24,
+            "short_desc": "Serialize a response message.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [
+                "The \"request\" @param tag variable name is wrong (should be \"response\")"
+            ],
+            "parameters": {
+                "response": {
+                    "name": "response",
+                    "line": 24,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Rpc\\Message\\Response",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Rpc\\Message\\Response",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "unserializeRequest": {
+            "name": "unserializeRequest",
+            "line": 34,
+            "short_desc": "Unserialize a request message.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Message\\Request",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Exception\\InvalidMessageException",
+                    ""
+                ]
+            ],
+            "errors": [],
+            "parameters": {
+                "buffer": {
+                    "name": "buffer",
+                    "line": 34,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "unserializeResponse": {
+            "name": "unserializeResponse",
+            "line": 44,
+            "short_desc": "Unserialize a response message.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Message\\Response",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Exception\\InvalidMessageException",
+                    ""
+                ]
+            ],
+            "errors": [],
+            "parameters": {
+                "buffer": {
+                    "name": "buffer",
+                    "line": 44,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

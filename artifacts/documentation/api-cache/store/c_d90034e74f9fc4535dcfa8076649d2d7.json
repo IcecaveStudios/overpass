@@ -1,0 +1,137 @@
+{
+    "name": "Icecave\\Overpass\\Amqp\\Rpc\\DeclarationManager",
+    "line": 9,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": {
+        "access": [
+            [
+                "private"
+            ]
+        ]
+    },
+    "namespace": "Icecave\\Overpass\\Amqp\\Rpc",
+    "file": ".\/src\/Amqp\/Rpc\/DeclarationManager.php",
+    "relative_file": null,
+    "hash": "d30cbf0344754b49d3c9c0c9b4898113ca045841",
+    "parent": null,
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "AMQPChannel": "PhpAmqpLib\\Channel\\AMQPChannel"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 11,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "channel": {
+                    "name": "channel",
+                    "line": 11,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\PhpAmqpLib\\Channel\\AMQPChannel",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "PhpAmqpLib\\Channel\\AMQPChannel",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "exchange": {
+            "name": "exchange",
+            "line": 20,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "requestQueue": {
+            "name": "requestQueue",
+            "line": 48,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "procedureName": {
+                    "name": "procedureName",
+                    "line": 48,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "responseQueue": {
+            "name": "responseQueue",
+            "line": 80,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

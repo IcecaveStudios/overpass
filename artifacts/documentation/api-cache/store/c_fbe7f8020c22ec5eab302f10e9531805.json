@@ -1,0 +1,104 @@
+{
+    "name": "Icecave\\Overpass\\Amqp\\ChannelDispatcher",
+    "line": 15,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": {
+        "access": [
+            [
+                "private\n\nThis",
+                "class",
+                "provides",
+                "a",
+                "wait()",
+                "implementation",
+                "that",
+                "can",
+                "handle",
+                "interruption\nby",
+                "signals."
+            ]
+        ]
+    },
+    "namespace": "Icecave\\Overpass\\Amqp",
+    "file": ".\/src\/Amqp\/ChannelDispatcher.php",
+    "relative_file": null,
+    "hash": "ddb4cf770d9887866ac0383462b592696f13ca39",
+    "parent": null,
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "ErrorException": "ErrorException",
+        "IsolatorTrait": "Icecave\\Isolator\\IsolatorTrait",
+        "AMQPChannel": "PhpAmqpLib\\Channel\\AMQPChannel",
+        "AMQPTimeoutException": "PhpAmqpLib\\Exception\\AMQPTimeoutException"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": {
+        "Icecave\\Isolator\\IsolatorTrait": "Icecave\\Isolator\\IsolatorTrait"
+    },
+    "properties": [],
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 19,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "timeout": {
+                    "name": "timeout",
+                    "line": 19,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": null,
+                    "tags": [],
+                    "modifiers": "",
+                    "default": "30",
+                    "is_by_ref": false
+                }
+            }
+        },
+        "wait": {
+            "name": "wait",
+            "line": 24,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "channel": {
+                    "name": "channel",
+                    "line": 24,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\PhpAmqpLib\\Channel\\AMQPChannel",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "PhpAmqpLib\\Channel\\AMQPChannel",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

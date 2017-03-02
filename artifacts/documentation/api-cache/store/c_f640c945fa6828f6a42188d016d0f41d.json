@@ -1,0 +1,121 @@
+{
+    "name": "Icecave\\Overpass\\PubSub\\SubscriberInterface",
+    "line": 6,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\PubSub",
+    "file": ".\/src\/PubSub\/SubscriberInterface.php",
+    "relative_file": null,
+    "hash": "282f5b012de0861f714e58a4243f1726cfc84442",
+    "parent": null,
+    "modifiers": "Stmt_Interface",
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": {
+        "LoggerAwareInterface": "Psr\\Log\\LoggerAwareInterface"
+    },
+    "errors": [],
+    "interfaces": {
+        "Psr\\Log\\LoggerAwareInterface": "Psr\\Log\\LoggerAwareInterface"
+    },
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "subscribe": {
+            "name": "subscribe",
+            "line": 13,
+            "short_desc": "Subscribe to the given topic.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "topic": {
+                    "name": "topic",
+                    "line": 13,
+                    "short_desc": "The topic or topic pattern to subscribe to.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "unsubscribe": {
+            "name": "unsubscribe",
+            "line": 20,
+            "short_desc": "Unsubscribe from the given topic.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "topic": {
+                    "name": "topic",
+                    "line": 20,
+                    "short_desc": "The topic or topic pattern to unsubscribe from.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "consume": {
+            "name": "consume",
+            "line": 34,
+            "short_desc": "Consume messages from subscriptions.",
+            "long_desc": "When a message is received the callback is invoked with two parameters,\nthe first is the topic to which the message was published, the second is\nthe message payload.\n\nThe callback must return true in order to keep consuming messages, or\nfalse to end consumption.",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "callback": {
+                    "name": "callback",
+                    "line": 34,
+                    "short_desc": "The callback to invoke when a message is received.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "callable",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "callable",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

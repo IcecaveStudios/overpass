@@ -1,54 +1,54 @@
 
 
 Code Coverage Report:      
-  2017-01-19 01:19:35      
+  2017-03-02 04:16:56      
                            
  Summary:                  
   Classes: 96.30% (26/27)  
   Methods: 98.97% (96/97)  
-  Lines:   99.55% (884/888)
+  Lines:   99.87% (776/777)
 
 \Icecave\Overpass\Amqp::ChannelDispatcher
-  Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 13/ 13)
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 12/ 12)
 \Icecave\Overpass\Amqp\JobQueue::AmqpQueue
-  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 25/ 25)
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 22/ 22)
 \Icecave\Overpass\Amqp\JobQueue::AmqpWorker
-  Methods:  90.00% ( 9/10)   Lines:  96.90% (125/129)
+  Methods: 100.00% (10/10)   Lines: 100.00% (117/117)
 \Icecave\Overpass\Amqp\JobQueue::DeclarationManager
-  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 31/ 31)
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 28/ 28)
 \Icecave\Overpass\Amqp\PubSub::AmqpPublisher
-  Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 22/ 22)
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 17/ 17)
 \Icecave\Overpass\Amqp\PubSub::AmqpSubscriber
-  Methods: 100.00% ( 7/ 7)   Lines: 100.00% ( 83/ 83)
+  Methods: 100.00% ( 7/ 7)   Lines: 100.00% ( 71/ 71)
 \Icecave\Overpass\Amqp\PubSub::DeclarationManager
-  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 21/ 21)
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 20/ 20)
 \Icecave\Overpass\Amqp\Rpc::AmqpRpcClient
-  Methods: 100.00% (11/11)   Lines: 100.00% (110/110)
+  Methods: 100.00% (11/11)   Lines: 100.00% ( 99/ 99)
 \Icecave\Overpass\Amqp\Rpc::AmqpRpcServer
-  Methods: 100.00% (10/10)   Lines: 100.00% (155/155)
+  Methods: 100.00% (10/10)   Lines: 100.00% (137/137)
 \Icecave\Overpass\Amqp\Rpc::DeclarationManager
-  Methods: 100.00% ( 4/ 4)   Lines: 100.00% ( 41/ 41)
+  Methods: 100.00% ( 4/ 4)   Lines: 100.00% ( 39/ 39)
 \Icecave\Overpass\JobQueue\Job::Job
-  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 11/ 11)
+  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 10/ 10)
 \Icecave\Overpass\JobQueue\Job::JobSerialization
-  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 23/ 23)
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 22/ 22)
 \Icecave\Overpass\Rpc::Invoker
-  Methods: 100.00% ( 4/ 4)   Lines: 100.00% ( 65/ 65)
+  Methods: 100.00% ( 4/ 4)   Lines: 100.00% ( 53/ 53)
 \Icecave\Overpass\Rpc\Exception::ExecutionException
-  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  6/  6)
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  4/  4)
 \Icecave\Overpass\Rpc\Exception::InvalidArgumentsException
-  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  6/  6)
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  4/  4)
 \Icecave\Overpass\Rpc\Exception::InvalidMessageException
-  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  6/  6)
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  4/  4)
 \Icecave\Overpass\Rpc\Exception::TimeoutException
-  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  5/  5)
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  4/  4)
 \Icecave\Overpass\Rpc\Exception::UnknownProcedureException
-  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  6/  6)
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  5/  5)
 \Icecave\Overpass\Rpc\Message::MessageSerialization
-  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 51/ 51)
+  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 49/ 49)
 \Icecave\Overpass\Rpc\Message::Request
-  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 17/ 17)
+  Methods: 100.00% ( 5/ 5)   Lines: 100.00% ( 12/ 12)
 \Icecave\Overpass\Rpc\Message::Response
-  Methods: 100.00% ( 8/ 8)   Lines: 100.00% ( 36/ 36)
+  Methods: 100.00% ( 8/ 8)   Lines: 100.00% ( 28/ 28)
 \Icecave\Overpass\Serialization::JsonSerialization
-  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 15/ 15)
+  Methods:  66.67% ( 2/ 3)   Lines:  92.86% ( 13/ 14)

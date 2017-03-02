@@ -1,0 +1,306 @@
+{
+    "name": "Icecave\\Overpass\\Amqp\\Rpc\\AmqpRpcServer",
+    "line": 27,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Amqp\\Rpc",
+    "file": ".\/src\/Amqp\/Rpc\/AmqpRpcServer.php",
+    "relative_file": null,
+    "hash": "618424f7edd4e3e264f9e15790ae717a628fae14",
+    "parent": null,
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "Exception": "Exception",
+        "IsolatorTrait": "Icecave\\Isolator\\IsolatorTrait",
+        "ChannelDispatcher": "Icecave\\Overpass\\Amqp\\ChannelDispatcher",
+        "InvalidMessageException": "Icecave\\Overpass\\Rpc\\Exception\\InvalidMessageException",
+        "Invoker": "Icecave\\Overpass\\Rpc\\Invoker",
+        "InvokerInterface": "Icecave\\Overpass\\Rpc\\InvokerInterface",
+        "MessageSerialization": "Icecave\\Overpass\\Rpc\\Message\\MessageSerialization",
+        "MessageSerializationInterface": "Icecave\\Overpass\\Rpc\\Message\\MessageSerializationInterface",
+        "Request": "Icecave\\Overpass\\Rpc\\Message\\Request",
+        "Response": "Icecave\\Overpass\\Rpc\\Message\\Response",
+        "ResponseCode": "Icecave\\Overpass\\Rpc\\Message\\ResponseCode",
+        "RpcServerInterface": "Icecave\\Overpass\\Rpc\\RpcServerInterface",
+        "JsonSerialization": "Icecave\\Overpass\\Serialization\\JsonSerialization",
+        "Repr": "Icecave\\Repr\\Repr",
+        "LogicException": "LogicException",
+        "AMQPChannel": "PhpAmqpLib\\Channel\\AMQPChannel",
+        "AMQPMessage": "PhpAmqpLib\\Message\\AMQPMessage",
+        "LoggerAwareTrait": "Psr\\Log\\LoggerAwareTrait",
+        "LoggerInterface": "Psr\\Log\\LoggerInterface",
+        "LogLevel": "Psr\\Log\\LogLevel",
+        "ReflectionClass": "ReflectionClass",
+        "Throwable": "Throwable"
+    },
+    "errors": [],
+    "interfaces": {
+        "Icecave\\Overpass\\Rpc\\RpcServerInterface": "Icecave\\Overpass\\Rpc\\RpcServerInterface"
+    },
+    "traits": {
+        "Icecave\\Isolator\\IsolatorTrait": "Icecave\\Isolator\\IsolatorTrait",
+        "Psr\\Log\\LoggerAwareTrait": "Psr\\Log\\LoggerAwareTrait"
+    },
+    "properties": [],
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 41,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "logger": {
+                    "name": "logger",
+                    "line": 42,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Psr\\Log\\LoggerInterface",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Psr\\Log\\LoggerInterface",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "channel": {
+                    "name": "channel",
+                    "line": 43,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\PhpAmqpLib\\Channel\\AMQPChannel",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "PhpAmqpLib\\Channel\\AMQPChannel",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "errorHandler": {
+                    "name": "errorHandler",
+                    "line": 44,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "callable",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "callable",
+                    "default": "null",
+                    "is_by_ref": false
+                },
+                "declarationManager": {
+                    "name": "declarationManager",
+                    "line": 45,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Amqp\\Rpc\\DeclarationManager",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Amqp\\Rpc\\DeclarationManager",
+                    "default": "null",
+                    "is_by_ref": false
+                },
+                "serialization": {
+                    "name": "serialization",
+                    "line": 46,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Rpc\\Message\\MessageSerializationInterface",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Rpc\\Message\\MessageSerializationInterface",
+                    "default": "null",
+                    "is_by_ref": false
+                },
+                "invoker": {
+                    "name": "invoker",
+                    "line": 47,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Rpc\\InvokerInterface",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Rpc\\InvokerInterface",
+                    "default": "null",
+                    "is_by_ref": false
+                },
+                "channelDispatcher": {
+                    "name": "channelDispatcher",
+                    "line": 48,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Amqp\\ChannelDispatcher",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Amqp\\ChannelDispatcher",
+                    "default": "null",
+                    "is_by_ref": false
+                }
+            }
+        },
+        "expose": {
+            "name": "expose",
+            "line": 70,
+            "short_desc": "Expose a procedure.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [
+                [
+                    "\\LogicException",
+                    "if the server is already running."
+                ]
+            ],
+            "errors": [],
+            "parameters": {
+                "name": {
+                    "name": "name",
+                    "line": 70,
+                    "short_desc": "The public name of the procedure.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "procedure": {
+                    "name": "procedure",
+                    "line": 70,
+                    "short_desc": "The procedure implementation.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "callable",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "callable",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "exposeObject": {
+            "name": "exposeObject",
+            "line": 87,
+            "short_desc": "Expose all public methods on an object.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "object": {
+                    "name": "object",
+                    "line": 87,
+                    "short_desc": "The object with the methods to expose.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "object",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "prefix": {
+                    "name": "prefix",
+                    "line": 87,
+                    "short_desc": "A string to prefix to all method names.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": "''",
+                    "is_by_ref": false
+                }
+            }
+        },
+        "run": {
+            "name": "run",
+            "line": 112,
+            "short_desc": "Run the RPC server.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "stop": {
+            "name": "stop",
+            "line": 159,
+            "short_desc": "Stop the RPC server.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

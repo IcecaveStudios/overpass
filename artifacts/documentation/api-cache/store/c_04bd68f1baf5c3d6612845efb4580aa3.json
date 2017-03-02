@@ -1,0 +1,155 @@
+{
+    "name": "Icecave\\Overpass\\Rpc\\RpcServerInterface",
+    "line": 6,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Rpc",
+    "file": ".\/src\/Rpc\/RpcServerInterface.php",
+    "relative_file": null,
+    "hash": "00bea9cdc23ed9a5de14660a8bd8e671a782ab40",
+    "parent": null,
+    "modifiers": "Stmt_Interface",
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": {
+        "LoggerAwareInterface": "Psr\\Log\\LoggerAwareInterface"
+    },
+    "errors": [],
+    "interfaces": {
+        "Psr\\Log\\LoggerAwareInterface": "Psr\\Log\\LoggerAwareInterface"
+    },
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "expose": {
+            "name": "expose",
+            "line": 16,
+            "short_desc": "Expose a procedure.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\LogicException",
+                    "if the server is already running."
+                ]
+            ],
+            "errors": [],
+            "parameters": {
+                "name": {
+                    "name": "name",
+                    "line": 16,
+                    "short_desc": "The public name of the procedure.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "procedure": {
+                    "name": "procedure",
+                    "line": 16,
+                    "short_desc": "The procedure implementation.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "callable",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "callable",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "exposeObject": {
+            "name": "exposeObject",
+            "line": 24,
+            "short_desc": "Expose all public methods on an object.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "object": {
+                    "name": "object",
+                    "line": 24,
+                    "short_desc": "The object with the methods to expose.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "object",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "prefix": {
+                    "name": "prefix",
+                    "line": 24,
+                    "short_desc": "A string to prefix to all method names.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": "''",
+                    "is_by_ref": false
+                }
+            }
+        },
+        "run": {
+            "name": "run",
+            "line": 29,
+            "short_desc": "Run the RPC server.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "stop": {
+            "name": "stop",
+            "line": 34,
+            "short_desc": "Stop the RPC server.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

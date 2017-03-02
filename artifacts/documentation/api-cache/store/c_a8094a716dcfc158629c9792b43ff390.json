@@ -1,0 +1,286 @@
+{
+    "name": "Icecave\\Overpass\\Amqp\\JobQueue\\AmqpWorker",
+    "line": 25,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Amqp\\JobQueue",
+    "file": ".\/src\/Amqp\/JobQueue\/AmqpWorker.php",
+    "relative_file": null,
+    "hash": "61b698ecd16fe907c15c797206d9bb90cf8dbc9b",
+    "parent": null,
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "ErrorException": "Eloquent\\Asplode\\Error\\ErrorException",
+        "Exception": "Exception",
+        "ChannelDispatcher": "Icecave\\Overpass\\Amqp\\ChannelDispatcher",
+        "DiscardException": "Icecave\\Overpass\\JobQueue\\Exception\\DiscardException",
+        "InvalidJobException": "Icecave\\Overpass\\JobQueue\\Exception\\InvalidJobException",
+        "JobSerialization": "Icecave\\Overpass\\JobQueue\\Job\\JobSerialization",
+        "JobSerializationInterface": "Icecave\\Overpass\\JobQueue\\Job\\JobSerializationInterface",
+        "Request": "Icecave\\Overpass\\JobQueue\\Request",
+        "WorkerInterface": "Icecave\\Overpass\\JobQueue\\WorkerInterface",
+        "JsonSerialization": "Icecave\\Overpass\\Serialization\\JsonSerialization",
+        "SerializationInterface": "Icecave\\Overpass\\Serialization\\SerializationInterface",
+        "LogicException": "LogicException",
+        "AMQPChannel": "PhpAmqpLib\\Channel\\AMQPChannel",
+        "AMQPMessage": "PhpAmqpLib\\Message\\AMQPMessage",
+        "LoggerAwareTrait": "Psr\\Log\\LoggerAwareTrait",
+        "LoggerInterface": "Psr\\Log\\LoggerInterface",
+        "LogLevel": "Psr\\Log\\LogLevel",
+        "ReflectionClass": "ReflectionClass",
+        "Throwable": "Throwable"
+    },
+    "errors": [],
+    "interfaces": {
+        "Icecave\\Overpass\\JobQueue\\WorkerInterface": "Icecave\\Overpass\\JobQueue\\WorkerInterface"
+    },
+    "traits": {
+        "Psr\\Log\\LoggerAwareTrait": "Psr\\Log\\LoggerAwareTrait"
+    },
+    "properties": [],
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 37,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "logger": {
+                    "name": "logger",
+                    "line": 38,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Psr\\Log\\LoggerInterface",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Psr\\Log\\LoggerInterface",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "channel": {
+                    "name": "channel",
+                    "line": 39,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\PhpAmqpLib\\Channel\\AMQPChannel",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "PhpAmqpLib\\Channel\\AMQPChannel",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "errorHandler": {
+                    "name": "errorHandler",
+                    "line": 40,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "callable",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "callable",
+                    "default": "null",
+                    "is_by_ref": false
+                },
+                "declarationManager": {
+                    "name": "declarationManager",
+                    "line": 41,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Amqp\\JobQueue\\DeclarationManager",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Amqp\\JobQueue\\DeclarationManager",
+                    "default": "null",
+                    "is_by_ref": false
+                },
+                "serialization": {
+                    "name": "serialization",
+                    "line": 42,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\JobQueue\\Job\\JobSerializationInterface",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\JobQueue\\Job\\JobSerializationInterface",
+                    "default": "null",
+                    "is_by_ref": false
+                },
+                "channelDispatcher": {
+                    "name": "channelDispatcher",
+                    "line": 43,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Amqp\\ChannelDispatcher",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Amqp\\ChannelDispatcher",
+                    "default": "null",
+                    "is_by_ref": false
+                }
+            }
+        },
+        "register": {
+            "name": "register",
+            "line": 64,
+            "short_desc": "Register a job.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [
+                [
+                    "\\LogicException",
+                    "if the worker is already running."
+                ]
+            ],
+            "errors": [],
+            "parameters": {
+                "type": {
+                    "name": "type",
+                    "line": 64,
+                    "short_desc": "The public name of the job.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "handler": {
+                    "name": "handler",
+                    "line": 64,
+                    "short_desc": "The handler to be registered against the job.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "callable",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "callable",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "registerObject": {
+            "name": "registerObject",
+            "line": 81,
+            "short_desc": "Register all public methods on an object against jobs of the same name.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "object": {
+                    "name": "object",
+                    "line": 81,
+                    "short_desc": "The object with the methods to register.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "object",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "prefix": {
+                    "name": "prefix",
+                    "line": 81,
+                    "short_desc": "A string to prefix all the method names with.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": "''",
+                    "is_by_ref": false
+                }
+            }
+        },
+        "run": {
+            "name": "run",
+            "line": 106,
+            "short_desc": "Run the worker.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "stop": {
+            "name": "stop",
+            "line": 147,
+            "short_desc": "Stop the worker.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

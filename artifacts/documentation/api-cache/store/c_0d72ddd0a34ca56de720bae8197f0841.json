@@ -1,0 +1,25 @@
+{
+    "name": "Icecave\\Overpass\\JobQueue\\Exception\\InvalidJobException",
+    "line": 7,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\JobQueue\\Exception",
+    "file": ".\/src\/JobQueue\/Exception\/InvalidJobException.php",
+    "relative_file": null,
+    "hash": "6470efd033c08dba7759c4360b13232edb8d3372",
+    "parent": "LogicException",
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "LogicException": "LogicException"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": [],
+    "constants": []
+}

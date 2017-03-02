@@ -1,0 +1,318 @@
+{
+    "name": "Icecave\\Overpass\\Amqp\\Rpc\\AmqpRpcClient",
+    "line": 19,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Amqp\\Rpc",
+    "file": ".\/src\/Amqp\/Rpc\/AmqpRpcClient.php",
+    "relative_file": null,
+    "hash": "203d14b40094fbcf51d788eb7995ef23cba1d623",
+    "parent": null,
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "IsolatorTrait": "Icecave\\Isolator\\IsolatorTrait",
+        "TimeoutException": "Icecave\\Overpass\\Rpc\\Exception\\TimeoutException",
+        "MessageSerialization": "Icecave\\Overpass\\Rpc\\Message\\MessageSerialization",
+        "MessageSerializationInterface": "Icecave\\Overpass\\Rpc\\Message\\MessageSerializationInterface",
+        "Request": "Icecave\\Overpass\\Rpc\\Message\\Request",
+        "Response": "Icecave\\Overpass\\Rpc\\Message\\Response",
+        "RpcClientInterface": "Icecave\\Overpass\\Rpc\\RpcClientInterface",
+        "JsonSerialization": "Icecave\\Overpass\\Serialization\\JsonSerialization",
+        "InvalidArgumentException": "InvalidArgumentException",
+        "AMQPChannel": "PhpAmqpLib\\Channel\\AMQPChannel",
+        "AMQPTimeoutException": "PhpAmqpLib\\Exception\\AMQPTimeoutException",
+        "AMQPMessage": "PhpAmqpLib\\Message\\AMQPMessage",
+        "LoggerAwareTrait": "Psr\\Log\\LoggerAwareTrait",
+        "RuntimeException": "RuntimeException"
+    },
+    "errors": [],
+    "interfaces": {
+        "Icecave\\Overpass\\Rpc\\RpcClientInterface": "Icecave\\Overpass\\Rpc\\RpcClientInterface"
+    },
+    "traits": {
+        "Icecave\\Isolator\\IsolatorTrait": "Icecave\\Isolator\\IsolatorTrait",
+        "Psr\\Log\\LoggerAwareTrait": "Psr\\Log\\LoggerAwareTrait"
+    },
+    "properties": [],
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 30,
+            "short_desc": "",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "channel": {
+                    "name": "channel",
+                    "line": 31,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\PhpAmqpLib\\Channel\\AMQPChannel",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "PhpAmqpLib\\Channel\\AMQPChannel",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "timeout": {
+                    "name": "timeout",
+                    "line": 32,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "integer",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": "10",
+                    "is_by_ref": false
+                },
+                "declarationManager": {
+                    "name": "declarationManager",
+                    "line": 33,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Amqp\\Rpc\\DeclarationManager",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Amqp\\Rpc\\DeclarationManager",
+                    "default": "null",
+                    "is_by_ref": false
+                },
+                "serialization": {
+                    "name": "serialization",
+                    "line": 34,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Rpc\\Message\\MessageSerializationInterface",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Rpc\\Message\\MessageSerializationInterface",
+                    "default": "null",
+                    "is_by_ref": false
+                }
+            }
+        },
+        "invoke": {
+            "name": "invoke",
+            "line": 52,
+            "short_desc": "Invoke a remote procedure.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "mixed",
+                    false
+                ]
+            ],
+            "hint_desc": "The return value.",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [
+                "\"1\" @param tags are expected but only \"2\" found"
+            ],
+            "parameters": {
+                "name": {
+                    "name": "name",
+                    "line": 52,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": null,
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "invokeArray": {
+            "name": "invokeArray",
+            "line": 68,
+            "short_desc": "Invoke a remote procedure.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "mixed",
+                    false
+                ]
+            ],
+            "hint_desc": "The return value.",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "name": {
+                    "name": "name",
+                    "line": 68,
+                    "short_desc": "The name of the procedure to invoke",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "arguments": {
+                    "name": "arguments",
+                    "line": 68,
+                    "short_desc": "The arguments to pass.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "array",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "array",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "__call": {
+            "name": "__call",
+            "line": 129,
+            "short_desc": "Invoke a remote procedure.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "mixed",
+                    false
+                ]
+            ],
+            "hint_desc": "The return value.",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "name": {
+                    "name": "name",
+                    "line": 129,
+                    "short_desc": "The name of the procedure to invoke",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "arguments": {
+                    "name": "arguments",
+                    "line": 129,
+                    "short_desc": "The arguments to pass.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "array",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "array",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "timeout": {
+            "name": "timeout",
+            "line": 139,
+            "short_desc": "Get the RPC response timeout.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "integer",
+                    false
+                ],
+                [
+                    "float",
+                    false
+                ]
+            ],
+            "hint_desc": "The RPC response timeout in seconds.",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "setTimeout": {
+            "name": "setTimeout",
+            "line": 149,
+            "short_desc": "Set the RPC response timeout.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "timeout": {
+                    "name": "timeout",
+                    "line": 149,
+                    "short_desc": "The RPC response timeout in seconds.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "integer",
+                            false
+                        ],
+                        [
+                            "float",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

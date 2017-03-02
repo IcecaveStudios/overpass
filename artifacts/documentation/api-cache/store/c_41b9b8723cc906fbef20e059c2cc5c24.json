@@ -1,0 +1,79 @@
+{
+    "name": "Icecave\\Overpass\\Rpc\\InvokerInterface",
+    "line": 7,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Rpc",
+    "file": ".\/src\/Rpc\/InvokerInterface.php",
+    "relative_file": null,
+    "hash": "5edafce3c78000332675f7a5987438c114fa72c9",
+    "parent": null,
+    "modifiers": "Stmt_Interface",
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": {
+        "Request": "Icecave\\Overpass\\Rpc\\Message\\Request",
+        "Response": "Icecave\\Overpass\\Rpc\\Message\\Response"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "invoke": {
+            "name": "invoke",
+            "line": 17,
+            "short_desc": "Invoke a procedure based on a request.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Icecave\\Overpass\\Rpc\\Message\\Response",
+                    false
+                ]
+            ],
+            "hint_desc": "The RPC response.",
+            "tags": [],
+            "modifiers": "1",
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "request": {
+                    "name": "request",
+                    "line": 17,
+                    "short_desc": "The RPC request.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Icecave\\Overpass\\Rpc\\Message\\Request",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "Icecave\\Overpass\\Rpc\\Message\\Request",
+                    "default": null,
+                    "is_by_ref": false
+                },
+                "procedure": {
+                    "name": "procedure",
+                    "line": 17,
+                    "short_desc": "The procedure to invoke.",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "callable",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "callable",
+                    "default": null,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

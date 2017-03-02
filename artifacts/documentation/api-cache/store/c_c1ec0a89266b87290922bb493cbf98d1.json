@@ -1,0 +1,56 @@
+{
+    "name": "Icecave\\Overpass\\Rpc\\Message\\ResponseCode",
+    "line": 6,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Icecave\\Overpass\\Rpc\\Message",
+    "file": ".\/src\/Rpc\/Message\/ResponseCode.php",
+    "relative_file": null,
+    "hash": "2b4262a45b34506f23424a085ba8ed6a77bfba77",
+    "parent": "Eloquent\\Enumeration\\AbstractEnumeration",
+    "modifiers": "Stmt_Class",
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "AbstractEnumeration": "Eloquent\\Enumeration\\AbstractEnumeration"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": [],
+    "constants": {
+        "SUCCESS": {
+            "name": "SUCCESS",
+            "line": 8,
+            "short_desc": "",
+            "long_desc": ""
+        },
+        "EXCEPTION": {
+            "name": "EXCEPTION",
+            "line": 9,
+            "short_desc": "",
+            "long_desc": ""
+        },
+        "INVALID_MESSAGE": {
+            "name": "INVALID_MESSAGE",
+            "line": 10,
+            "short_desc": "",
+            "long_desc": ""
+        },
+        "UNKNOWN_PROCEDURE": {
+            "name": "UNKNOWN_PROCEDURE",
+            "line": 11,
+            "short_desc": "",
+            "long_desc": ""
+        },
+        "INVALID_ARGUMENTS": {
+            "name": "INVALID_ARGUMENTS",
+            "line": 12,
+            "short_desc": "",
+            "long_desc": ""
+        }
+    }
+}
