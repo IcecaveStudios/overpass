@@ -3,14 +3,13 @@
 namespace Icecave\Overpass\Amqp\JobQueue;
 
 use Eloquent\Asplode\Error\ErrorException;
-use Error;
 use Exception;
 use Icecave\Overpass\Amqp\ChannelDispatcher;
 use Icecave\Overpass\JobQueue\Exception\DiscardException;
 use Icecave\Overpass\JobQueue\Exception\InvalidJobException;
-use Icecave\Overpass\JobQueue\Request;
 use Icecave\Overpass\JobQueue\Job\JobSerialization;
 use Icecave\Overpass\JobQueue\Job\JobSerializationInterface;
+use Icecave\Overpass\JobQueue\Request;
 use Icecave\Overpass\JobQueue\WorkerInterface;
 use Icecave\Overpass\Serialization\JsonSerialization;
 use Icecave\Overpass\Serialization\SerializationInterface;
@@ -135,7 +134,7 @@ class AmqpWorker implements WorkerInterface
         }
 
         if ($this->uncaughtThrowable !== null) {
-            $this->logger->critical('rjobqueue.worker shutdown due to uncaught exception');
+            $this->logger->critical('jobqueue.worker shutdown due to uncaught exception');
             throw $this->uncaughtThrowable;
         }
 
@@ -215,10 +214,6 @@ class AmqpWorker implements WorkerInterface
                 }
             }
 
-            if ($e instanceof Error) {
-                $e = new Exception('Internal server error.', $e->getCode());
-            }
-
             $logLevel = LogLevel::ERROR;
             $logContext['exception'] = $e;
             $logMessage = $this->handleFailure(
@@ -241,12 +236,12 @@ class AmqpWorker implements WorkerInterface
      */
     private function handleFailure(
         AMQPMessage $message,
-        Exception $exception,
+        Throwable $e,
         &$logContext,
         $discard = false
     ) {
-        $logContext['code'] = $exception->getCode();
-        $logContext['reason'] = json_encode($exception->getMessage());
+        $logContext['code'] = $e->getCode();
+        $logContext['reason'] = json_encode($e->getMessage());
 
         if ($discard) {
             $this->channel->basic_reject($message->get('delivery_tag'), false);
