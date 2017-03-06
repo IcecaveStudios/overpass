@@ -1,5 +1,9 @@
 # Overpass Changelog
 
+### 2.0.2 (2017-03-07)
+
+* **[FIXED]** Remove archer publish version 7.1
+
 ### 2.0.1 (2017-03-06)
 
 * **[IMPROVED]** Update dependencies
