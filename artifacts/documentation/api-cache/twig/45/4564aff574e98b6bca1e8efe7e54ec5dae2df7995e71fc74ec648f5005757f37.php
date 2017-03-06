@@ -26,7 +26,7 @@ class __TwigTemplate_7aa85d9c7741fd6fade619b27fcbe37d66cef782e1c284311bbdf8a5edf
     protected function doDisplay(array $context, array $blocks = array())
     {
         // line 2
-        $context["__internal_85ccf9b3f3c3445af7c92714f18e8f83c604ac68cbce074e25692206e124b295"] = $this->loadTemplate("macros.twig", "namespace.twig", 2);
+        $context["__internal_f1cdf1bcce447e80ed4827a3e229787b08d3eca47d33402e9c7ab8a89c4bb8cf"] = $this->loadTemplate("macros.twig", "namespace.twig", 2);
         // line 1
         $this->parent->display($context, array_merge($this->blocks, $blocks));
     }
@@ -60,7 +60,7 @@ class __TwigTemplate_7aa85d9c7741fd6fade619b27fcbe37d66cef782e1c284311bbdf8a5edf
             <li><span class=\"label label-default\">Namespace</span></li>
             ";
         // line 11
-        echo $context["__internal_85ccf9b3f3c3445af7c92714f18e8f83c604ac68cbce074e25692206e124b295"]->getbreadcrumbs((isset($context["namespace"]) ? $context["namespace"] : $this->getContext($context, "namespace")));
+        echo $context["__internal_f1cdf1bcce447e80ed4827a3e229787b08d3eca47d33402e9c7ab8a89c4bb8cf"]->getbreadcrumbs((isset($context["namespace"]) ? $context["namespace"] : $this->getContext($context, "namespace")));
         echo "
         </ol>
     </div>
@@ -90,7 +90,7 @@ class __TwigTemplate_7aa85d9c7741fd6fade619b27fcbe37d66cef782e1c284311bbdf8a5edf
             $context['_parent'] = $context;
             $context['_seq'] = twig_ensure_traversable((isset($context["subnamespaces"]) ? $context["subnamespaces"] : $this->getContext($context, "subnamespaces")));
             foreach ($context['_seq'] as $context["_key"] => $context["ns"]) {
-                echo $context["__internal_85ccf9b3f3c3445af7c92714f18e8f83c604ac68cbce074e25692206e124b295"]->getnamespace_link($context["ns"]);
+                echo $context["__internal_f1cdf1bcce447e80ed4827a3e229787b08d3eca47d33402e9c7ab8a89c4bb8cf"]->getnamespace_link($context["ns"]);
             }
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['_key'], $context['ns'], $context['_parent'], $context['loop']);
@@ -108,7 +108,7 @@ class __TwigTemplate_7aa85d9c7741fd6fade619b27fcbe37d66cef782e1c284311bbdf8a5edf
             echo "        <h2>Classes</h2>
         ";
             // line 31
-            echo $context["__internal_85ccf9b3f3c3445af7c92714f18e8f83c604ac68cbce074e25692206e124b295"]->getrender_classes((isset($context["classes"]) ? $context["classes"] : $this->getContext($context, "classes")));
+            echo $context["__internal_f1cdf1bcce447e80ed4827a3e229787b08d3eca47d33402e9c7ab8a89c4bb8cf"]->getrender_classes((isset($context["classes"]) ? $context["classes"] : $this->getContext($context, "classes")));
             echo "
     ";
         }
@@ -121,7 +121,7 @@ class __TwigTemplate_7aa85d9c7741fd6fade619b27fcbe37d66cef782e1c284311bbdf8a5edf
             echo "        <h2>Interfaces</h2>
         ";
             // line 36
-            echo $context["__internal_85ccf9b3f3c3445af7c92714f18e8f83c604ac68cbce074e25692206e124b295"]->getrender_classes((isset($context["interfaces"]) ? $context["interfaces"] : $this->getContext($context, "interfaces")));
+            echo $context["__internal_f1cdf1bcce447e80ed4827a3e229787b08d3eca47d33402e9c7ab8a89c4bb8cf"]->getrender_classes((isset($context["interfaces"]) ? $context["interfaces"] : $this->getContext($context, "interfaces")));
             echo "
     ";
         }
@@ -134,7 +134,7 @@ class __TwigTemplate_7aa85d9c7741fd6fade619b27fcbe37d66cef782e1c284311bbdf8a5edf
             echo "        <h2>Exceptions</h2>
         ";
             // line 41
-            echo $context["__internal_85ccf9b3f3c3445af7c92714f18e8f83c604ac68cbce074e25692206e124b295"]->getrender_classes((isset($context["exceptions"]) ? $context["exceptions"] : $this->getContext($context, "exceptions")));
+            echo $context["__internal_f1cdf1bcce447e80ed4827a3e229787b08d3eca47d33402e9c7ab8a89c4bb8cf"]->getrender_classes((isset($context["exceptions"]) ? $context["exceptions"] : $this->getContext($context, "exceptions")));
             echo "
     ";
         }

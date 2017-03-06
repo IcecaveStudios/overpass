@@ -1,202 +1,202 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="145" assertions="353" failures="0" errors="0" time="3.894043">
-    <testsuite name="Icecave\Overpass\Amqp\ChannelDispatcherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/ChannelDispatcherTest.php" tests="4" assertions="8" failures="0" errors="0" time="0.923607">
-      <testcase name="testWait" class="Icecave\Overpass\Amqp\ChannelDispatcherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/ChannelDispatcherTest.php" line="23" assertions="2" time="0.896178"/>
-      <testcase name="testWaitWithSignalInterrupt" class="Icecave\Overpass\Amqp\ChannelDispatcherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/ChannelDispatcherTest.php" line="31" assertions="2" time="0.009949"/>
-      <testcase name="testWaitWithGenericException" class="Icecave\Overpass\Amqp\ChannelDispatcherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/ChannelDispatcherTest.php" line="47" assertions="2" time="0.007507"/>
-      <testcase name="testWaitWithTimeoutException" class="Icecave\Overpass\Amqp\ChannelDispatcherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/ChannelDispatcherTest.php" line="63" assertions="2" time="0.009973"/>
+  <testsuite name="" tests="145" assertions="353" failures="0" errors="0" time="3.796072">
+    <testsuite name="Icecave\Overpass\Amqp\ChannelDispatcherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/ChannelDispatcherTest.php" tests="4" assertions="8" failures="0" errors="0" time="0.936756">
+      <testcase name="testWait" class="Icecave\Overpass\Amqp\ChannelDispatcherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/ChannelDispatcherTest.php" line="23" assertions="2" time="0.907856"/>
+      <testcase name="testWaitWithSignalInterrupt" class="Icecave\Overpass\Amqp\ChannelDispatcherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/ChannelDispatcherTest.php" line="31" assertions="2" time="0.010818"/>
+      <testcase name="testWaitWithGenericException" class="Icecave\Overpass\Amqp\ChannelDispatcherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/ChannelDispatcherTest.php" line="47" assertions="2" time="0.007692"/>
+      <testcase name="testWaitWithTimeoutException" class="Icecave\Overpass\Amqp\ChannelDispatcherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/ChannelDispatcherTest.php" line="63" assertions="2" time="0.010390"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Amqp\JobQueue\AmqpQueueTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpQueueTest.php" tests="3" assertions="7" failures="0" errors="0" time="0.088594">
-      <testcase name="testEnqueue" class="Icecave\Overpass\Amqp\JobQueue\AmqpQueueTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpQueueTest.php" line="38" assertions="2" time="0.038634"/>
-      <testcase name="testEnqueueExtraneousParameters" class="Icecave\Overpass\Amqp\JobQueue\AmqpQueueTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpQueueTest.php" line="56" assertions="2" time="0.023923"/>
-      <testcase name="testEnqueueWithLogging" class="Icecave\Overpass\Amqp\JobQueue\AmqpQueueTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpQueueTest.php" line="74" assertions="3" time="0.026037"/>
+    <testsuite name="Icecave\Overpass\Amqp\JobQueue\AmqpQueueTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpQueueTest.php" tests="3" assertions="7" failures="0" errors="0" time="0.089962">
+      <testcase name="testEnqueue" class="Icecave\Overpass\Amqp\JobQueue\AmqpQueueTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpQueueTest.php" line="38" assertions="2" time="0.039432"/>
+      <testcase name="testEnqueueExtraneousParameters" class="Icecave\Overpass\Amqp\JobQueue\AmqpQueueTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpQueueTest.php" line="56" assertions="2" time="0.024289"/>
+      <testcase name="testEnqueueWithLogging" class="Icecave\Overpass\Amqp\JobQueue\AmqpQueueTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpQueueTest.php" line="74" assertions="3" time="0.026241"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" tests="14" assertions="71" failures="0" errors="0" time="1.179044">
-      <testcase name="testRegiserWhileRunning" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="88" assertions="2" time="0.020094"/>
-      <testcase name="testRegisterObject" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="115" assertions="7" time="0.025392"/>
-      <testcase name="testRegiserObjectWithPrefix" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="157" assertions="2" time="0.015684"/>
-      <testcase name="testRun" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="174" assertions="8" time="0.032176"/>
-      <testcase name="testRunNoProcedures" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="220" assertions="3" time="0.014231"/>
-      <testcase name="testStop" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="232" assertions="3" time="0.023968"/>
-      <testcase name="testReceiveRequest" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="252" assertions="6" time="0.027563"/>
-      <testcase name="testReceiveRequestWithInvalidRequest" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="304" assertions="6" time="0.030531"/>
-      <testcase name="testReceiveRequestWithDiscardException" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="361" assertions="6" time="0.030706"/>
-      <testcase name="testReceiveRequestWithErrorException" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="420" assertions="6" time="0.281787"/>
-      <testcase name="testReceiveRequestWithGenericException" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="484" assertions="6" time="0.281560"/>
-      <testcase name="testReceiveRequestWithError" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="548" assertions="6" time="0.293396"/>
-      <testcase name="testReceiveRequestWithCustomErrorHandlerThatCompletes" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="607" assertions="5" time="0.055932"/>
-      <testcase name="testReceiveRequestWithCustomErrorHandlerThatThrows" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="674" assertions="5" time="0.046024"/>
+    <testsuite name="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" tests="14" assertions="71" failures="0" errors="0" time="1.131183">
+      <testcase name="testRegiserWhileRunning" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="88" assertions="2" time="0.020336"/>
+      <testcase name="testRegisterObject" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="115" assertions="7" time="0.025634"/>
+      <testcase name="testRegiserObjectWithPrefix" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="157" assertions="2" time="0.015911"/>
+      <testcase name="testRun" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="174" assertions="8" time="0.032816"/>
+      <testcase name="testRunNoProcedures" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="220" assertions="3" time="0.014579"/>
+      <testcase name="testStop" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="232" assertions="3" time="0.024957"/>
+      <testcase name="testReceiveRequest" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="252" assertions="6" time="0.027843"/>
+      <testcase name="testReceiveRequestWithInvalidRequest" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="304" assertions="6" time="0.031644"/>
+      <testcase name="testReceiveRequestWithDiscardException" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="361" assertions="6" time="0.030716"/>
+      <testcase name="testReceiveRequestWithErrorException" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="420" assertions="6" time="0.282514"/>
+      <testcase name="testReceiveRequestWithGenericException" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="484" assertions="6" time="0.284062"/>
+      <testcase name="testReceiveRequestWithError" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="548" assertions="6" time="0.282815"/>
+      <testcase name="testReceiveRequestWithCustomErrorHandlerThatCompletes" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="607" assertions="5" time="0.031502"/>
+      <testcase name="testReceiveRequestWithCustomErrorHandlerThatThrows" class="Icecave\Overpass\Amqp\JobQueue\AmqpWorkerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/AmqpWorkerTest.php" line="674" assertions="5" time="0.025854"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Amqp\JobQueue\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/DeclarationManagerTest.php" tests="2" assertions="4" failures="0" errors="0" time="0.039959">
-      <testcase name="testRequestQueue" class="Icecave\Overpass\Amqp\JobQueue\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/DeclarationManagerTest.php" line="30" assertions="2" time="0.024202"/>
-      <testcase name="testRequestQueueDeclaresOnce" class="Icecave\Overpass\Amqp\JobQueue\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/DeclarationManagerTest.php" line="53" assertions="2" time="0.015757"/>
+    <testsuite name="Icecave\Overpass\Amqp\JobQueue\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/DeclarationManagerTest.php" tests="2" assertions="4" failures="0" errors="0" time="0.022335">
+      <testcase name="testRequestQueue" class="Icecave\Overpass\Amqp\JobQueue\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/DeclarationManagerTest.php" line="30" assertions="2" time="0.013404"/>
+      <testcase name="testRequestQueueDeclaresOnce" class="Icecave\Overpass\Amqp\JobQueue\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/JobQueue/DeclarationManagerTest.php" line="53" assertions="2" time="0.008931"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Amqp\PubSub\AmqpPublisherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpPublisherTest.php" tests="2" assertions="3" failures="0" errors="0" time="0.046540">
-      <testcase name="testPublish" class="Icecave\Overpass\Amqp\PubSub\AmqpPublisherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpPublisherTest.php" line="35" assertions="2" time="0.026745"/>
-      <testcase name="testPublishLogging" class="Icecave\Overpass\Amqp\PubSub\AmqpPublisherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpPublisherTest.php" line="49" assertions="1" time="0.019795"/>
+    <testsuite name="Icecave\Overpass\Amqp\PubSub\AmqpPublisherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpPublisherTest.php" tests="2" assertions="3" failures="0" errors="0" time="0.027830">
+      <testcase name="testPublish" class="Icecave\Overpass\Amqp\PubSub\AmqpPublisherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpPublisherTest.php" line="35" assertions="2" time="0.015869"/>
+      <testcase name="testPublishLogging" class="Icecave\Overpass\Amqp\PubSub\AmqpPublisherTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpPublisherTest.php" line="49" assertions="1" time="0.011961"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" tests="14" assertions="25" failures="0" errors="0" time="0.279695">
-      <testcase name="testSubscribe" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="72" assertions="3" time="0.028574"/>
-      <testcase name="testSubscribeWithDuplicateSubscription" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="87" assertions="1" time="0.022505"/>
-      <testcase name="testSubscribeWithAtomWildcard" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="99" assertions="1" time="0.022935"/>
-      <testcase name="testSubscribeWithFullWildcard" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="110" assertions="1" time="0.022525"/>
-      <testcase name="testSubscribeLogging" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="121" assertions="1" time="0.023444"/>
-      <testcase name="testUnsubscribe" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="135" assertions="1" time="0.015665"/>
-      <testcase name="testUnsubscribeWithUnknownSubscription" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="147" assertions="2" time="0.014488"/>
-      <testcase name="testUnsubscribeWithAtomWildcard" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="155" assertions="1" time="0.016495"/>
-      <testcase name="testUnsubscribeWithFullWildcard" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="167" assertions="1" time="0.017764"/>
-      <testcase name="testUnsubscribeLogging" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="180" assertions="1" time="0.019905"/>
-      <testcase name="testConsume" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="195" assertions="5" time="0.023394"/>
-      <testcase name="testConsumeCancel" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="234" assertions="4" time="0.021110"/>
-      <testcase name="testConsumeWithNoSubscriptions" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="266" assertions="1" time="0.010518"/>
-      <testcase name="testConsumeLogging" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="277" assertions="2" time="0.020373"/>
+    <testsuite name="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" tests="14" assertions="25" failures="0" errors="0" time="0.224763">
+      <testcase name="testSubscribe" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="72" assertions="3" time="0.016606"/>
+      <testcase name="testSubscribeWithDuplicateSubscription" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="87" assertions="1" time="0.013296"/>
+      <testcase name="testSubscribeWithAtomWildcard" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="99" assertions="1" time="0.012855"/>
+      <testcase name="testSubscribeWithFullWildcard" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="110" assertions="1" time="0.012877"/>
+      <testcase name="testSubscribeLogging" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="121" assertions="1" time="0.013185"/>
+      <testcase name="testUnsubscribe" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="135" assertions="1" time="0.016065"/>
+      <testcase name="testUnsubscribeWithUnknownSubscription" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="147" assertions="2" time="0.010629"/>
+      <testcase name="testUnsubscribeWithAtomWildcard" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="155" assertions="1" time="0.015400"/>
+      <testcase name="testUnsubscribeWithFullWildcard" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="167" assertions="1" time="0.015379"/>
+      <testcase name="testUnsubscribeLogging" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="180" assertions="1" time="0.016249"/>
+      <testcase name="testConsume" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="195" assertions="5" time="0.022058"/>
+      <testcase name="testConsumeCancel" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="234" assertions="4" time="0.030025"/>
+      <testcase name="testConsumeWithNoSubscriptions" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="266" assertions="1" time="0.010281"/>
+      <testcase name="testConsumeLogging" class="Icecave\Overpass\Amqp\PubSub\AmqpSubscriberTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/AmqpSubscriberTest.php" line="277" assertions="2" time="0.019858"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Amqp\PubSub\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/DeclarationManagerTest.php" tests="4" assertions="8" failures="0" errors="0" time="0.035626">
-      <testcase name="testExchange" class="Icecave\Overpass\Amqp\PubSub\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/DeclarationManagerTest.php" line="21" assertions="2" time="0.008765"/>
-      <testcase name="testExchangeDeclaresOnce" class="Icecave\Overpass\Amqp\PubSub\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/DeclarationManagerTest.php" line="39" assertions="2" time="0.008253"/>
-      <testcase name="testQueue" class="Icecave\Overpass\Amqp\PubSub\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/DeclarationManagerTest.php" line="53" assertions="2" time="0.009549"/>
-      <testcase name="testQueueDeclaresOnce" class="Icecave\Overpass\Amqp\PubSub\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/DeclarationManagerTest.php" line="70" assertions="2" time="0.009059"/>
+    <testsuite name="Icecave\Overpass\Amqp\PubSub\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/DeclarationManagerTest.php" tests="4" assertions="8" failures="0" errors="0" time="0.032691">
+      <testcase name="testExchange" class="Icecave\Overpass\Amqp\PubSub\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/DeclarationManagerTest.php" line="21" assertions="2" time="0.008522"/>
+      <testcase name="testExchangeDeclaresOnce" class="Icecave\Overpass\Amqp\PubSub\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/DeclarationManagerTest.php" line="39" assertions="2" time="0.007541"/>
+      <testcase name="testQueue" class="Icecave\Overpass\Amqp\PubSub\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/DeclarationManagerTest.php" line="53" assertions="2" time="0.008342"/>
+      <testcase name="testQueueDeclaresOnce" class="Icecave\Overpass\Amqp\PubSub\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/PubSub/DeclarationManagerTest.php" line="70" assertions="2" time="0.008286"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" tests="11" assertions="27" failures="0" errors="0" time="0.221665">
-      <testcase name="testInvoke" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="97" assertions="6" time="0.043411"/>
-      <testcase name="testInvokeIgnoresPreviousResponses" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="147" assertions="3" time="0.019904"/>
-      <testcase name="testInvokeFailsWithFutureResponses" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="196" assertions="2" time="0.015664"/>
-      <testcase name="testInvokeInitializesOnce" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="221" assertions="1" time="0.022825"/>
-      <testcase name="testInvokeLogging" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="231" assertions="3" time="0.023895"/>
-      <testcase name="testInvokeLoggingWithTimeout" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="268" assertions="2" time="0.018546"/>
-      <testcase name="testInvokeWithAmqpTimeout" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="298" assertions="1" time="0.015349"/>
-      <testcase name="testInvokeWithElapsedTimeTimeout" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="313" assertions="4" time="0.027364"/>
-      <testcase name="testCallMagicMethod" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="350" assertions="1" time="0.015756"/>
-      <testcase name="testSetTimeout" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="360" assertions="2" time="0.009376"/>
-      <testcase name="testSetTimeoutFailure" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="375" assertions="2" time="0.009575"/>
+    <testsuite name="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" tests="11" assertions="27" failures="0" errors="0" time="0.219882">
+      <testcase name="testInvoke" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="97" assertions="6" time="0.043561"/>
+      <testcase name="testInvokeIgnoresPreviousResponses" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="147" assertions="3" time="0.020031"/>
+      <testcase name="testInvokeFailsWithFutureResponses" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="196" assertions="2" time="0.015267"/>
+      <testcase name="testInvokeInitializesOnce" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="221" assertions="1" time="0.022217"/>
+      <testcase name="testInvokeLogging" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="231" assertions="3" time="0.023372"/>
+      <testcase name="testInvokeLoggingWithTimeout" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="268" assertions="2" time="0.018479"/>
+      <testcase name="testInvokeWithAmqpTimeout" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="298" assertions="1" time="0.015121"/>
+      <testcase name="testInvokeWithElapsedTimeTimeout" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="313" assertions="4" time="0.027066"/>
+      <testcase name="testCallMagicMethod" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="350" assertions="1" time="0.015913"/>
+      <testcase name="testSetTimeout" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="360" assertions="2" time="0.009283"/>
+      <testcase name="testSetTimeoutFailure" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcClientTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcClientTest.php" line="375" assertions="2" time="0.009572"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" tests="15" assertions="81" failures="0" errors="0" time="0.558252">
-      <testcase name="testExposeWhileRunning" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="100" assertions="2" time="0.026011"/>
-      <testcase name="testExposeObject" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="127" assertions="7" time="0.029869"/>
-      <testcase name="testExposeObjectWithPrefix" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="169" assertions="2" time="0.019280"/>
-      <testcase name="testRun" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="186" assertions="9" time="0.037364"/>
-      <testcase name="testRunNoProcedures" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="233" assertions="3" time="0.017491"/>
-      <testcase name="testStop" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="245" assertions="3" time="0.027947"/>
-      <testcase name="testReceiveRequest" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="265" assertions="9" time="0.055503"/>
-      <testcase name="testReceiveRequestWithArbitraryException" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="352" assertions="8" time="0.054680"/>
-      <testcase name="testReceiveRequestWithArbitraryExceptionStopsServer" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="432" assertions="4" time="0.031515"/>
-      <testcase name="testReceiveRequestWithCustomErrorHandlerThatCompletes" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="475" assertions="3" time="0.045271"/>
-      <testcase name="testReceiveRequestWithCustomErrorHandlerThatThrowsError" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="536" assertions="5" time="0.032431"/>
-      <testcase name="testReceiveRequestWithExecutionException" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="597" assertions="8" time="0.051542"/>
-      <testcase name="testReceiveRequestWithInvalidMessage" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="676" assertions="8" time="0.050582"/>
-      <testcase name="testReceiveRequestWithoutReplyQueue" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="755" assertions="6" time="0.034645"/>
-      <testcase name="testReceiveRequestWithoutCorrelationId" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="817" assertions="4" time="0.044121"/>
+    <testsuite name="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" tests="15" assertions="81" failures="0" errors="0" time="0.589383">
+      <testcase name="testExposeWhileRunning" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="100" assertions="2" time="0.025775"/>
+      <testcase name="testExposeObject" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="127" assertions="7" time="0.029459"/>
+      <testcase name="testExposeObjectWithPrefix" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="169" assertions="2" time="0.019393"/>
+      <testcase name="testRun" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="186" assertions="9" time="0.038080"/>
+      <testcase name="testRunNoProcedures" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="233" assertions="3" time="0.018320"/>
+      <testcase name="testStop" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="245" assertions="3" time="0.029714"/>
+      <testcase name="testReceiveRequest" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="265" assertions="9" time="0.063654"/>
+      <testcase name="testReceiveRequestWithArbitraryException" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="352" assertions="8" time="0.054471"/>
+      <testcase name="testReceiveRequestWithArbitraryExceptionStopsServer" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="432" assertions="4" time="0.031542"/>
+      <testcase name="testReceiveRequestWithCustomErrorHandlerThatCompletes" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="475" assertions="3" time="0.047183"/>
+      <testcase name="testReceiveRequestWithCustomErrorHandlerThatThrowsError" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="536" assertions="5" time="0.033027"/>
+      <testcase name="testReceiveRequestWithExecutionException" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="597" assertions="8" time="0.054675"/>
+      <testcase name="testReceiveRequestWithInvalidMessage" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="676" assertions="8" time="0.061664"/>
+      <testcase name="testReceiveRequestWithoutReplyQueue" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="755" assertions="6" time="0.034223"/>
+      <testcase name="testReceiveRequestWithoutCorrelationId" class="Icecave\Overpass\Amqp\Rpc\AmqpRpcServerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/AmqpRpcServerTest.php" line="817" assertions="4" time="0.048203"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/DeclarationManagerTest.php" tests="4" assertions="10" failures="0" errors="0" time="0.044816">
-      <testcase name="testRequestQueue" class="Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/DeclarationManagerTest.php" line="29" assertions="4" time="0.014190"/>
-      <testcase name="testRequestQueueDeclaresOnce" class="Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/DeclarationManagerTest.php" line="62" assertions="2" time="0.009211"/>
-      <testcase name="testResponseQueue" class="Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/DeclarationManagerTest.php" line="76" assertions="2" time="0.011317"/>
-      <testcase name="testResponseQueueDeclaresOnce" class="Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/DeclarationManagerTest.php" line="94" assertions="2" time="0.010098"/>
+    <testsuite name="Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/DeclarationManagerTest.php" tests="4" assertions="10" failures="0" errors="0" time="0.044014">
+      <testcase name="testRequestQueue" class="Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/DeclarationManagerTest.php" line="29" assertions="4" time="0.015644"/>
+      <testcase name="testRequestQueueDeclaresOnce" class="Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/DeclarationManagerTest.php" line="62" assertions="2" time="0.011061"/>
+      <testcase name="testResponseQueue" class="Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/DeclarationManagerTest.php" line="76" assertions="2" time="0.009454"/>
+      <testcase name="testResponseQueueDeclaresOnce" class="Icecave\Overpass\Amqp\Rpc\DeclarationManagerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Amqp/Rpc/DeclarationManagerTest.php" line="94" assertions="2" time="0.007855"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\JobQueue\Job\JobSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/JobQueue/Job/JobSerializationTest.php" tests="7" assertions="12" failures="0" errors="0" time="0.040998">
-      <testcase name="testSerializeJob" class="Icecave\Overpass\JobQueue\Job\JobSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/JobQueue/Job/JobSerializationTest.php" line="21" assertions="1" time="0.004999"/>
-      <testcase name="testUnserializeJob" class="Icecave\Overpass\JobQueue\Job\JobSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/JobQueue/Job/JobSerializationTest.php" line="33" assertions="1" time="0.009119"/>
-      <testsuite name="Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJobFailure" tests="5" assertions="10" failures="0" errors="0" time="0.026880">
-        <testcase name="testUnserializeJobFailure with data set #0" assertions="2" time="0.005596"/>
-        <testcase name="testUnserializeJobFailure with data set #1" assertions="2" time="0.005354"/>
-        <testcase name="testUnserializeJobFailure with data set #2" assertions="2" time="0.005323"/>
-        <testcase name="testUnserializeJobFailure with data set #3" assertions="2" time="0.005297"/>
-        <testcase name="testUnserializeJobFailure with data set #4" assertions="2" time="0.005310"/>
+    <testsuite name="Icecave\Overpass\JobQueue\Job\JobSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/JobQueue/Job/JobSerializationTest.php" tests="7" assertions="12" failures="0" errors="0" time="0.040676">
+      <testcase name="testSerializeJob" class="Icecave\Overpass\JobQueue\Job\JobSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/JobQueue/Job/JobSerializationTest.php" line="21" assertions="1" time="0.004909"/>
+      <testcase name="testUnserializeJob" class="Icecave\Overpass\JobQueue\Job\JobSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/JobQueue/Job/JobSerializationTest.php" line="33" assertions="1" time="0.008883"/>
+      <testsuite name="Icecave\Overpass\JobQueue\Job\JobSerializationTest::testUnserializeJobFailure" tests="5" assertions="10" failures="0" errors="0" time="0.026884">
+        <testcase name="testUnserializeJobFailure with data set #0" assertions="2" time="0.005571"/>
+        <testcase name="testUnserializeJobFailure with data set #1" assertions="2" time="0.005168"/>
+        <testcase name="testUnserializeJobFailure with data set #2" assertions="2" time="0.005151"/>
+        <testcase name="testUnserializeJobFailure with data set #3" assertions="2" time="0.005137"/>
+        <testcase name="testUnserializeJobFailure with data set #4" assertions="2" time="0.005857"/>
       </testsuite>
     </testsuite>
-    <testsuite name="Icecave\Overpass\JobQueue\Job\JobTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/JobQueue/Job/JobTest.php" tests="2" assertions="3" failures="0" errors="0" time="0.009943">
-      <testcase name="testCreate" class="Icecave\Overpass\JobQueue\Job\JobTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/JobQueue/Job/JobTest.php" line="9" assertions="2" time="0.005140"/>
-      <testcase name="testToString" class="Icecave\Overpass\JobQueue\Job\JobTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/JobQueue/Job/JobTest.php" line="24" assertions="1" time="0.004803"/>
+    <testsuite name="Icecave\Overpass\JobQueue\Job\JobTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/JobQueue/Job/JobTest.php" tests="2" assertions="3" failures="0" errors="0" time="0.009444">
+      <testcase name="testCreate" class="Icecave\Overpass\JobQueue\Job\JobTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/JobQueue/Job/JobTest.php" line="9" assertions="2" time="0.004763"/>
+      <testcase name="testToString" class="Icecave\Overpass\JobQueue\Job\JobTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/JobQueue/Job/JobTest.php" line="24" assertions="1" time="0.004681"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Rpc\Exception\ExecutionExceptionTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Exception/ExecutionExceptionTest.php" tests="1" assertions="3" failures="0" errors="0" time="0.005841">
-      <testcase name="testException" class="Icecave\Overpass\Rpc\Exception\ExecutionExceptionTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Exception/ExecutionExceptionTest.php" line="9" assertions="3" time="0.005841"/>
+    <testsuite name="Icecave\Overpass\Rpc\Exception\ExecutionExceptionTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Exception/ExecutionExceptionTest.php" tests="1" assertions="3" failures="0" errors="0" time="0.005831">
+      <testcase name="testException" class="Icecave\Overpass\Rpc\Exception\ExecutionExceptionTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Exception/ExecutionExceptionTest.php" line="9" assertions="3" time="0.005831"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Rpc\Exception\InvalidMessageExceptionTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Exception/InvalidMessageExceptionTest.php" tests="1" assertions="3" failures="0" errors="0" time="0.005961">
-      <testcase name="testException" class="Icecave\Overpass\Rpc\Exception\InvalidMessageExceptionTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Exception/InvalidMessageExceptionTest.php" line="9" assertions="3" time="0.005961"/>
+    <testsuite name="Icecave\Overpass\Rpc\Exception\InvalidMessageExceptionTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Exception/InvalidMessageExceptionTest.php" tests="1" assertions="3" failures="0" errors="0" time="0.005938">
+      <testcase name="testException" class="Icecave\Overpass\Rpc\Exception\InvalidMessageExceptionTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Exception/InvalidMessageExceptionTest.php" line="9" assertions="3" time="0.005938"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Rpc\Exception\UnknownProcedureExceptionTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Exception/UnknownProcedureExceptionTest.php" tests="1" assertions="3" failures="0" errors="0" time="0.006079">
-      <testcase name="testException" class="Icecave\Overpass\Rpc\Exception\UnknownProcedureExceptionTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Exception/UnknownProcedureExceptionTest.php" line="9" assertions="3" time="0.006079"/>
+    <testsuite name="Icecave\Overpass\Rpc\Exception\UnknownProcedureExceptionTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Exception/UnknownProcedureExceptionTest.php" tests="1" assertions="3" failures="0" errors="0" time="0.006185">
+      <testcase name="testException" class="Icecave\Overpass\Rpc\Exception\UnknownProcedureExceptionTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Exception/UnknownProcedureExceptionTest.php" line="9" assertions="3" time="0.006185"/>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" tests="26" assertions="27" failures="0" errors="0" time="0.204152">
-      <testcase name="testInvokeWithClosure" class="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" line="20" assertions="1" time="0.009426"/>
-      <testcase name="testInvokeWithFunction" class="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" line="35" assertions="1" time="0.007565"/>
-      <testcase name="testInvokeWithMethodAsArray" class="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" line="48" assertions="1" time="0.007520"/>
-      <testcase name="testInvokeWithMethodAsString" class="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" line="63" assertions="1" time="0.007636"/>
-      <testcase name="testInvokeWithProcedureThatThrowsArbitraryException" class="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" line="78" assertions="2" time="0.005373"/>
-      <testcase name="testInvokeWithProcedureThatThrowsExecutionException" class="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" line="95" assertions="1" time="0.008135"/>
-      <testsuite name="Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking" tests="11" assertions="11" failures="0" errors="0" time="0.082223">
-        <testcase name="testInvokeArgumentChecking with data set &quot;arity&quot;" assertions="1" time="0.007578"/>
-        <testcase name="testInvokeArgumentChecking with data set &quot;arity (var args)&quot;" assertions="1" time="0.007478"/>
-        <testcase name="testInvokeArgumentChecking with data set &quot;array type hint&quot;" assertions="1" time="0.007508"/>
-        <testcase name="testInvokeArgumentChecking with data set &quot;array type hint (nullable)&quot;" assertions="1" time="0.007573"/>
-        <testcase name="testInvokeArgumentChecking with data set &quot;array type hint (nullable + with null)&quot;" assertions="1" time="0.007403"/>
-        <testcase name="testInvokeArgumentChecking with data set &quot;callable type hint&quot;" assertions="1" time="0.007451"/>
-        <testcase name="testInvokeArgumentChecking with data set &quot;callable type hint (nullable)&quot;" assertions="1" time="0.007343"/>
-        <testcase name="testInvokeArgumentChecking with data set &quot;callable type hint (nullable + with null)&quot;" assertions="1" time="0.007435"/>
-        <testcase name="testInvokeArgumentChecking with data set &quot;class type hint&quot;" assertions="1" time="0.007460"/>
-        <testcase name="testInvokeArgumentChecking with data set &quot;class type hint (nullable)&quot;" assertions="1" time="0.007472"/>
-        <testcase name="testInvokeArgumentChecking with data set &quot;class type hint (nullable + with null)&quot;" assertions="1" time="0.007521"/>
+    <testsuite name="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" tests="26" assertions="27" failures="0" errors="0" time="0.205403">
+      <testcase name="testInvokeWithClosure" class="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" line="20" assertions="1" time="0.009453"/>
+      <testcase name="testInvokeWithFunction" class="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" line="35" assertions="1" time="0.007341"/>
+      <testcase name="testInvokeWithMethodAsArray" class="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" line="48" assertions="1" time="0.007262"/>
+      <testcase name="testInvokeWithMethodAsString" class="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" line="63" assertions="1" time="0.008059"/>
+      <testcase name="testInvokeWithProcedureThatThrowsArbitraryException" class="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" line="78" assertions="2" time="0.005198"/>
+      <testcase name="testInvokeWithProcedureThatThrowsExecutionException" class="Icecave\Overpass\Rpc\InvokerTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/InvokerTest.php" line="95" assertions="1" time="0.007932"/>
+      <testsuite name="Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentChecking" tests="11" assertions="11" failures="0" errors="0" time="0.082995">
+        <testcase name="testInvokeArgumentChecking with data set &quot;arity&quot;" assertions="1" time="0.007675"/>
+        <testcase name="testInvokeArgumentChecking with data set &quot;arity (var args)&quot;" assertions="1" time="0.007436"/>
+        <testcase name="testInvokeArgumentChecking with data set &quot;array type hint&quot;" assertions="1" time="0.007354"/>
+        <testcase name="testInvokeArgumentChecking with data set &quot;array type hint (nullable)&quot;" assertions="1" time="0.007498"/>
+        <testcase name="testInvokeArgumentChecking with data set &quot;array type hint (nullable + with null)&quot;" assertions="1" time="0.007393"/>
+        <testcase name="testInvokeArgumentChecking with data set &quot;callable type hint&quot;" assertions="1" time="0.007338"/>
+        <testcase name="testInvokeArgumentChecking with data set &quot;callable type hint (nullable)&quot;" assertions="1" time="0.007898"/>
+        <testcase name="testInvokeArgumentChecking with data set &quot;callable type hint (nullable + with null)&quot;" assertions="1" time="0.008178"/>
+        <testcase name="testInvokeArgumentChecking with data set &quot;class type hint&quot;" assertions="1" time="0.007481"/>
+        <testcase name="testInvokeArgumentChecking with data set &quot;class type hint (nullable)&quot;" assertions="1" time="0.007391"/>
+        <testcase name="testInvokeArgumentChecking with data set &quot;class type hint (nullable + with null)&quot;" assertions="1" time="0.007352"/>
       </testsuite>
-      <testsuite name="Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure" tests="9" assertions="9" failures="0" errors="0" time="0.076274">
-        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;arity&quot;" assertions="1" time="0.008731"/>
-        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;array type hint&quot;" assertions="1" time="0.008373"/>
-        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;array type hint (nullable)&quot;" assertions="1" time="0.008515"/>
-        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;callable type hint&quot;" assertions="1" time="0.008619"/>
-        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;callable type hint (nullable)&quot;" assertions="1" time="0.008316"/>
-        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;class type hint&quot;" assertions="1" time="0.008355"/>
-        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;class type hint (nullable)&quot;" assertions="1" time="0.008430"/>
-        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;class type hint (other class)&quot;" assertions="1" time="0.008547"/>
-        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;class type hint (nullable + other class)&quot;" assertions="1" time="0.008388"/>
-      </testsuite>
-    </testsuite>
-    <testsuite name="Icecave\Overpass\Rpc\Message\MessageSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/MessageSerializationTest.php" tests="16" assertions="28" failures="0" errors="0" time="0.103171">
-      <testcase name="testSerializeRequest" class="Icecave\Overpass\Rpc\Message\MessageSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/MessageSerializationTest.php" line="23" assertions="1" time="0.005303"/>
-      <testcase name="testSerializeResponse" class="Icecave\Overpass\Rpc\Message\MessageSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/MessageSerializationTest.php" line="35" assertions="1" time="0.005430"/>
-      <testcase name="testUnserializeRequest" class="Icecave\Overpass\Rpc\Message\MessageSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/MessageSerializationTest.php" line="47" assertions="1" time="0.009384"/>
-      <testsuite name="Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure" tests="6" assertions="12" failures="0" errors="0" time="0.036275">
-        <testcase name="testUnserializeRequestFailure with data set #0" assertions="2" time="0.006053"/>
-        <testcase name="testUnserializeRequestFailure with data set #1" assertions="2" time="0.006050"/>
-        <testcase name="testUnserializeRequestFailure with data set #2" assertions="2" time="0.006035"/>
-        <testcase name="testUnserializeRequestFailure with data set #3" assertions="2" time="0.006018"/>
-        <testcase name="testUnserializeRequestFailure with data set #4" assertions="2" time="0.005980"/>
-        <testcase name="testUnserializeRequestFailure with data set #5" assertions="2" time="0.006139"/>
-      </testsuite>
-      <testcase name="testUnserializeResponse" class="Icecave\Overpass\Rpc\Message\MessageSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/MessageSerializationTest.php" line="86" assertions="1" time="0.007895"/>
-      <testsuite name="Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure" tests="6" assertions="12" failures="0" errors="0" time="0.038884">
-        <testcase name="testUnserializeResponseFailure with data set #0" assertions="2" time="0.006011"/>
-        <testcase name="testUnserializeResponseFailure with data set #1" assertions="2" time="0.006073"/>
-        <testcase name="testUnserializeResponseFailure with data set #2" assertions="2" time="0.006223"/>
-        <testcase name="testUnserializeResponseFailure with data set #3" assertions="2" time="0.006091"/>
-        <testcase name="testUnserializeResponseFailure with data set #4" assertions="2" time="0.007695"/>
-        <testcase name="testUnserializeResponseFailure with data set #5" assertions="2" time="0.006791"/>
+      <testsuite name="Icecave\Overpass\Rpc\InvokerTest::testInvokeArgumentCheckingFailure" tests="9" assertions="9" failures="0" errors="0" time="0.077163">
+        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;arity&quot;" assertions="1" time="0.009371"/>
+        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;array type hint&quot;" assertions="1" time="0.008466"/>
+        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;array type hint (nullable)&quot;" assertions="1" time="0.008275"/>
+        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;callable type hint&quot;" assertions="1" time="0.008241"/>
+        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;callable type hint (nullable)&quot;" assertions="1" time="0.008336"/>
+        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;class type hint&quot;" assertions="1" time="0.009169"/>
+        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;class type hint (nullable)&quot;" assertions="1" time="0.008591"/>
+        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;class type hint (other class)&quot;" assertions="1" time="0.008439"/>
+        <testcase name="testInvokeArgumentCheckingFailure with data set &quot;class type hint (nullable + other class)&quot;" assertions="1" time="0.008275"/>
       </testsuite>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Rpc\Message\RequestTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/RequestTest.php" tests="2" assertions="3" failures="0" errors="0" time="0.010471">
-      <testcase name="testCreate" class="Icecave\Overpass\Rpc\Message\RequestTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/RequestTest.php" line="8" assertions="2" time="0.005337"/>
-      <testcase name="testToString" class="Icecave\Overpass\Rpc\Message\RequestTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/RequestTest.php" line="23" assertions="1" time="0.005134"/>
-    </testsuite>
-    <testsuite name="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" tests="10" assertions="17" failures="0" errors="0" time="0.059582">
-      <testcase name="testCreate" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="13" assertions="2" time="0.005212"/>
-      <testcase name="testCreateFromValue" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="31" assertions="2" time="0.005725"/>
-      <testcase name="testCreateFromException" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="46" assertions="2" time="0.006167"/>
-      <testcase name="testCreateFromExceptionWithUnknownException" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="63" assertions="2" time="0.005938"/>
-      <testcase name="testExtract" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="80" assertions="1" time="0.005184"/>
-      <testsuite name="Icecave\Overpass\Rpc\Message\ResponseTest::testExtractWithException" tests="3" assertions="6" failures="0" errors="0" time="0.020082">
-        <testcase name="testExtractWithException with data set #0" assertions="2" time="0.006944"/>
-        <testcase name="testExtractWithException with data set #1" assertions="2" time="0.006364"/>
-        <testcase name="testExtractWithException with data set #2" assertions="2" time="0.006774"/>
+    <testsuite name="Icecave\Overpass\Rpc\Message\MessageSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/MessageSerializationTest.php" tests="16" assertions="28" failures="0" errors="0" time="0.102600">
+      <testcase name="testSerializeRequest" class="Icecave\Overpass\Rpc\Message\MessageSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/MessageSerializationTest.php" line="23" assertions="1" time="0.005360"/>
+      <testcase name="testSerializeResponse" class="Icecave\Overpass\Rpc\Message\MessageSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/MessageSerializationTest.php" line="35" assertions="1" time="0.005370"/>
+      <testcase name="testUnserializeRequest" class="Icecave\Overpass\Rpc\Message\MessageSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/MessageSerializationTest.php" line="47" assertions="1" time="0.009400"/>
+      <testsuite name="Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeRequestFailure" tests="6" assertions="12" failures="0" errors="0" time="0.036381">
+        <testcase name="testUnserializeRequestFailure with data set #0" assertions="2" time="0.006145"/>
+        <testcase name="testUnserializeRequestFailure with data set #1" assertions="2" time="0.005987"/>
+        <testcase name="testUnserializeRequestFailure with data set #2" assertions="2" time="0.006002"/>
+        <testcase name="testUnserializeRequestFailure with data set #3" assertions="2" time="0.006421"/>
+        <testcase name="testUnserializeRequestFailure with data set #4" assertions="2" time="0.005964"/>
+        <testcase name="testUnserializeRequestFailure with data set #5" assertions="2" time="0.005862"/>
       </testsuite>
-      <testcase name="testToString" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="114" assertions="1" time="0.005377"/>
-      <testcase name="testToStringWithException" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="124" assertions="1" time="0.005897"/>
+      <testcase name="testUnserializeResponse" class="Icecave\Overpass\Rpc\Message\MessageSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/MessageSerializationTest.php" line="86" assertions="1" time="0.007600"/>
+      <testsuite name="Icecave\Overpass\Rpc\Message\MessageSerializationTest::testUnserializeResponseFailure" tests="6" assertions="12" failures="0" errors="0" time="0.038489">
+        <testcase name="testUnserializeResponseFailure with data set #0" assertions="2" time="0.005936"/>
+        <testcase name="testUnserializeResponseFailure with data set #1" assertions="2" time="0.005957"/>
+        <testcase name="testUnserializeResponseFailure with data set #2" assertions="2" time="0.005915"/>
+        <testcase name="testUnserializeResponseFailure with data set #3" assertions="2" time="0.005881"/>
+        <testcase name="testUnserializeResponseFailure with data set #4" assertions="2" time="0.007712"/>
+        <testcase name="testUnserializeResponseFailure with data set #5" assertions="2" time="0.007088"/>
+      </testsuite>
     </testsuite>
-    <testsuite name="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" tests="6" assertions="10" failures="0" errors="0" time="0.030048">
-      <testcase name="testSerialize" class="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" line="14" assertions="1" time="0.004735"/>
-      <testcase name="testSerializeWithInvalidPayload" class="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" line="22" assertions="2" time="0.005097"/>
-      <testcase name="testSerializeFailure" class="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" line="34" assertions="2" time="0.005222"/>
-      <testcase name="testUnserialize" class="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" line="46" assertions="1" time="0.004774"/>
-      <testcase name="testUnserializeNull" class="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" line="54" assertions="2" time="0.005097"/>
-      <testcase name="testUnserializeFailure" class="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" line="64" assertions="2" time="0.005123"/>
+    <testsuite name="Icecave\Overpass\Rpc\Message\RequestTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/RequestTest.php" tests="2" assertions="3" failures="0" errors="0" time="0.011034">
+      <testcase name="testCreate" class="Icecave\Overpass\Rpc\Message\RequestTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/RequestTest.php" line="8" assertions="2" time="0.005744"/>
+      <testcase name="testToString" class="Icecave\Overpass\Rpc\Message\RequestTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/RequestTest.php" line="23" assertions="1" time="0.005290"/>
+    </testsuite>
+    <testsuite name="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" tests="10" assertions="17" failures="0" errors="0" time="0.059851">
+      <testcase name="testCreate" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="13" assertions="2" time="0.005199"/>
+      <testcase name="testCreateFromValue" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="31" assertions="2" time="0.005385"/>
+      <testcase name="testCreateFromException" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="46" assertions="2" time="0.006100"/>
+      <testcase name="testCreateFromExceptionWithUnknownException" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="63" assertions="2" time="0.006330"/>
+      <testcase name="testExtract" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="80" assertions="1" time="0.005489"/>
+      <testsuite name="Icecave\Overpass\Rpc\Message\ResponseTest::testExtractWithException" tests="3" assertions="6" failures="0" errors="0" time="0.020198">
+        <testcase name="testExtractWithException with data set #0" assertions="2" time="0.007094"/>
+        <testcase name="testExtractWithException with data set #1" assertions="2" time="0.006397"/>
+        <testcase name="testExtractWithException with data set #2" assertions="2" time="0.006707"/>
+      </testsuite>
+      <testcase name="testToString" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="114" assertions="1" time="0.005456"/>
+      <testcase name="testToStringWithException" class="Icecave\Overpass\Rpc\Message\ResponseTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Rpc/Message/ResponseTest.php" line="124" assertions="1" time="0.005694"/>
+    </testsuite>
+    <testsuite name="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" tests="6" assertions="10" failures="0" errors="0" time="0.030311">
+      <testcase name="testSerialize" class="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" line="14" assertions="1" time="0.005001"/>
+      <testcase name="testSerializeWithInvalidPayload" class="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" line="22" assertions="2" time="0.005113"/>
+      <testcase name="testSerializeFailure" class="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" line="34" assertions="2" time="0.005176"/>
+      <testcase name="testUnserialize" class="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" line="46" assertions="1" time="0.004813"/>
+      <testcase name="testUnserializeNull" class="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" line="54" assertions="2" time="0.005129"/>
+      <testcase name="testUnserializeFailure" class="Icecave\Overpass\Serialization\JsonSerializationTest" file="/home/travis/build/IcecaveStudios/overpass/test/suite/Serialization/JsonSerializationTest.php" line="64" assertions="2" time="0.005079"/>
     </testsuite>
   </testsuite>
 </testsuites>
