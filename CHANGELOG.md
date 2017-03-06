@@ -1,5 +1,9 @@
 # Overpass Changelog
 
+### 2.0.1 (2017-03-06)
+
+* **[IMPROVED]** Update dependencies
+
 ### 2.0.0 (2017-03-06)
 
 * **[NEW]** Amqp rpc server accepts custom error handler
