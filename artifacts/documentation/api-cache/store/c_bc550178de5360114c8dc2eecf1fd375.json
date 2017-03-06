@@ -8,7 +8,7 @@
     "namespace": "Icecave\\Overpass",
     "file": ".\/src\/PackageInfo.php",
     "relative_file": null,
-    "hash": "962cf48bd4364519c227ceb3dec6e967e818982b",
+    "hash": "b6f8baed1edcc44f3231f7bad830418f0e59ff92",
     "parent": null,
     "modifiers": "Stmt_Class",
     "is_trait": false,
