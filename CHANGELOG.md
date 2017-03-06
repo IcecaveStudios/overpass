@@ -1,5 +1,12 @@
 # Overpass Changelog
 
+### 2.0.0 (2017-03-06)
+
+* **[NEW]** Amqp rpc server accepts custom error handler
+* **[IMPROVED]** Include procedure name in RPC timeout exception message
+* **[IMPROVED]** Include timing information for RPC calls
+* **[IMPROVED]** RPC logging improvements
+
 ### 1.0.1 (2016-11-10)
 
 * **[FIXED]** Reverted JSON logging
