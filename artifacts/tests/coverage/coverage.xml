@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1488780373">
-  <project timestamp="1488780373">
+<coverage generated="1488782063">
+  <project timestamp="1488782063">
     <package name="Icecave\Overpass\Amqp">
       <file name="/home/travis/build/IcecaveStudios/overpass/src/Amqp/ChannelDispatcher.php">
         <class name="ChannelDispatcher" namespace="Icecave\Overpass\Amqp">
