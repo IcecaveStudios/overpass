@@ -861,4 +861,16 @@ class AmqpRpcServerTest extends PHPUnit_Framework_TestCase
             $responseMessage
         );
     }
+
+    public function testHeartbeat()
+    {
+        $this->server->expose('procedure-1', $this->procedure1);
+
+        $this->server->run();
+
+        Phake::inOrder(
+            Phake::verify($this->channelDispatcher, Phake::times(2))->heartbeat($this->declarationManager),
+            Phake::verify($this->logger, Phake::times(2))->info('rpc.server heartbeat')
+        );
+    }
 }

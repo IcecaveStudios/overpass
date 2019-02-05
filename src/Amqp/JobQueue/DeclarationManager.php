@@ -2,12 +2,13 @@
 
 namespace Icecave\Overpass\Amqp\JobQueue;
 
+use Icecave\Overpass\Amqp\DeclarationManagerInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 
 /**
  * @access private
  */
-class DeclarationManager
+class DeclarationManager implements DeclarationManagerInterface
 {
     public function __construct(AMQPChannel $channel)
     {
@@ -71,6 +72,18 @@ class DeclarationManager
             );
 
         $this->jobQueues[$jobName] = $queueName;
+    }
+
+    /**
+     * Fake a heartbeat.
+     *
+     * @return string
+     */
+    public function heartbeat()
+    {
+        $this->exchange = null;
+
+        return $this->exchange();
     }
 
     private $exchange;

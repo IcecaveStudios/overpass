@@ -142,7 +142,12 @@ class AmqpRpcServer implements RpcServerInterface
                 foreach ($this->procedures as $procedureName => $procedure) {
                     $this->unbind($procedureName);
                 }
-            }
+            } //else {
+                $this->channelDispatcher->heartbeat(
+                    $this->declarationManager
+                );
+                $this->logger->info('rpc.server heartbeat');
+            //}
         }
 
         if ($this->uncaughtThrowable !== null) {

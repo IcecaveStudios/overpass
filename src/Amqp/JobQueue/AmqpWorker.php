@@ -130,6 +130,11 @@ class AmqpWorker implements WorkerInterface
                 foreach ($this->handlers as $type => $handler) {
                     $this->unbind($type);
                 }
+            } else {
+                $this->channelDispatcher->heartbeat(
+                    $this->declarationManager
+                );
+                $this->logger->info('jobqueue.worker heartbeat');
             }
         }
 

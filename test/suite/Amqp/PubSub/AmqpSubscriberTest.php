@@ -307,4 +307,23 @@ class AmqpSubscriberTest extends PHPUnit_Framework_TestCase
             ]
         );
     }
+
+    public function testHeartbeat()
+    {
+        $calls    = [];
+        $consumer = function () use (&$calls) {
+            $calls[] = func_get_args();
+
+            return true;
+        };
+
+        $this->subscriber->setLogger($this->logger);
+        $this->subscriber->subscribe('subscription-topic');
+        $this->subscriber->consume($consumer);
+
+        Phake::inOrder(
+            Phake::verify($this->channelDispatcher, Phake::times(2))->heartbeat($this->declarationManager),
+            Phake::verify($this->logger,Phake::times(2))->info('pubsub.subscriber heartbeat')
+        );
+    }
 }

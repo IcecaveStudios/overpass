@@ -1,12 +1,13 @@
 <?php
 namespace Icecave\Overpass\Amqp\PubSub;
 
+use Icecave\Overpass\Amqp\DeclarationManagerInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 
 /**
  * @access private
  */
-class DeclarationManager
+class DeclarationManager implements DeclarationManagerInterface
 {
     public function __construct(AMQPChannel $channel)
     {
@@ -54,6 +55,18 @@ class DeclarationManager
         );
 
         return $this->queue;
+    }
+
+    /**
+     * Fake a heartbeat.
+     *
+     * @return string
+     */
+    public function heartbeat()
+    {
+        $this->exchange = null;
+
+        return $this->exchange();
     }
 
     private $exchange;
