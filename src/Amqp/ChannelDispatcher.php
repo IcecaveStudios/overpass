@@ -42,5 +42,18 @@ class ChannelDispatcher
         $this->isolator()->pcntl_signal_dispatch();
     }
 
+    public function heartbeat(DeclarationManagerInterface $declarationManager)
+    {
+        try {
+            $declarationManager->heartbeat();
+        } catch (ErrorException $e) {
+            if (false === strpos($e->getMessage(), 'Failed to send heartbeat')) {
+                throw $e;
+            }
+        } catch (AMQPTimeoutException $e) {
+            // ignore ...
+        }
+    }
+
     private $timeout;
 }

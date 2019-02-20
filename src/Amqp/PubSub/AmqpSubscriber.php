@@ -149,6 +149,14 @@ class AmqpSubscriber implements SubscriberInterface
 
         while ($this->channel->callbacks) {
             $this->channelDispatcher->wait($this->channel);
+
+            $this->channelDispatcher->heartbeat(
+                $this->declarationManager
+            );
+
+            if ($this->logger) {
+                $this->logger->info('pubsub.subscriber heartbeat');
+            }
         }
     }
 

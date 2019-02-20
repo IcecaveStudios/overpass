@@ -736,5 +736,15 @@ class AmqpWorkerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($exceptioned);
     }
 
+    public function testHeartbeat()
+    {
+        $this->worker->register('job-1', $this->job1);
 
+        $this->worker->run();
+
+        Phake::inOrder(
+            Phake::verify($this->channelDispatcher, Phake::times(2))->heartbeat($this->declarationManager),
+            Phake::verify($this->logger, Phake::times(2))->info('jobqueue.worker heartbeat')
+        );
+    }
 }
