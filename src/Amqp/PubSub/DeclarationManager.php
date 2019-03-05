@@ -64,9 +64,15 @@ class DeclarationManager implements DeclarationManagerInterface
      */
     public function heartbeat()
     {
-        $this->exchange = null;
+        try {
+            $this->exchange = null;
 
-        return $this->exchange();
+            return $this->exchange();
+        } catch (AMQPRuntimeException $ex) {
+            throw new ConnectionException();
+        } catch (AMQPConnectionClosedException $ex) {
+            throw new ConnectionException();
+        }
     }
 
     private $exchange;
