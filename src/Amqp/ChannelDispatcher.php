@@ -50,6 +50,8 @@ class ChannelDispatcher
             if (false === strpos($e->getMessage(), 'Failed to send heartbeat')) {
                 throw $e;
             }
+        } catch (ConnectionException $e) {
+            throw $e;
         } catch (AMQPTimeoutException $e) {
             // ignore ...
         }
