@@ -69,9 +69,9 @@ class DeclarationManager implements DeclarationManagerInterface
 
             return $this->exchange();
         } catch (AMQPRuntimeException $ex) {
-            throw new ConnectionException();
+            throw new ConnectionException($ex->getMessage());
         } catch (AMQPConnectionClosedException $ex) {
-            throw new ConnectionException();
+            throw new ConnectionException($ex->getMessage());
         }
     }
 
