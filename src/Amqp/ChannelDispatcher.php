@@ -3,6 +3,7 @@ namespace Icecave\Overpass\Amqp;
 
 use ErrorException;
 use Icecave\Isolator\IsolatorTrait;
+use Icecave\Overpass\Amqp\Exception\HeartbeatFailureException;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 
@@ -50,7 +51,7 @@ class ChannelDispatcher
             if (false === strpos($e->getMessage(), 'Failed to send heartbeat')) {
                 throw $e;
             }
-        } catch (ConnectionException $e) {
+        } catch (HeartbeatFailureException $e) {
             throw $e;
         } catch (AMQPTimeoutException $e) {
             // ignore ...
