@@ -3,7 +3,6 @@ namespace Icecave\Overpass\Amqp;
 
 use ErrorException;
 use Icecave\Isolator\IsolatorTrait;
-use Icecave\Overpass\Amqp\Exception\HeartbeatFailureException;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 
