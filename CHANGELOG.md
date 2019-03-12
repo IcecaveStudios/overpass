@@ -1,5 +1,9 @@
 # Overpass Changelog
 
+### 2.0.3 (2019-05-13)
+
+* **[IMPROVED]** Add "fake heartbeat" feature, to ensure services fail when the connection to RMQ is severed
+
 ### 2.0.2 (2017-03-07)
 
 * **[FIXED]** Remove archer publish version 7.1
