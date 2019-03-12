@@ -2,7 +2,11 @@
 namespace Icecave\Overpass\Amqp\PubSub;
 
 use Icecave\Overpass\Amqp\DeclarationManagerInterface;
+use Icecave\Overpass\Amqp\Exception\HeartbeatFailureException;
 use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Exception\AMQConnectionClosedException;
+use PhpAmqpLib\Exception\AMQPRuntimeException;
+
 
 /**
  * @access private
@@ -64,9 +68,15 @@ class DeclarationManager implements DeclarationManagerInterface
      */
     public function heartbeat()
     {
-        $this->exchange = null;
+        try {
+            $this->exchange = null;
 
-        return $this->exchange();
+            return $this->exchange();
+        } catch (AMQPRuntimeException $ex) {
+            throw new HeartbeatFailureException($ex->getMessage());
+        } catch (AMQPConnectionClosedException $ex) {
+            throw new HeartbeatFailureException($ex->getMessage());
+        }
     }
 
     private $exchange;
